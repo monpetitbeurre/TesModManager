@@ -1,0 +1,2162 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>BaseTools</name>
+    </assembly>
+    <members>
+        <member name="T:BaseTools.Configuration.ConfigList">
+            <summary>
+            A nested configuration list/structure
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.#ctor">
+            <summary>
+            Creates a new ConfigList
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.#ctor(System.Collections.Generic.List{BaseTools.Configuration.ConfigPair})">
+            <summary>
+            Creates a new ConfigList
+            </summary>
+            <param name="pairs">The initial pairs</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.#ctor(BaseTools.Configuration.ConfigPair[])">
+            <summary>
+            Creates a new ConfigList
+            </summary>
+            <param name="pairs">The inital pairs</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.Clone">
+            <summary>
+            Creates a clone of this ConfigList
+            </summary>
+            <returns>A clone of this ConfigList</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.MergeStrings(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Merges this list's strings with another
+            </summary>
+            <param name="list">The list to merge with</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetEnumerator">
+            <summary>
+            Creates an enumerator for this ConfigList
+            </summary>
+            <returns>Enumerator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPath(BaseTools.Configuration.ConfigList,System.String)">
+            <summary>
+            Finds data by a path
+            </summary>
+            <param name="rel">The place the path is relative to</param>
+            <param name="path">The path</param>
+            <returns>The path object or null</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.AddPair(System.String,System.Object)">
+            <summary>
+            Adds a pair directly into the ConfigList
+            </summary>
+            <param name="key">The key name</param>
+            <param name="data">The data</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.AddPair(BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Adds a pair directly into the ConfigList
+            </summary>
+            <param name="p">The pair to add</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.AddString(System.String,System.String)">
+            <summary>
+            Adds a string/value
+            </summary>
+            <param name="key">The key</param>
+            <param name="data">The data</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.AddSection(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Adds a section
+            </summary>
+            <param name="key">The section key</param>
+            <param name="section">The section</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.AddSection(System.String)">
+            <summary>
+            Adds a section
+            </summary>
+            <param name="key">The section key</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPair(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds the first pair that matches the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>The first pair matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPair(BaseTools.Searching.IValidator{BaseTools.Configuration.ConfigPair})">
+            <summary>
+            Finds the first pair that matches the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>The first pair matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairsV(BaseTools.Searching.IValidator{BaseTools.Configuration.ConfigPair})">
+            <summary>
+            Finds all of the pairs that match the specified validator
+            (this method is here to retain consistency with Java XBaseTools)
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of pairs matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairs(BaseTools.Searching.IValidator{BaseTools.Configuration.ConfigPair})">
+            <summary>
+            Finds all of the pairs that match the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of pairs matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairs(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds all of the pairs that match the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of pairs matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairs(System.String)">
+            <summary>
+            Finds all of the pairs with the specified key
+            </summary>
+            <param name="key">The key to search for</param>
+            <returns>A list of pairs with the key</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairs(System.String,System.Boolean)">
+            <summary>
+            Finds all of the pairs with the specified key
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="caseSensitive">Whether the search is case-sensitive</param>
+            <returns>A list of pairs with the key</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairsIndex(BaseTools.Searching.IValidator{BaseTools.Configuration.ConfigPair})">
+            <summary>
+            Finds all of the pairs that match the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of indexes</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairsIndex(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds all of the pairs that match the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of indexes</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairsIndex(System.String)">
+            <summary>
+            Finds all of the pairs with the specified key value
+            </summary>
+            <param name="key">The key to search for</param>
+            <returns>A list of indexes</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.FindPairsIndex(System.String,System.Boolean)">
+            <summary>
+            Finds all the pairs with the specified key value
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="caseSensitive">Whether the search is case-sensitive</param>
+            <returns>A list of indexes</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetSections(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds all of the sections that match the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of sections matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.HasSection(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Checks that a section exists
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>Whether any sections are valid</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetSection(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds the first section that matches the specified validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>The first section matching the validator or null if none match</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetSection(System.String)">
+            <summary>
+            Finds the first section with the key
+            </summary>
+            <param name="key">The key to search for</param>
+            <returns>The first section with the key or null if not found</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetSection(System.String,System.Boolean)">
+            <summary>
+            Finds the first section with the key
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="caseSensitive">Whether the search is case-sensitive</param>
+            <returns>The first section with the key or null if not found</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetStrings(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds all of the strings matching the validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>A list of strings matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.HasPair(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Checks that the pair exists
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>Whether any strings are null</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.HasString(System.String)">
+            <summary>
+            Checks that the string exists
+            </summary>
+            <param name="key">The key</param>
+            <returns>Whether there is a string matching the key</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.HasString(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Checks that the string exists
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>Whether there is a string matching the validator</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetPair(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds the first pair matching the validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>The first pair matching the validator or null if none match</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetPair(System.String)">
+            <summary>
+            Finds the first pair with the key
+            </summary>
+            <param name="key">The key to use</param>
+            <returns>The first pair with the key or null if none match</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetString(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Finds the first string matching the validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <returns>The first string matching the validatoor or null if none match</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetString(System.String)">
+            <summary>
+            Finds the first string with the key
+            </summary>
+            <param name="key">The key to search for</param>
+            <returns>The first string with the key or null if not found</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetString(System.String,System.Boolean)">
+            <summary>
+            Finds the first string with the key
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="caseSensitive">Whether the search is case-sensitive</param>
+            <returns>The first string with the key or null if not found</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.SetPair(BaseTools.Searching.IValidator{System.String},BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Sets the first string that matched the validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <param name="val">The new value for the string</param>
+            <returns>Whether there was any valid string to change</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.SetPair(System.String,BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Sets the first pair with the key to val
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="val">The new value for the string</param>
+            <returns>Whether there was any valid string to change</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.SetPair(System.String,BaseTools.Configuration.ConfigPair,System.Boolean)">
+            <summary>
+            Sets the first pair with the key to val
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="val">The new value for the string</param>
+            <param name="caseSensitive">Case sensitive keyname</param>
+            <returns>Whether there was any valid string to change</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.SetString(BaseTools.Searching.IValidator{System.String},System.String)">
+            <summary>
+            Sets the first string that matched the validator
+            </summary>
+            <param name="validator">The validator to use</param>
+            <param name="val">The new value for the string</param>
+            <returns>Whether there was any valid string to change</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.SetString(System.String,System.String)">
+            <summary>
+            Sets the first string with the key to val
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="val">The new value for the string</param>
+            <returns>Whether there was any valid string to change</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.SetString(System.String,System.String,System.Boolean)">
+            <summary>
+            Sets the first string with the key to val
+            </summary>
+            <param name="key">The key to search for</param>
+            <param name="val">The new value for the string</param>
+            <param name="caseSensitive">Case sensitive keyname</param>
+            <returns>Whether there was any valid string to change</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.Remove(System.Int32)">
+            <summary>
+            Remove an item from the list
+            </summary>
+            <param name="index">Index to remove</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.RemoveKey(BaseTools.Searching.IValidator{System.String})">
+            <summary>
+            Remove items from the list by validator
+            </summary>
+            <param name="validator">The validator to use to delete</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.RemoveKey(System.String)">
+            <summary>
+            Remove items from the list by key
+            </summary>
+            <param name="key">The key to delete</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.RemoveKey(System.String,System.Boolean)">
+            <summary>
+            Remove items from the list by key
+            </summary>
+            <param name="key">The key to delete</param>
+            <param name="caseSensitive">Case sensitive keyname</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.RemoveReference(BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Remove an item from the list by reference
+            </summary>
+            <param name="p">The reference</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.GetList">
+            <summary>
+            Get a list of all the pairs
+            </summary>
+            <returns>A list of the pairs</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigList.AppendList(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Appends another list to this one
+            </summary>
+            <param name="list">The list to append</param>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigList.Item(System.String)">
+            <summary>
+            Case-insensitive operator for data items
+            </summary>
+        </member>
+        <member name="T:BaseTools.Configuration.ConfigPair">
+            <summary>
+            A source configuration pair/value
+            </summary>
+        </member>
+        <member name="F:BaseTools.Configuration.ConfigPair.Key">
+            <summary>
+            The key
+            </summary>
+        </member>
+        <member name="F:BaseTools.Configuration.ConfigPair.Data">
+            <summary>
+            The data
+            </summary>
+        </member>
+        <member name="F:BaseTools.Configuration.ConfigPair.KeyQuoted">
+            <summary>
+            Whether key/data is quoted
+            </summary>
+        </member>
+        <member name="F:BaseTools.Configuration.ConfigPair.DataQuoted">
+            <summary>
+            Whether key/data is quoted
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigPair.#ctor(System.String,System.Object)">
+            <summary>
+            Creates a new pair
+            </summary>
+            <param name="key">The key of the pair</param>
+            <param name="data">The data of the pair</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigPair.#ctor(System.String,System.Object,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new pair
+            </summary>
+            <param name="key">The key of the pair</param>
+            <param name="data">The data of the pair</param>
+            <param name="kq">Whether the key is quoted</param>
+            <param name="dq">Whether the data is quoted</param>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigPair.CheckIsDecimal(System.Object)">
+            <summary>
+            The data as a decimal
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigPair.ConvertToDecimal(System.Object)">
+            <summary>
+            The data as a decimal
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.ConfigPair.Clone">
+            <summary>
+            Creates a clone of this ConfigPair
+            </summary>
+            <returns>A clone of this ConfigPair</returns>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataAsString">
+            <summary>
+            The data as a string
+            </summary>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataAsList">
+            <summary>
+            The data as a list
+            </summary>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataAsInteger">
+            <summary>
+            The data as an integer
+            </summary>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataAsArray">
+            <summary>
+            The data as an array
+            </summary>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataIsArray">
+            <summary>
+            Checks whether the data is an array
+            </summary>
+            <returns>Whether data is an array</returns>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataAsDecimal">
+            <summary>
+            The data as a decimal
+            </summary>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataIsDecimal">
+            <summary>
+            Checks whether the data is a double
+            </summary>
+            <returns>Whether data is a double</returns>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataIsInteger">
+            <summary>
+            Checks whether the data is an integer
+            </summary>
+            <returns>Whether data is an integer</returns>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataIsString">
+            <summary>
+            Checks whether the data is a string
+            </summary>
+            <returns>Whether data is a string</returns>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataIsList">
+            <summary>
+            Checks whether the data is a ConfigList
+            </summary>
+            <returns>Whether data is a ConfigList</returns>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataIsBoolean">
+            <summary>
+            Checks whether the data is a boolean
+            </summary>
+        </member>
+        <member name="P:BaseTools.Configuration.ConfigPair.DataAsBoolean">
+            <summary>
+            The data as a boolean
+            </summary>
+        </member>
+        <member name="T:BaseTools.Configuration.IConfig">
+            <summary>
+            Interface for a nested configuration reader/writer
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.IConfig.SaveConfiguration(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Save the configuration to a file
+            </summary>
+            <param name="filename">The filename</param>
+            <param name="lst">The ConfigList to write</param>
+        </member>
+        <member name="M:BaseTools.Configuration.IConfig.WriteConfiguration(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Save the configuration to a string
+            </summary>
+            <param name="lst">The ConfigList to write</param>
+            <returns>A string representing the ConfigList</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.IConfig.LoadConfiguration(System.String)">
+            <summary>
+            Load the configuration from a file
+            </summary>
+            <param name="filename">The filename</param>
+            <returns>A ConfigList interpreted from the file</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.IConfig.ReadConfiguration(System.String)">
+            <summary>
+            Load the configuration from a string
+            </summary>
+            <param name="data">The data</param>
+            <returns>A ConfigList interpreted from the string</returns>
+        </member>
+        <member name="T:BaseTools.Configuration.IIni">
+            <summary>
+            Interface for an ini-style reader
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.IIni.SaveConfiguration(System.String,System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.String}})">
+            <summary>
+            Save the configuration to a file
+            </summary>
+            <param name="filename">The filename</param>
+            <param name="lst">The GenericApplication to write</param>
+        </member>
+        <member name="M:BaseTools.Configuration.IIni.WriteConfiguration(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.String}})">
+            <summary>
+            Save the configuration to a string
+            </summary>
+            <param name="lst">The GenericApplication to write</param>
+            <returns>A string representing the GenericApplication</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.IIni.LoadConfiguration(System.String)">
+            <summary>
+            Load the configuration from a file
+            </summary>
+            <param name="filename">The filename</param>
+            <returns>A GenericApplication interpreted from the file</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.IIni.ReadConfiguration(System.String)">
+            <summary>
+            Load the configuration from a string
+            </summary>
+            <param name="data">The data</param>
+            <returns>A GenericApplication interpreted from the string</returns>
+        </member>
+        <member name="T:BaseTools.Configuration.Parsers.BuilderConfig">
+            <summary>
+            Nested reader/writer that works with Doom Builder configurations
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.BuilderConfig.#ctor">
+            <summary>
+            Creates a new Doom Builder configuration parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.BuilderConfig.BuilderParseInfo">
+            <summary>
+            The parsing information used by Doom Builder
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.BuilderConfig.SaveConfiguration(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Saves the configuration to a file
+            </summary>
+            <param name="filename">The file to save to</param>
+            <param name="lst">The ConfigList to save</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.BuilderConfig.WriteConfiguration(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Creates a string representing the configuration
+            </summary>
+            <returns>The string respresentation of the configuration</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.BuilderConfig.LoadConfiguration(System.String)">
+            <summary>
+            Imports a configuration from file
+            </summary>
+            <param name="filename">The file to read the configuration from</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.BuilderConfig.ReadConfiguration(System.String)">
+            <summary>
+            Imports a configuration
+            </summary>
+            <param name="data">The file data</param>
+        </member>
+        <member name="T:BaseTools.Configuration.Parsers.GeneralConfig">
+            <summary>
+            Standard nested source style configuration reader/writer, with support
+            for int/short, double/float and null
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.GeneralConfig.#ctor">
+            <summary>
+            Creates a new XSettings parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.GeneralConfig.AdvancedParseInfo">
+            <summary>
+            The parsing information used by the parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.GeneralConfig.SaveConfiguration(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Saves the configuration to a file
+            </summary>
+            <param name="filename">The file to save to</param>
+            <param name="lst">The ConfigList to save</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.GeneralConfig.WriteConfiguration(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Creates a string representing the configuration
+            </summary>
+            <returns>The string respresentation of the configuration</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.GeneralConfig.LoadConfiguration(System.String)">
+            <summary>
+            Imports a configuration from file
+            </summary>
+            <param name="filename">The file to read the configuration from</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.GeneralConfig.ReadConfiguration(System.String)">
+            <summary>
+            Imports a configuration
+            </summary>
+            <param name="data">The file data</param>
+        </member>
+        <member name="T:BaseTools.Configuration.Parsers.IniConfig">
+            <summary>
+            Ini reader/writer for IConfig
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.IniConfig.#ctor">
+            <summary>
+            Creates a new ini reader/writer
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.IniConfig.SaveConfiguration(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Save the configuration to an ini
+            </summary>
+            <param name="filename">The filename</param>
+            <param name="lst">The ConfigList to write</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.IniConfig.WriteConfiguration(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Save the configuration to a string
+            </summary>
+            <param name="lst">The ConfigList to write</param>
+            <returns>A string representing the ConfigList</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.IniConfig.LoadConfiguration(System.String)">
+            <summary>
+            Load the configuration from an ini
+            </summary>
+            <param name="filename">The filename</param>
+            <returns>A ConfigList interpreted from the file</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.IniConfig.ReadConfiguration(System.String)">
+            <summary>
+            Load the configuration from a string
+            </summary>
+            <param name="data">The data</param>
+            <returns>A ConfigList interpreted from the string</returns>
+        </member>
+        <member name="T:BaseTools.Configuration.Parsers.JSONConfig">
+            <summary>
+            JSON parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.JSONConfig.#ctor">
+            <summary>
+            Creates a new XSettings parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.JSONConfig.AdvancedParseInfo">
+            <summary>
+            The parsing information used by the parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.JSONConfig.SaveConfiguration(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Saves the configuration to a file
+            </summary>
+            <param name="filename">The file to save to</param>
+            <param name="lst">The ConfigList to save</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.JSONConfig.WriteConfiguration(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Creates a string representing the configuration
+            </summary>
+            <returns>The string respresentation of the configuration</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.JSONConfig.LoadConfiguration(System.String)">
+            <summary>
+            Imports a configuration from file
+            </summary>
+            <param name="filename">The file to read the configuration from</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.JSONConfig.ReadConfiguration(System.String)">
+            <summary>
+            Imports a configuration
+            </summary>
+            <param name="data">The file data</param>
+        </member>
+        <member name="T:BaseTools.Configuration.Parsers.SourceConfig">
+            <summary>
+            Standard nested source style configuration reader/writer for VGUI2 based configurations
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.SourceConfig.#ctor">
+            <summary>
+            Creates a new SourceConfig
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.SourceConfig.AdvancedParseInfo">
+            <summary>
+            The parsing information used for Source configurations
+            </summary>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.SourceConfig.SaveConfiguration(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Saves the configuration to a file
+            </summary>
+            <param name="filename">The file to save to</param>
+            <param name="lst">The ConfigList to save</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.SourceConfig.WriteConfiguration(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Creates a string representing the configuration
+            </summary>
+            <returns>The string respresentation of the configuration</returns>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.SourceConfig.LoadConfiguration(System.String)">
+            <summary>
+            Imports a configuration from file
+            </summary>
+            <param name="filename">The file to read the configuration from</param>
+        </member>
+        <member name="M:BaseTools.Configuration.Parsers.SourceConfig.ReadConfiguration(System.String)">
+            <summary>
+            Imports a configuration
+            </summary>
+            <param name="data">The file data</param>
+        </member>
+        <member name="T:BaseTools.Dialog.InputBox">
+            <summary>
+            An InputBox
+            </summary>
+        </member>
+        <member name="M:BaseTools.Dialog.InputBox.Show(System.String,System.String)">
+            <summary>
+            Reads a string from the user
+            </summary>
+            <param name="title">The title of the window</param>
+            <param name="promptText">The prompt to display</param>
+            <returns>The value given back by the user, null if they pressed cancel</returns>
+        </member>
+        <member name="M:BaseTools.Dialog.InputBox.Show(System.String,System.String,System.String)">
+            <summary>
+            Reads a string from the user
+            </summary>
+            <param name="title">The title of the window</param>
+            <param name="promptText">The prompt to display</param>
+            <param name="defaultvalue">The default value</param>
+            <returns>The value given back by the user, null if they pressed cancel</returns>
+        </member>
+        <member name="T:BaseTools.Helpers.GenericConverter">
+            <summary>
+            Converts between Dictionaries and Configuration Lists
+            </summary>
+        </member>
+        <member name="M:BaseTools.Helpers.GenericConverter.ReadSection(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Read a single-scope ConfigList into a dictionary
+            </summary>
+            <param name="section">The ConfigList to convert</param>
+            <returns>Dictionary copy of section</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.GenericConverter.ReadApplication(BaseTools.Configuration.ConfigList)">
+            <summary>
+            Read a double-scope ConfigList into a dictionary
+            </summary>
+            <param name="application">The ConfigList to convert</param>
+            <returns>Dictionary copy of application</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.GenericConverter.WriteSection(System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Write a single-scope dictionary into a ConfigList
+            </summary>
+            <param name="section">The dictionary to convert</param>
+            <returns>ConfigList copy of section</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.GenericConverter.WriteApplication(System.Collections.Generic.Dictionary{System.String,System.Collections.Generic.Dictionary{System.String,System.String}})">
+            <summary>
+            Write a double-scope dictionary into a ConfigList
+            </summary>
+            <param name="application">The dictionary to convert</param>
+            <returns>ConfigList copy of application</returns>
+        </member>
+        <member name="T:BaseTools.Helpers.PathInfo">
+            <summary>
+            A path position
+            </summary>
+        </member>
+        <member name="F:BaseTools.Helpers.PathInfo.Absolute">
+            <summary>
+            Absolute path
+            </summary>
+        </member>
+        <member name="F:BaseTools.Helpers.PathInfo.Network">
+            <summary>
+            Network path
+            </summary>
+        </member>
+        <member name="F:BaseTools.Helpers.PathInfo.Relative">
+            <summary>
+            Relative path
+            </summary>
+        </member>
+        <member name="T:BaseTools.Helpers.ProtocolInfo">
+            <summary>
+            Data returned by protocolify
+            </summary>
+        </member>
+        <member name="M:BaseTools.Helpers.ProtocolInfo.#ctor(System.String)">
+            <summary>
+            Creates a new ProtocolInfo
+            </summary>
+            <param name="url">The url</param>
+        </member>
+        <member name="M:BaseTools.Helpers.ProtocolInfo.#ctor(System.String,System.String)">
+            <summary>
+            Creates a new ProtocolInfo
+            </summary>
+            <param name="protocol">The name of the protocol</param>
+            <param name="path">The name of the path</param>
+        </member>
+        <member name="P:BaseTools.Helpers.ProtocolInfo.Protocol">
+            <summary>
+            The protocol
+            </summary>
+        </member>
+        <member name="P:BaseTools.Helpers.ProtocolInfo.Path">
+            <summary>
+            The path
+            </summary>
+            
+        </member>
+        <member name="P:BaseTools.Helpers.ProtocolInfo.DefaultConfig">
+            <summary>
+            The default IConfig used for this Protocol
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="T:BaseTools.Helpers.IOHelper">
+            <summary>
+            Helper class for IO related stuff
+            </summary>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.BaseToolsImages">
+            <summary>
+            The images used by BaseTools
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.Protocolify(System.String)">
+            <summary>
+            Get the protocol split from the path
+            </summary>
+            <param name="url">The url</param>
+            <returns>The protocol and path split</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.DefaultProtocol(BaseTools.Helpers.ProtocolInfo)">
+            <summary>
+            Gets the default IConfig used for the protocol
+            </summary>
+            <param name="protocol">The name of the protocol</param>
+            <returns>The corresponding IConfig or null</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.DefaultProtocol(System.String)">
+            <summary>
+            Gets the default IConfig used for the protocol
+            </summary>
+            <param name="protocol">The name of the protocol</param>
+            <returns>The corresponding IConfig or GeneralConfig if invalid</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.CleanPath(System.String)">
+            <summary>
+            Clean a path
+            </summary>
+            <param name="path">The path to clean</param>
+            <returns>A clean version of path</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.IsDriveLetter(System.String)">
+            <summary>
+            Checks that the letter is a valid drive letter
+            </summary>
+            <param name="letter">The letter to check</param>
+            <returns>Whether letter is a valid drive letter</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.PathPosition(System.String)">
+            <summary>
+            Calculates the path's position
+            </summary>
+            <param name="path">The path</param>
+            <returns>The path's postition</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.ListDirectories(System.String)">
+            <summary>
+            List the directories
+            </summary>
+            <param name="directory">The directory to look in</param>
+            <returns>A list of the directory names inside the directory</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.ListFiles(System.String,System.String)">
+            <summary>
+            List the files
+            </summary>
+            <param name="directory">The directory to look in</param>
+            <param name="filter">The file filter</param>
+            <returns>A list of the file names inside the directory</returns>
+        </member>
+        <member name="M:BaseTools.Helpers.IOHelper.RelativeTo(System.String,System.String)">
+            <summary>
+            Calculate a\b, removing redundant slashes
+            </summary>
+            <param name="a">The first path</param>
+            <param name="b">The second path</param>
+            <returns>a\b without redundant slashes</returns>
+        </member>
+        <member name="P:BaseTools.Helpers.IOHelper.OSType">
+            <summary>
+            The OS type. True is Windows. False is Unix.
+            </summary>
+        </member>
+        <member name="T:BaseTools.Maths.Matrix">
+            <summary>
+            A matrix wrapper
+            </summary>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.ToString">
+            <summary>
+            Matrix as a string
+            </summary>
+            <returns>Matrix as a string</returns>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.#ctor(System.Int32,System.Int32)">
+            <summary>
+            Creates a new matrix
+            </summary>
+            <param name="rows">Number of rows</param>
+            <param name="cols">Number of columns</param>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.#ctor(System.Double[0:,0:])">
+            <summary>
+            Wraps a matrix
+            </summary>
+            <param name="t">The table to wrap</param>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.SwapRows(System.Int32,System.Int32)">
+            <summary>
+            Swaps rows
+            </summary>
+            <param name="a">Row 1</param>
+            <param name="b">Row 2</param>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.DivideRow(System.Int32,System.Double)">
+            <summary>
+            Performs scalar division on a row
+            </summary>
+            <param name="row">The row number</param>
+            <param name="scale">The scalar</param>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.ScaleRow(System.Int32,System.Double)">
+            <summary>
+            Performs scalar multiplication on a row
+            </summary>
+            <param name="row">The row number</param>
+            <param name="scale">The scalar</param>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.RREF(BaseTools.Maths.Matrix)">
+            <summary>
+            Reduced row echelon form
+            </summary>
+            <param name="a">The matrix to reduce</param>
+        </member>
+        <member name="M:BaseTools.Maths.Matrix.RREF(System.Double[0:,0:]@)">
+            <summary>
+            Reduced row echelon form
+            </summary>
+            <param name="matrix">The matrix to reduce</param>
+        </member>
+        <member name="P:BaseTools.Maths.Matrix.MatrixTable">
+            <summary>
+            The array wrapped by the matrix
+            </summary>
+        </member>
+        <member name="P:BaseTools.Maths.Matrix.Rows">
+            <summary>
+            Number of rows
+            </summary>
+        </member>
+        <member name="P:BaseTools.Maths.Matrix.Columns">
+            <summary>
+            Number of columns
+            </summary>
+        </member>
+        <member name="P:BaseTools.Maths.Matrix.Item(System.Int32,System.Int32)">
+            <summary>
+            Accesses or changes an element
+            </summary>
+        </member>
+        <member name="T:BaseTools.Searching.IValidator`1">
+            <summary>
+            Checks items to see if you are searching for them
+            </summary>
+        </member>
+        <member name="M:BaseTools.Searching.IValidator`1.ItemValid(`0)">
+            <summary>
+            Checks that the item is valid
+            </summary>
+            <param name="type">The type to check for validity</param>
+            <returns>Whether the item is valid</returns>
+        </member>
+        <member name="T:BaseTools.Searching.PairListValidator">
+            <summary>
+            Validates a pair if it is a ConfigList
+            </summary>
+        </member>
+        <member name="M:BaseTools.Searching.PairListValidator.ItemValid(BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Checks that the pair's data is a ConfigList
+            </summary>
+            <param name="p">The pair to check</param>
+            <returns>Whether the pair's data is a ConfigList</returns>
+        </member>
+        <member name="T:BaseTools.Searching.PairStringValidator">
+            <summary>
+            Validates a pair depending if it is a string
+            </summary>
+        </member>
+        <member name="M:BaseTools.Searching.PairStringValidator.ItemValid(BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Checks that the pair's data is a string
+            </summary>
+            <param name="p">The pair to check</param>
+            <returns>Whether the pair's data is a string</returns>
+        </member>
+        <member name="T:BaseTools.Searching.PairValidator">
+            <summary>
+            Validates pairs
+            </summary>
+        </member>
+        <member name="M:BaseTools.Searching.PairValidator.#ctor(System.String)">
+            <summary>
+            Creates a new string validator
+            </summary>
+            <param name="check">The string to check for</param>
+        </member>
+        <member name="M:BaseTools.Searching.PairValidator.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new string validator
+            </summary>
+            <param name="check">The string to check for</param>
+            <param name="casesens">Whether the comparison is case-sensitive</param>
+        </member>
+        <member name="M:BaseTools.Searching.PairValidator.#ctor(System.String,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates a new string validator
+            </summary>
+            <param name="check">The string to check for</param>
+            <param name="casesens">Whether the comparison is case-sensitive</param>
+            <param name="acceptSection">Whether sections are accepted</param>
+            <param name="acceptString">Whether strings are accepted</param>
+        </member>
+        <member name="M:BaseTools.Searching.PairValidator.ItemValid(BaseTools.Configuration.ConfigPair)">
+            <summary>
+            Checks that the string is the same as the one defined in the constructor
+            </summary>
+            <param name="comp">The string to compare</param>
+            <returns>Whether comp is the same as Check</returns>
+        </member>
+        <member name="P:BaseTools.Searching.PairValidator.Check">
+            <summary>
+            The string used to compare for validity
+            </summary>
+        </member>
+        <member name="P:BaseTools.Searching.PairValidator.CaseSensitive">
+            <summary>
+            Whether the check is case-sensitive
+            </summary>
+        </member>
+        <member name="P:BaseTools.Searching.PairValidator.AcceptSection">
+            <summary>
+            Whether sections are accepted
+            </summary>
+        </member>
+        <member name="P:BaseTools.Searching.PairValidator.AcceptString">
+            <summary>
+            Whether strings are accepted
+            </summary>
+        </member>
+        <member name="T:BaseTools.Searching.StringValidator">
+            <summary>
+            Validates strings
+            </summary>
+        </member>
+        <member name="M:BaseTools.Searching.StringValidator.#ctor(System.String)">
+            <summary>
+            Creates a new string validator
+            </summary>
+            <param name="check">The string to check for</param>
+        </member>
+        <member name="M:BaseTools.Searching.StringValidator.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new string validator
+            </summary>
+            <param name="check">The string to check for</param>
+            <param name="casesens">Whether the comparison is case-sensitive</param>
+        </member>
+        <member name="M:BaseTools.Searching.StringValidator.ItemValid(System.String)">
+            <summary>
+            Checks that the string is the same as the one defined in the constructor
+            </summary>
+            <param name="comp">The string to compare</param>
+            <returns>Whether comp is the same as Check</returns>
+        </member>
+        <member name="P:BaseTools.Searching.StringValidator.Check">
+            <summary>
+            The string used to compare for validity
+            </summary>
+        </member>
+        <member name="P:BaseTools.Searching.StringValidator.CaseSensitive">
+            <summary>
+            Whether the check is case-sensitive
+            </summary>
+        </member>
+        <member name="T:BaseTools.Strings.ParseInfo">
+            <summary>
+            Parsing information for Advanced String Parser
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseInfo.Escapes">
+            <summary>
+            The escape sequences
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseInfo.Parses">
+            <summary>
+            The parse sequences
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseInfo.ParseChars">
+            <summary>
+            The parse characters (for newline and whitespace)
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseInfo.AllowNumeralEscape">
+            <summary>
+            Allows numeral escapes
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.#ctor(BaseTools.Strings.ParseSequence[],BaseTools.Strings.ParseChar[],BaseTools.Strings.EscapeSequence[])">
+            <summary>
+            Creates an instance of parsing information
+            </summary>
+            <param name="Escapes">The escape sequences</param>
+            <param name="ParseChars">The parse characters</param>
+            <param name="Parses">The parse sequences</param>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.#ctor(BaseTools.Strings.ParseSequence[],BaseTools.Strings.ParseChar[],BaseTools.Strings.EscapeSequence[],System.Boolean)">
+            <summary>
+            Creates an instance of parsing information
+            </summary>
+            <param name="Escapes">The escape sequences</param>
+            <param name="ParseChars">The parse characters</param>
+            <param name="Parses">The parse sequences</param>
+            <param name="NumEsc">Whether numeral escapes are allowed</param>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.EncodeString(System.String,System.Text.StringBuilder)">
+            <summary>
+            Encode a string (convert to escaped form)
+            </summary>
+            <param name="str">The string to encode</param>
+            <param name="sb">The StringBuilder to output into</param>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.EncodeStream(BaseTools.Strings.ICharStream,System.Text.StringBuilder)">
+            <summary>
+            Encode a stream and put it into a StringBuilder
+            </summary>
+            <param name="strm">The stream to encode</param>
+            <param name="output">The StringBuilder to output into</param>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.Reset">
+            <summary>
+            Resets the parses
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.Equals(System.Object)">
+            <summary>
+            Equals
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.Equals(BaseTools.Strings.ParseInfo)">
+            <summary>
+            Equals
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.GetHashCode">
+            <summary>
+            Xor'ed hash codes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.op_Equality(BaseTools.Strings.ParseInfo,BaseTools.Strings.ParseInfo)">
+            <summary>
+            Equals operator
+            </summary>
+            <param name="lhs"></param>
+            <param name="rhs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseInfo.op_Inequality(BaseTools.Strings.ParseInfo,BaseTools.Strings.ParseInfo)">
+            <summary>
+            Inequal operator
+            </summary>
+            <param name="lhs"></param>
+            <param name="rhs"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BaseTools.Strings.StringParser">
+            <summary>
+            Advanced string parser
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.StringParser.#ctor(BaseTools.Strings.ParseInfo,BaseTools.Strings.ICharStream)">
+            <summary>
+            Creates a new advanced string parser
+            </summary>
+            <param name="advi">The parsing info</param>
+            <param name="stream">The stream to be parsed</param>
+        </member>
+        <member name="M:BaseTools.Strings.StringParser.Available">
+            <summary>
+            Whether there is any more available data
+            </summary>
+            <returns>Whether there is any more available data</returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringParser.SkipWhitespace">
+            <summary>
+            Skip the whitespace in a stream
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.StringParser.SkipLine">
+            <summary>
+            Skips a line
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.StringParser.ReadBlock">
+            <summary>
+            Reads a block
+            </summary>
+            <returns>The block</returns>
+        </member>
+        <member name="T:BaseTools.Strings.EscapeSequence">
+            <summary>
+            An escape sequence
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.EscapeSequence.Sequence">
+            <summary>
+            Character that invokes the sequence
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.EscapeSequence.Output">
+            <summary>
+            Character created by the sequence
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.#ctor(System.Char,System.Char)">
+            <summary>
+            Create an escape sequence
+            </summary>
+            <param name="Sequence">Character that invokes the sequence</param>
+            <param name="Output">Character created by the sequence</param>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.FindBySequence(BaseTools.Strings.EscapeSequence[],System.Char)">
+            <summary>
+            Finds the first sequence with the specified sequence
+            </summary>
+            <param name="list">The list of sequences</param>
+            <param name="sequence">The sequence to search for</param>
+            <returns>The index of the first matching sequence or -1 if not found</returns>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.FindByOutput(BaseTools.Strings.EscapeSequence[],System.Char)">
+            <summary>
+            Finds the first sequence with the specified output
+            </summary>
+            <param name="list">The list of sequences</param>
+            <param name="output">The output to search for</param>
+            <returns>The index of the first matching sequence or -1 if not found</returns>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.Equals(System.Object)">
+            <summary>
+            Compares an escape sequence
+            </summary>
+            <param name="obj">The escape sequence to compare to</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.Equals(BaseTools.Strings.EscapeSequence)">
+            <summary>
+            Compares an escape sequence
+            </summary>
+            <param name="other">The escape sequence to compare to</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.GetHashCode">
+            <summary>
+            Generates a hash code
+            </summary>
+            <returns>The hash code</returns>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.op_Equality(BaseTools.Strings.EscapeSequence,BaseTools.Strings.EscapeSequence)">
+            <summary>
+            Compares
+            </summary>
+            <param name="lhs"></param>
+            <param name="rhs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.EscapeSequence.op_Inequality(BaseTools.Strings.EscapeSequence,BaseTools.Strings.EscapeSequence)">
+            <summary>
+            Not compares
+            </summary>
+            <param name="lhs"></param>
+            <param name="rhs"></param>
+            <returns></returns>
+        </member>
+        <member name="T:BaseTools.Strings.ICharStream">
+            <summary>
+            Character stream
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.ICharStream.Available">
+            <summary>
+            Whether there is any more characters left
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.ICharStream.Next">
+            <summary>
+            The next character
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.ICharStream.Unread">
+            <summary>
+            Moves back a character
+            </summary>
+        </member>
+        <member name="T:BaseTools.Strings.ParseChar">
+            <summary>
+            A parse sequence for the advanced parser
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseChar.Type">
+            <summary>
+            The parsing type
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseChar.Sequence">
+            <summary>
+            The string that activates the parse sequence
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.ParseChar.#ctor(System.Char,BaseTools.Strings.ParseType)">
+            <summary>
+            Creates a new ParseSequence
+            </summary>
+            <param name="sequence">The activating sequence</param>
+            <param name="type">The sequence action</param>
+        </member>
+        <member name="M:BaseTools.Strings.ParseChar.TestSequence(System.Char)">
+            <summary>
+            Tests if the sequence is done
+            </summary>
+            <param name="c">The next character in the stream</param>
+            <returns>If the sequence is done</returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseChar.FindSequence(BaseTools.Strings.ParseChar[],System.Char)">
+            <summary>
+            Finds a sequence in the list
+            </summary>
+            <param name="seqs">The list</param>
+            <param name="c">The next character in the stream</param>
+            <returns>The activated sequence or null</returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseChar.TestSequence(BaseTools.Strings.ParseChar[],System.Char)">
+            <summary>
+            Finds a sequence in the list
+            </summary>
+            <param name="seqs">The list</param>
+            <param name="c">The next character in the stream</param>
+            <returns>The activated sequence or null</returns>
+        </member>
+        <member name="T:BaseTools.Strings.ParseType">
+            <summary>
+            A parsing type
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.None">
+            <summary>
+            No parse method
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.OpenComment">
+            <summary>
+            Comment opening
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.CloseComment">
+            <summary>
+            Comment closing
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.LineComment">
+            <summary>
+            Line comment
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.Special">
+            <summary>
+            Special, use for special characters like + and /
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.BeginEscape">
+            <summary>
+            Begin an escape sequence
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.OpenQuote">
+            <summary>
+            Open a quote
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.CloseQuote">
+            <summary>
+            Close a quote
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.ToggleQuote">
+            <summary>
+            Toggle a quote
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.Whitespace">
+            <summary>
+            Whitespace
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.Newline">
+            <summary>
+            Newline
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseType.AddLine">
+            <summary>
+            Adds to the line count
+            </summary>
+        </member>
+        <member name="T:BaseTools.Strings.ParseSequence">
+            <summary>
+            A parse sequence for the advanced parser
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseSequence.Type">
+            <summary>
+            The parsing type
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseSequence.Sequence">
+            <summary>
+            The string that activates the parse sequence
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.ParseSequence.CharStream">
+            <summary>
+            The stream used for testing the sequence
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.ParseSequence.#ctor(System.String,BaseTools.Strings.ParseType)">
+            <summary>
+            Creates a new ParseSequence
+            </summary>
+            <param name="sequence">The activating sequence</param>
+            <param name="type">The sequence action</param>
+        </member>
+        <member name="M:BaseTools.Strings.ParseSequence.TestSequence(System.Char)">
+            <summary>
+            Tests if the sequence is done
+            </summary>
+            <param name="c">The next character in the stream</param>
+            <returns>If the sequence is done</returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseSequence.FindSequence(BaseTools.Strings.ParseSequence[],System.Char)">
+            <summary>
+            Finds a sequence in the list
+            </summary>
+            <param name="seqs">The list</param>
+            <param name="c">The next character in the stream</param>
+            <returns>The activated sequence or null</returns>
+        </member>
+        <member name="M:BaseTools.Strings.ParseSequence.TestSequence(BaseTools.Strings.ParseSequence[],System.Char)">
+            <summary>
+            Finds a sequence in the list
+            </summary>
+            <param name="seqs">The list</param>
+            <param name="c">The next character in the stream</param>
+            <returns>The activated sequence or null</returns>
+        </member>
+        <member name="T:BaseTools.Strings.StringBlock">
+            <summary>
+            A string block
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.StringBlock.Data">
+            <summary>
+            String block data
+            </summary>
+        </member>
+        <member name="F:BaseTools.Strings.StringBlock.Quoted">
+            <summary>
+            String block is quoted
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.Match(System.String)">
+            <summary>
+            Whether this StringBlock matches an case-insensitive string
+            </summary>
+            <param name="str">The string</param>
+            <returns>Whether is matches</returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.op_Implicit(BaseTools.Strings.StringBlock)~System.String">
+            <summary>
+            Implicit operator for string
+            </summary>
+            <param name="sb">The string block</param>
+            <returns>The data of the stringblock</returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.#ctor(System.String,System.Boolean)">
+            <summary>
+            Creates a new string block
+            </summary>
+            <param name="Data"></param>
+            <param name="Quoted"></param>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.Equals(System.Object)">
+            <summary>
+            Equals
+            </summary>
+            <param name="obj"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.Equals(BaseTools.Strings.StringBlock)">
+            <summary>
+            Equals
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.GetHashCode">
+            <summary>
+            Xor'ed hash codes
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.op_Equality(BaseTools.Strings.StringBlock,BaseTools.Strings.StringBlock)">
+            <summary>
+            Equals operator
+            </summary>
+            <param name="lhs"></param>
+            <param name="rhs"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringBlock.op_Inequality(BaseTools.Strings.StringBlock,BaseTools.Strings.StringBlock)">
+            <summary>
+            Inequal operator
+            </summary>
+            <param name="lhs"></param>
+            <param name="rhs"></param>
+            <returns></returns>
+        </member>
+        <member name="P:BaseTools.Strings.StringBlock.IsEmpty">
+            <summary>
+            Whether this StringBlock is empty
+            </summary>
+        </member>
+        <member name="T:BaseTools.Strings.StringCharStream">
+            <summary>
+            A CharStream of a string
+            </summary>>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.#ctor(System.String)">
+            <summary>
+            Create a new StringCharStream
+            </summary>
+            <param name="s">The string to read from</param>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.Available">
+            <summary>
+            Whether at end of string or not
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.Next">
+            <summary>
+            Next character in the string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.Unread">
+            <summary>
+            Cancels a read
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.Restart">
+            <summary>
+            Restarts the position
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.GetPosition">
+            <summary>
+            Gets the position
+            </summary>
+            <returns>The position</returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.ToString">
+            <summary>
+            The string used by the stream
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.GetLine(BaseTools.Strings.ICharStream)">
+            <summary>
+            Gets the line nunber in a stream
+            </summary>
+            <param name="str">The stream</param>
+            <returns>The current line number</returns>
+        </member>
+        <member name="M:BaseTools.Strings.StringCharStream.GetLine(BaseTools.Strings.StringCharStream)">
+            <summary>
+            Gets the line nunber in a stream
+            </summary>
+            <param name="str">The stream</param>
+            <returns>The current line number</returns>
+        </member>
+        <member name="T:BaseTools.Strings.TextCharStream">
+            <summary>
+            A character stream for a text file
+            </summary>
+        </member>
+        <member name="M:BaseTools.Strings.TextCharStream.#ctor(System.IO.TextReader)">
+            <summary>
+            A text character stream
+            </summary>
+            <param name="sr">The text reader to read from</param>
+        </member>
+        <member name="M:BaseTools.Strings.TextCharStream.Available">
+            <summary>
+            Whether the stream is at the end of file or not
+            </summary>
+            <returns>True when there is still data to read</returns>
+        </member>
+        <member name="M:BaseTools.Strings.TextCharStream.Next">
+            <summary>
+            Next character in the string
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.Strings.TextCharStream.Unread">
+            <summary>
+            Cancels a read
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.AppInfo">
+            <summary>
+            Application locator information
+            </summary>
+        </member>
+        <member name="F:BaseTools.XS.AppInfo.Location">
+            <summary>
+            The executable location
+            </summary>
+        </member>
+        <member name="F:BaseTools.XS.AppInfo.Commands">
+            <summary>
+            The command to execute
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.AppInfo.#ctor(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Create new AppInfo
+            </summary>
+            <param name="location">The executable location</param>
+            <param name="commands">The command to execute</param>
+        </member>
+        <member name="M:BaseTools.XS.AppInfo.#ctor(System.String)">
+            <summary>
+            Create new AppInfo
+            </summary>
+            <param name="location">The executable location</param>
+        </member>
+        <member name="T:BaseTools.XS.AppLocator">
+            <summary>
+            Application location storage with XConf
+            </summary>
+        </member>
+        <member name="F:BaseTools.XS.AppLocator.APPFILE">
+            <summary>
+            The file relative to XConf where application locator settings are stored
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.SetAppInfo(System.String,BaseTools.XS.AppInfo)">
+            <summary>
+            Set the application info
+            </summary>
+            <param name="app">The application name</param>
+            <param name="appinfo">The app info of the application</param>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.GetAppInfo(System.String)">
+            <summary>
+            Get the application info
+            </summary>
+            <param name="app">The application name</param>
+            <returns>The AppInfo of the appplication or null if none is found</returns>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.CreateFormat(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Create format using a ConfigList, very useful for command line
+            </summary>
+            <param name="Data">The original formatted string</param>
+            <param name="Variables">The ConfigList of variables</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.CreateFormat(System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Create format using a Dictionary, very useful for command line
+            </summary>
+            <param name="Data">The original formatted string</param>
+            <param name="Variables">The dictionary of variables</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.GetStartInfo(System.String)">
+            <summary>
+            Gets the ProcessStartInfo for an application
+            </summary>
+            <param name="app">The application name</param>
+            <returns>The PSI of the app or null if none found</returns>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.GetStartInfo(System.String,System.String)">
+            <summary>
+            Gets the ProcessStartInfo for an application
+            </summary>
+            <param name="app">The application name</param>
+            <param name="command">The command line index to use</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.AppLocator.GetStartInfo(System.String,System.String,System.Collections.Generic.Dictionary{System.String,System.String})">
+            <summary>
+            Gets the ProcessStartInfo for an application using CreateFormat
+            </summary>
+            <param name="app">The application name</param>
+            <param name="command">The command line index to use</param>
+            <param name="vars">The variables list</param>
+            <returns></returns>
+        </member>
+        <member name="P:BaseTools.XS.AppLocator.Info">
+            <summary>
+            Application operator accessor
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.AppLocator.PropAppInfo">
+            <summary>
+            AppInfo operator
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.AppLocator.PropAppInfo.Item(System.String)">
+            <summary>
+            Get/SetAppInfo operator
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.XConf">
+            <summary>
+            XBaseTools settings storage
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XConf.EnsureXConf">
+            <summary>
+            Ensures XConf is present. Call this before doing anything.
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XConf.DirectoryExists(System.String)">
+            <summary>
+            Whether the directory exists
+            </summary>
+            <param name="filename">the directory name</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.FileExists(System.String)">
+            <summary>
+            Whether the file exists
+            </summary>
+            <param name="filename">the file name</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.EnsureDirectory(System.String)">
+            <summary>
+            Ensures the directory exists
+            </summary>
+            <param name="dirname">the directory name</param>
+            <returns>Whether the directory already exists</returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.ProtocolRead(System.String)">
+            <summary>
+            Read the config for a protocol filename
+            </summary>
+            <param name="url">The url of the config</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.ProtocolSave(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Save the config for a protocol filename
+            </summary>
+            <param name="url">The url of the config</param>
+            <param name="lst">The list to write</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.LoadConfig(System.String,BaseTools.Configuration.IConfig)">
+            <summary>
+            Load the config for a filename
+            </summary>
+            <param name="filename">The filename of the config</param>
+            <param name="io">The r/w used for the config</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.ReadConfig(System.String)">
+            <summary>
+            Load the config for a filename
+            </summary>
+            <param name="filename">The filename of the config</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.ReadConfig(System.String,BaseTools.Configuration.IConfig)">
+            <summary>
+            Load the config for a filename
+            </summary>
+            <param name="filename">The filename of the config</param>
+            <param name="io">The r/w used for the config</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.LoadConfig(System.String)">
+            <summary>
+            Load the config for a filename
+            </summary>
+            <param name="filename">The filename of the config</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.SaveConfig(System.String,BaseTools.Configuration.ConfigList,BaseTools.Configuration.IConfig)">
+            <summary>
+            Write the config to a file
+            </summary>
+            <param name="filename">The file to write to</param>
+            <param name="lst">The ConfigList to save</param>
+            <param name="io">The r/w used for the config</param>
+        </member>
+        <member name="M:BaseTools.XS.XConf.SaveConfig(System.String,BaseTools.Configuration.ConfigList)">
+            <summary>
+            Write the config to a file
+            </summary>
+            <param name="filename">The file to write to</param>
+            <param name="lst">The ConfigList to save</param>
+        </member>
+        <member name="M:BaseTools.XS.XConf.GetInstalledLocation(System.String)">
+            <summary>
+            Get the installed application location
+            </summary>
+            <param name="app">The application name</param>
+            <returns>The location or null</returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.RelativeTo(System.String)">
+            <summary>
+            XConf RelativeTo function
+            </summary>
+            <param name="location"></param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XConf.SetInstalledLocation(System.String,System.String)">
+            <summary>
+            Set the installed application location
+            </summary>
+            <param name="app">The application name</param>
+            <param name="val">The new location</param>
+        </member>
+        <member name="P:BaseTools.XS.XConf.XConfSettings">
+            <summary>
+            XSettings used in XConf
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XConf.InstalledLocation">
+            <summary>
+            The installed location for an application
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.XConf.PropInstalled">
+            <summary>
+            AppInfo operator
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XConf.PropInstalled.Item(System.String)">
+            <summary>
+            Get/SetAppInfo operator
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.XSettings">
+            <summary>
+            A settings manager for XBaseTools
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.#ctor(System.String)">
+            <summary>
+            Create an XSettings instance
+            </summary>
+            <param name="program">The program name to manage</param>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetPrograms">
+            <summary>
+            Gets a list of all the programs in the folder
+            </summary>
+            <returns>A list of all the programs as XSettings</returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetGlobalPrograms">
+            <summary>
+            Gets a list of all the programs in the global folder
+            </summary>
+            <returns>A list of all the programs as XSettings</returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.EnsureSettings">
+            <summary>
+            Ensure that the root settings folder exists
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.EnsureIcon">
+            <summary>
+            Ensure that the folder icon for XSettings is set up
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.EnsureProgram">
+            <summary>
+            Ensures that XSettings and this program exist
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.EnsureProgramGlobal">
+            <summary>
+            Ensures that XSettings and this program (including global) exist
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.Create">
+            <summary>
+            Creates this folder if it doesn't exist
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.Delete">
+            <summary>
+            Deletes this folder if it exists
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetFiles">
+            <summary>
+            Get the files in the program directory
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetFiles(System.String)">
+            <summary>
+            Get te files in the program directory
+            </summary>
+            <param name="searchPattern">The pattern to search for</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetFiles(System.String,System.IO.SearchOption)">
+            <summary>
+            Get the files in the program directory
+            </summary>
+            <param name="searchPattern">The pattern to search for</param>
+            <param name="searchOption">The search option</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetDirectories">
+            <summary>
+            Get the directories in the program directory
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetDirectories(System.String)">
+            <summary>
+            Get the directories in the program directory
+            </summary>
+            <param name="searchPattern">The pattern to search for</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.GetDirectories(System.String,System.IO.SearchOption)">
+            <summary>
+            Get the directories in the program directory
+            </summary>
+            <param name="searchPattern">The pattern to search for</param>
+            <param name="searchOption">The search option</param>
+            <returns></returns>
+        </member>
+        <member name="M:BaseTools.XS.XSettings.RelativeTo(System.String)">
+            <summary>
+            Gets the filename relative to this program settings
+            </summary>
+            <param name="s">The filename, if prefixed with a # then it uses the global xsettings folder</param>
+            <returns>The filename relative to this</returns>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.SettingsFolder">
+             <summary>
+            The root settings folder
+             </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.GlobalSettingsFolder">
+            <summary>
+            The root global settings folder
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.SettingsDirectory">
+            <summary>
+            The root settings folder as a DirectoryInfo
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.GlobalSettingsDirectory">
+            <summary>
+            The root global settings folder as a DirectoryInfo
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.SettingsExists">
+            <summary>
+            Whether the settings folder exists
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.ProgramFolder">
+            <summary>
+            The program settings folder
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.ProgramDirectory">
+            <summary>
+            The program settings folder as a DirectoryInfo
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.GlobalProgramFolder">
+            <summary>
+            The global program settings folder
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.GlobalProgramDirectory">
+            <summary>
+            The global program settings folder as a DirectoryInfo
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.Exists">
+            <summary>
+            Whether this program folder exists
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.ProgramImage">
+            <summary>
+            The image for the program
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.ProgramInfo">
+            <summary>
+            The program info for the program
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSettings.Name">
+            <summary>
+            The directory name of the program
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.XSInfo">
+            <summary>
+            XSettings program information
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XSInfo.#ctor(System.String,System.String,System.String,System.String)">
+            <summary>
+            Create a new XSInfo
+            </summary>
+            <param name="name">The program name</param>
+            <param name="author">The program author</param>
+            <param name="description">The program description</param>
+            <param name="launch">The program executable path</param>
+        </member>
+        <member name="P:BaseTools.XS.XSInfo.Name">
+            <summary>
+            Name of the program that created the configuration
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSInfo.Author">
+            <summary>
+            Name of the author that created the program
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSInfo.Description">
+            <summary>
+            Description of the program
+            </summary>
+        </member>
+        <member name="P:BaseTools.XS.XSInfo.Launch">
+            <summary>
+            Executable path for the program using the configuration
+            </summary>
+        </member>
+        <member name="T:BaseTools.XS.XVars">
+            <summary>
+            XConf environment variables
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XVars.EnsureXVars">
+            <summary>
+            Ensures XVars exists, called by EnsureXConf
+            </summary>
+        </member>
+        <member name="M:BaseTools.XS.XVars.GetVar(System.String)">
+            <summary>
+            Gets an environment variable
+            </summary>
+            <param name="name">The name of the environment variable</param>
+            <returns>The value or null</returns>
+        </member>
+        <member name="M:BaseTools.XS.XVars.SetVar(System.String,System.String)">
+            <summary>
+            Sets an environment variable
+            </summary>
+            <param name="name">The name of the environment variable</param>
+            <param name="data">The value of the environment variable</param>
+        </member>
+    </members>
+</doc>

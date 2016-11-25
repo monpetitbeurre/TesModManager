@@ -1,0 +1,12 @@
+LIBRARY NifScanner
+EXPORTS
+
+Load
+ResaveNif
+GenList
+GetMaterial=GetSubsetMaterial
+GetVerticies=GetSubsetVerticies
+GetTransform=GetSubsetTransform
+GetInfo=GetSubsetInfo
+GetTex=GetSubsetTex
+GetIndicies=GetSubsetIndicies
