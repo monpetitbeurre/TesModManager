@@ -1,0 +1,261 @@
+<?xml version="1.0"?>
+<!-- syntaxdefinition for Python by tsbob -->
+<SyntaxDefinition name ="Python" extensions = ".py">
+	<Properties>
+		<Property name="LineComment" value="#"/>
+	</Properties>
+	<Digits name ="Digits" bold ="false" italic ="false" color ="DarkRed"/>
+	<RuleSets>
+		<RuleSet ignorecase = "false">
+			<Delimiters>=!&gt;&lt;+-/*%&amp;|^~.}{,;][?:()</Delimiters>
+
+			<Span name ="LineComment" bold ="false" italic ="false" color ="DarkGreen" stopateol ="true">
+				<Begin>#</Begin>
+			</Span>
+			<Span name ="BlockComment" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="true">
+				<Begin>[uUrR]?&quot;&quot;&quot;</Begin>
+				<End>&quot;&quot;&quot;</End>
+			</Span>
+			<Span name ="String" bold ="false" italic ="false" color ="DarkRed" stopateol ="false">
+				<Begin>&quot;</Begin>
+				<End>&quot;</End>
+			</Span>
+			<Span name = "String2" bold = "false" italic = "false" color = "DarkRed" stopateol = "false">
+				<Begin>&apos;</Begin>
+				<End>&apos;</End>
+			</Span>
+			<Span name ="Multiline String" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="false">
+				<Begin>[uUrR]?&quot;&quot;&quot;</Begin>
+				<End>&quot;&quot;&quot;</End>
+			</Span>
+			<Span name ="Multiline String 2" bold ="false" italic ="false" color ="DarkSlateGray" stopateol ="false">
+				<Begin>[uUrR]?&apos;&apos;&apos;</Begin>
+				<End>&apos;&apos;&apos;</End>
+			</Span>
+			<KeyWords name ="PythonKeyWords" bold="true" italic = "false" color = "Blue">
+				<Key word =	"import" />
+				<Key word =	"from" />
+				<Key word =	"as" />
+				<Key word =	"False" />
+				<Key word =	"None" />
+				<Key word =	"True" />
+				<Key word =	"def" />
+				<Key word =	"class" />
+				<Key word =	"return" />
+				<Key word =	"and" />
+				<Key word =	"assert" />
+				<Key word =	"break" />
+				<Key word =	"continue" />
+				<Key word =	"del" />
+				<Key word =	"elif" />
+				<Key word =	"else" />
+				<Key word =	"except" />
+				<Key word =	"exec" />
+				<Key word =	"finally" />
+				<Key word =	"for" />
+				<Key word =	"global" />
+				<Key word =	"if" />
+				<Key word =	"in" />
+				<Key word =	"is" />
+				<Key word =	"lambda" />
+				<Key word =	"not" />
+				<Key word =	"or" />
+				<Key word =	"pass" />
+				<Key word =	"print" />
+				<Key word =	"raise" />
+				<Key word =	"try" />
+				<Key word =	"while" />
+				<Key word =	"yield" />
+			</KeyWords>
+			<KeyWords name ="ObmmScriptFunctions" bold="false" italic="false" color ="DarkCyan">
+				<Key word="GetDisplayWarnings" />
+				<Key word="DialogYesNo" />
+				<Key word="DataFileExists" />
+				<Key word="GetOBMMVersion" />
+				<Key word="GetOBSEVersion" />
+				<Key word="GetOBGEVersion" />
+				<Key word="GetOblivionVersion" />
+				<Key word="GetOBSEPluginVersionVersion" />
+				<Key word="GetPlugins" />
+				<Key word="GetDataFiles" />
+				<Key word="GetPluginFolders" />
+				<Key word="GetDataFolders" />
+				<Key word="Select" />
+				<Key word="Message" />
+				<Key word="DisplayImage" />
+				<Key word="DisplayText" />
+				<Key word="LoadBefore" />
+				<Key word="LoadAfter" />
+				<Key word="UncheckEsp" />
+				<Key word="SetDeactivationWarning" />
+				<Key word="ConflictsWith" />
+				<Key word="ConflictsWithRegex" />
+				<Key word="DependsOn" />
+				<Key word="DependsOnRegex" />
+				<Key word="DontInstallAnyPlugins" />
+				<Key word="DontInstallAnyDataFiles" />
+				<Key word="InstallAllPlugins" />
+				<Key word="InstallAllDataFiles" />
+				<Key word="DontInstallPlugin" />
+				<Key word="DontInstallDataFile" />
+				<Key word="DontInstallDataFolder" />
+				<Key word="InstallPlugin" />
+				<Key word="InstallDataFile" />
+				<Key word="InstallDataFolder" />
+				<Key word="CopyPlugin" />
+				<Key word="CopyDataFile" />
+				<Key word="CopyDataFolder" />
+				<Key word="PatchPlugin" />
+				<Key word="PatchDataFile" />
+				<Key word="RegisterBSA" />
+				<Key word="UnregisterBSA" />
+				<Key word="EditINI" />
+				<Key word="EditShader" />
+				<Key word="FatalError" />
+				<Key word="SetGMST" />
+				<Key word="SetGlobal" />
+				<Key word="SetPluginByte" />
+				<Key word="SetPluginShort" />
+				<Key word="SetPluginInt" />
+				<Key word="SetPluginLong" />
+				<Key word="SetPluginFloat" />
+				<Key word="InputString" />
+				<Key word="ReadINI" />
+				<Key word="ReadRendererInfo" />
+				<Key word="EditXMLLine" />
+				<Key word="EditXMLReplace" />
+				<Key word="CreateCustomDialog" />
+				<Key word="ReadDataFile" />
+				<Key word="ReadExistingDataFile" />
+				<Key word="GenerateNewDataFile" />
+				<Key word="GenerateBSA" />
+				<Key word="GetDataFileFromBSA" />
+			</KeyWords>
+			<KeyWords name ="ObmmScriptConstants" bold="true" italic="false" color ="DarkGreen">
+				<Key word ="SELECT_ONE" />
+				<Key word ="SELECT_MANY" />
+				<Key word ="SELECT_PREVIEW" />
+				<Key word ="SELECT_DESC" />
+
+				<Key word ="CONFLICT_MINOR" />
+				<Key word ="CONFLICT_MAJOR" />
+				<Key word ="CONFLICT_UNUSABLE" />
+
+				<Key word ="DEACTIVATE_ALLOW" />
+				<Key word ="DEACTIVATE_DISALLOW" />
+				<Key word ="DEACTIVATE_WARN" />
+			</KeyWords>
+			<KeyWords name ="PythonException" bold="false" italic = "false" color = "Blue">
+				<Key word =	"ArithmeticError" />
+				<Key word =	"AssertionError" />
+				<Key word =	"AttributeError" />
+				<Key word =	"EnvironmentError" />
+				<Key word =	"EOFError" />
+				<Key word =	"Exception" />
+				<Key word =	"FloatingPointError" />
+				<Key word =	"ImportError" />
+				<Key word =	"IndentationError" />
+				<Key word =	"IndexError" />
+				<Key word =	"IOError" />
+				<Key word =	"KeyboardInterrupt" />
+				<Key word =	"KeyError" />
+				<Key word =	"LookupError" />
+				<Key word =	"MemoryError" />
+				<Key word =	"NameError" />
+				<Key word =	"NotImplementedError" />
+				<Key word =	"OSError" />
+				<Key word =	"OverflowError" />
+				<Key word =	"ReferenceError" />
+				<Key word =	"RuntimeError" />
+				<Key word =	"StandardError" />
+				<Key word =	"StopIteration" />
+				<Key word =	"SyntaxError" />
+				<Key word =	"SystemError" />
+				<Key word =	"SystemExit" />
+				<Key word =	"TabError" />
+				<Key word =	"TypeError" />
+				<Key word =	"UnboundLocalError" />
+				<Key word =	"UnicodeDecodeError" />
+				<Key word =	"UnicodeEncodeError" />
+				<Key word =	"UnicodeError" />
+				<Key word =	"UnicodeTranslateError" />
+				<Key word =	"ValueError" />
+				<Key word =	"WindowsError" />
+				<Key word =	"ZeroDivisionError" />
+			</KeyWords>
+			<KeyWords name = "AccessKeywords" bold="true" italic="false" color="Black">
+				<Key word = "self" />
+			</KeyWords>
+			<KeyWords name = "GlobalKeywords" bold="true" italic="false" color="Magenta">
+				<Key word =	"abs" />
+				<Key word =	"apply" />
+				<Key word =	"basestring" />
+				<Key word =	"bool" />
+				<Key word =	"buffer" />
+				<Key word =	"callable" />
+				<Key word =	"chr" />
+				<Key word =	"classmethod" />
+				<Key word =	"cmp" />
+				<Key word =	"coerce" />
+				<Key word =	"complex" />
+				<Key word =	"delattr" />
+				<Key word =	"dict" />
+				<Key word =	"dir" />
+				<Key word =	"divmod" />
+				<Key word =	"enumerate" />
+				<Key word =	"filter" />
+				<Key word =	"float" />
+				<Key word =	"getattr" />
+				<Key word =	"globals" />
+				<Key word =	"hasattr" />
+				<Key word =	"hash" />
+				<Key word =	"hex" />
+				<Key word =	"id" />
+				<Key word =	"input" />
+				<Key word =	"int" />
+				<Key word =	"intern" />
+				<Key word =	"isinstance" />
+				<Key word =	"issubclass" />
+				<Key word =	"iter" />
+				<Key word =	"len" />
+				<Key word =	"list" />
+				<Key word =	"locals" />
+				<Key word =	"long" />
+				<Key word =	"map" />
+				<Key word =	"max" />
+				<Key word =	"min" />
+				<Key word =	"object" />
+				<Key word =	"oct" />
+				<Key word =	"ord" />
+				<Key word =	"pow" />
+				<Key word =	"property" />
+				<Key word =	"range" />
+				<Key word =	"raw_input" />
+				<Key word =	"reduce" />
+				<Key word =	"reload" />
+				<Key word =	"repr" />
+				<Key word =	"round" />
+				<Key word =	"setattr" />
+				<Key word =	"slice" />
+				<Key word =	"staticmethod" />
+				<Key word =	"str" />
+				<Key word =	"sum" />
+				<Key word =	"super" />
+				<Key word =	"tuple" />
+				<Key word =	"type" />
+				<Key word =	"unichr" />
+				<Key word =	"unicode" />
+				<Key word =	"vars" />
+				<Key word =	"xrange" />
+				<Key word =	"zip" />
+			</KeyWords>
+			<KeyWords name = "NameSpaces" bold="true" italic="false" color="Blue">
+				<Key word = "import" />
+				<Key word = "from" />
+				<Key word =	"__name__" />
+				<Key word =	"__import__" />
+				<Key word =	"__debug__" />
+			</KeyWords>
+		</RuleSet>
+	</RuleSets>
+</SyntaxDefinition>

@@ -1,0 +1,740 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="4.0">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.50727</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{ED71E2C4-F888-45C8-8F38-6FBCB7E3E12F}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>OblivionModManager</RootNamespace>
+    <AssemblyName>TesModManager</AssemblyName>
+    <StartupObject>OblivionModManager.Program</StartupObject>
+    <ApplicationIcon>..\SneakyTomato%27s Icons 1.3\Icons\Obmm green.ico</ApplicationIcon>
+    <TargetZone>LocalIntranet</TargetZone>
+    <GenerateManifests>false</GenerateManifests>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <NoStdLib>False</NoStdLib>
+    <WarningLevel>4</WarningLevel>
+    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <SourceAnalysisOverrideSettingsFile>C:\Users\ScentTree\AppData\Roaming\ICSharpCode/SharpDevelop3.0\Settings.SourceAnalysis</SourceAnalysisOverrideSettingsFile>
+    <TargetFrameworkProfile />
+    <SignAssembly>False</SignAssembly>
+    <DelaySign>False</DelaySign>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+    <StartWorkingDirectory>G:\Games\Oblivion</StartWorkingDirectory>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
+    <PublishUrl>publish\</PublishUrl>
+    <Install>true</Install>
+    <InstallFrom>Disk</InstallFrom>
+    <UpdateEnabled>false</UpdateEnabled>
+    <UpdateMode>Foreground</UpdateMode>
+    <UpdateInterval>7</UpdateInterval>
+    <UpdateIntervalUnits>Days</UpdateIntervalUnits>
+    <UpdatePeriodically>false</UpdatePeriodically>
+    <UpdateRequired>false</UpdateRequired>
+    <MapFileExtensions>true</MapFileExtensions>
+    <ApplicationRevision>0</ApplicationRevision>
+    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <UseApplicationTrust>false</UseApplicationTrust>
+    <BootstrapperEnabled>true</BootstrapperEnabled>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <OutputPath>..\..\steam\steamapps\common\skyrim\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>None</DebugType>
+    <OutputPath>..\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <UseVSHostingProcess>true</UseVSHostingProcess>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>false</DebugSymbols>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <OutputPath>..\..\steam\steamapps\common\skyrim\</OutputPath>
+    <DebugType>Full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <OutputPath>..\Release\</OutputPath>
+    <DebugType>Full</DebugType>
+    <ErrorReport>prompt</ErrorReport>
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <Optimize>False</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <Optimize>true</Optimize>
+    <CheckForOverflowUnderflow>False</CheckForOverflowUnderflow>
+    <StartAction>Project</StartAction>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Platform)' == 'x86' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <OutputPath>..\..\steam\steamapps\common\skyrim\</OutputPath>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="BaseTools">
+      <HintPath>.\BaseTools.dll</HintPath>
+    </Reference>
+    <Reference Include="DevILNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\Release\DevILNet.dll</HintPath>
+    </Reference>
+    <Reference Include="IronMath, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\IronMath.dll</HintPath>
+    </Reference>
+    <Reference Include="IronPython, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\IronPython.dll</HintPath>
+    </Reference>
+    <Reference Include="SevenZipSharp, Version=0.64.3890.29348, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>.\SevenZipSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.ServiceModel.Web" />
+    <Reference Include="System.ServiceProcess" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.XML" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="7zip\Common\CRC.cs" />
+    <Compile Include="7zip\Common\InBuffer.cs" />
+    <Compile Include="7zip\Common\OutBuffer.cs" />
+    <Compile Include="7zip\Compress\LZMA\LzmaBase.cs" />
+    <Compile Include="7zip\Compress\LZMA\LzmaDecoder.cs" />
+    <Compile Include="7zip\Compress\LZMA\LzmaEncoder.cs" />
+    <Compile Include="7zip\Compress\LZ\IMatchFinder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\Compress\LZ\LzBinTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\Compress\LZ\LzInWindow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\Compress\LZ\LzOutWindow.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\Compress\RangeCoder\RangeCoder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\Compress\RangeCoder\RangeCoderBit.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\Compress\RangeCoder\RangeCoderBitTree.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="7zip\ICoder.cs" />
+    <Compile Include="AdvList.cs" />
+    <Compile Include="altpanel.cs" />
+    <Compile Include="MonoFScalls.cs" />
+    <Compile Include="Classes\BSAUncorrupter.cs" />
+    <Compile Include="Classes\com7zrWrapper.cs" />
+    <Compile Include="Classes\Logger.cs" />
+    <Compile Include="Classes\OblivionBSA.cs" />
+    <Compile Include="Classes\OblivionSDP.cs" />
+    <Compile Include="ConflictReport\NewReportGenerator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConflictReport\NewReportGenerator.Designer.cs">
+      <DependentUpon>NewReportGenerator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConflictReport\SettingsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="ConflictReport\SettingsForm.Designer.cs">
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Data.cs" />
+    <Compile Include="ESPM.cs" />
+    <Compile Include="Forms\DownloadsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DownloadsForm.Designer.cs">
+      <DependentUpon>DownloadsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\About.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\About.Designer.cs">
+      <DependentUpon>About.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConflictReport\ReportGenerator.cs" />
+    <Compile Include="Classes\Conflicts.cs" />
+    <Compile Include="Forms\ArchiveInvalidation.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ArchiveInvalidation.Designer.cs">
+      <DependentUpon>ArchiveInvalidation.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BSABrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BSABrowser.Designer.cs">
+      <DependentUpon>BSABrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\BSACreator.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BSACreator.Designer.cs">
+      <DependentUpon>BSACreator.cs</DependentUpon>
+    </Compile>
+    <Compile Include="ConflictReport\EspParser.cs" />
+    <Compile Include="Forms\ConflictedFilePickerForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ConflictedFilePickerForm.Designer.cs">
+      <DependentUpon>ConflictedFilePickerForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\CreateModForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\CreateModForm.Designer.cs">
+      <DependentUpon>CreateModForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DataFileBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DataFileBrowser.Designer.cs">
+      <DependentUpon>DataFileBrowser.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\DownloadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\DownloadForm.Designer.cs">
+      <DependentUpon>DownloadForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ESForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ESForm.Designer.cs">
+      <DependentUpon>ESForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\FindForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\FindForm.Designer.cs">
+      <DependentUpon>FindForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ModRename.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ModRename.Designer.cs">
+      <DependentUpon>ModRename.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SkyProcPatchersForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SkyProcPatchersForm.Designer.cs">
+      <DependentUpon>SkyProcPatchersForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\NexusLoginForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NexusLoginForm.Designer.cs">
+      <DependentUpon>NexusLoginForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImageDownload.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImageDownload.Designer.cs">
+      <DependentUpon>ImageDownload.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ImageForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImageForm.Designer.cs">
+      <DependentUpon>ImageForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LimitedUserForm.cs">
+      <SubType>Form</SubType>
+      <DependentUpon>FindForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\LimitedUserForm.Designer.cs">
+      <DependentUpon>LimitedUserForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Classes\Misc.cs" />
+    <Compile Include="Classes\Oblivion.cs" />
+    <Compile Include="Classes\omod.cs" />
+    <Compile Include="Forms\NumberForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\NumberForm.Designer.cs">
+      <DependentUpon>NumberForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OCDForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OCDForm.Designer.cs">
+      <DependentUpon>OCDForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\omodEnabler.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\omodEnabler.Designer.cs">
+      <DependentUpon>omodEnabler.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OptionsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OptionsForm.Designer.cs">
+      <DependentUpon>OptionsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\OverwriteForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\OverwriteForm.Designer.cs">
+      <DependentUpon>OverwriteForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ProcessKiller.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ProcessKiller.Designer.cs">
+      <DependentUpon>ProcessKiller.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScriptEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ScriptEditor.Designer.cs">
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScriptMessages.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ScriptMessages.Designer.cs">
+      <DependentUpon>ScriptMessages.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\ScriptPrefabs.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SearchForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SearchForm.Designer.cs">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SelectForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SelectForm.Designer.cs">
+      <DependentUpon>SelectForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SimResults.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SimResults.Designer.cs">
+      <DependentUpon>SimResults.cs</DependentUpon>
+    </Compile>
+    <Compile Include="GlobalSettings.cs" />
+    <Compile Include="ModConfig5_0.cs" />
+    <Compile Include="NexusInterface.cs" />
+    <Compile Include="OCDResources.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Forms\ProgressForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+      <DependentUpon>Settings.settings</DependentUpon>
+    </Compile>
+    <Compile Include="XBT.cs" />
+    <EmbeddedResource Include="ConflictReport\NewReportGenerator.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>NewReportGenerator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ConflictReport\SettingsForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SettingsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DownloadsForm.resx">
+      <DependentUpon>DownloadsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\About.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>About.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ArchiveInvalidation.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ArchiveInvalidation.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BSABrowser.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BSABrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\BSACreator.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>BSACreator.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ConflictedFilePickerForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ConflictedFilePickerForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\CreateModForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>CreateModForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DataFileBrowser.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>DataFileBrowser.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\DownloadForm.resx">
+      <DependentUpon>DownloadForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ESForm.resx">
+      <DependentUpon>ESForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ModRename.resx">
+      <DependentUpon>ModRename.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\NexusLoginForm.resx">
+      <DependentUpon>NexusLoginForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImageDownload.resx">
+      <DependentUpon>ImageDownload.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImageForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ImageForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\MainForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OCDForm.resx">
+      <DependentUpon>OCDForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\omodEnabler.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>omodEnabler.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OptionsForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>OptionsForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\OverwriteForm.resx">
+      <DependentUpon>OverwriteForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProcessKiller.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProcessKiller.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ProgressForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ProgressForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ScriptEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>ScriptEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ScriptMessages.resx">
+      <DependentUpon>ScriptMessages.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SearchForm.resx">
+      <DependentUpon>SearchForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SelectForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SelectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SimResults.resx">
+      <DependentUpon>SimResults.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SkyProcPatchersForm.resx">
+      <DependentUpon>SkyProcPatchersForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SaveForm.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>SaveForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\TextEditor.resx">
+      <SubType>Designer</SubType>
+      <DependentUpon>TextEditor.cs</DependentUpon>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Forms\SaveForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SaveForm.Designer.cs">
+      <DependentUpon>SaveForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\TextEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Classes\CompressionHandler.cs" />
+    <Compile Include="Scripting\DotNetScriptHandler.cs" />
+    <Compile Include="Scripting\obmmScriptHandler.cs" />
+    <Compile Include="Scripting\Public.cs" />
+    <Compile Include="Scripting\pythonScriptHandler.cs" />
+    <Compile Include="Scripting\ScriptFunctions.cs" />
+    <Compile Include="Scripting\ScriptRunner.cs" />
+    <Compile Include="Settings.cs" />
+    <Compile Include="sharptextedit\Actions\BookmarkActions.cs" />
+    <Compile Include="sharptextedit\Actions\CaretActions.cs" />
+    <Compile Include="sharptextedit\Actions\ClipBoardActions.cs" />
+    <Compile Include="sharptextedit\Actions\FoldActions.cs" />
+    <Compile Include="sharptextedit\Actions\FormatActions.cs" />
+    <Compile Include="sharptextedit\Actions\HomeEndActions.cs" />
+    <Compile Include="sharptextedit\Actions\IEditAction.cs" />
+    <Compile Include="sharptextedit\Actions\MiscActions.cs" />
+    <Compile Include="sharptextedit\Actions\SelectionActions.cs" />
+    <Compile Include="sharptextedit\Document\AbstractSegment.cs" />
+    <Compile Include="sharptextedit\Document\BookmarkManager\Bookmark.cs" />
+    <Compile Include="sharptextedit\Document\BookmarkManager\BookmarkEventHandler.cs" />
+    <Compile Include="sharptextedit\Document\BookmarkManager\BookmarkManager.cs" />
+    <Compile Include="sharptextedit\Document\BookmarkManager\BookmarkManagerMemento.cs" />
+    <Compile Include="sharptextedit\Document\CustomLineManager\CustomLineManager.cs" />
+    <Compile Include="sharptextedit\Document\CustomLineManager\ICustomLineManager.cs" />
+    <Compile Include="sharptextedit\Document\DefaultDocument.cs" />
+    <Compile Include="sharptextedit\Document\DefaultTextEditorProperties.cs" />
+    <Compile Include="sharptextedit\Document\DocumentEventArgs.cs" />
+    <Compile Include="sharptextedit\Document\DocumentFactory.cs" />
+    <Compile Include="sharptextedit\Document\FoldingStrategy\FoldingManager.cs" />
+    <Compile Include="sharptextedit\Document\FoldingStrategy\FoldMarker.cs" />
+    <Compile Include="sharptextedit\Document\FoldingStrategy\IFoldingStrategy.cs" />
+    <Compile Include="sharptextedit\Document\FoldingStrategy\IndentFoldingStrategy.cs" />
+    <Compile Include="sharptextedit\Document\FormattingStrategy\DefaultFormattingStrategy.cs" />
+    <Compile Include="sharptextedit\Document\FormattingStrategy\IFormattingStrategy.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\DefaultHighlightingStrategy.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\FontContainer.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightBackground.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightColor.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightInfo.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightingColorNotFoundException.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightingDefinitionParser.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightingManager.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightingStrategyFactory.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\HighlightRuleSet.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\IHighlightingStrategy.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\NextMarker.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\PrevMarker.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\Span.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\SpanStack.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\SyntaxModes\ISyntaxModeFileProvider.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\SyntaxModes\ResourceSyntaxModeProvider.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\SyntaxModes\SyntaxMode.cs" />
+    <Compile Include="sharptextedit\Document\HighlightingStrategy\TextWord.cs" />
+    <Compile Include="sharptextedit\Document\IDocument.cs" />
+    <Compile Include="sharptextedit\Document\ISegment.cs" />
+    <Compile Include="sharptextedit\Document\ITextEditorProperties.cs" />
+    <Compile Include="sharptextedit\Document\LineManager\DefaultLineManager.cs" />
+    <Compile Include="sharptextedit\Document\LineManager\ILineManager.cs" />
+    <Compile Include="sharptextedit\Document\LineManager\LineManagerEventArgs.cs" />
+    <Compile Include="sharptextedit\Document\LineManager\LineSegment.cs" />
+    <Compile Include="sharptextedit\Document\MarkerStrategy\MarkerStrategy.cs" />
+    <Compile Include="sharptextedit\Document\MarkerStrategy\TextMarker.cs" />
+    <Compile Include="sharptextedit\Document\Selection\ColumnRange.cs" />
+    <Compile Include="sharptextedit\Document\Selection\DefaultSelection.cs" />
+    <Compile Include="sharptextedit\Document\Selection\ISelection.cs" />
+    <Compile Include="sharptextedit\Document\Selection\SelectionManager.cs" />
+    <Compile Include="sharptextedit\Document\TextBufferStrategy\GapTextBufferStrategy.cs" />
+    <Compile Include="sharptextedit\Document\TextBufferStrategy\ITextBufferStrategy.cs" />
+    <Compile Include="sharptextedit\Document\TextBufferStrategy\PieceTableTextBufferStrategy.cs" />
+    <Compile Include="sharptextedit\Document\TextBufferStrategy\StringTextBufferStrategy.cs" />
+    <Compile Include="sharptextedit\Document\TextUtilities.cs" />
+    <Compile Include="sharptextedit\Gui\AbstractMargin.cs" />
+    <Compile Include="sharptextedit\Gui\BracketHighlighter.cs" />
+    <Compile Include="sharptextedit\Gui\BrushRegistry.cs" />
+    <Compile Include="sharptextedit\Gui\Caret.cs" />
+    <Compile Include="sharptextedit\Gui\CompletionWindow\AbstractCompletionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\CompletionWindow\CodeCompletionListView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\CompletionWindow\CodeCompletionWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\CompletionWindow\DeclarationViewWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\CompletionWindow\ICompletionData.cs" />
+    <Compile Include="sharptextedit\Gui\CompletionWindow\ICompletionDataProvider.cs" />
+    <Compile Include="sharptextedit\Gui\DrawableLine.cs" />
+    <Compile Include="sharptextedit\Gui\FoldMargin.cs" />
+    <Compile Include="sharptextedit\Gui\GutterMargin.cs" />
+    <Compile Include="sharptextedit\Gui\HRuler.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\IconBarMargin.cs" />
+    <Compile Include="sharptextedit\Gui\Ime.cs" />
+    <Compile Include="sharptextedit\Gui\InsightWindow\IInsightDataProvider.cs" />
+    <Compile Include="sharptextedit\Gui\InsightWindow\InsightWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\TextArea.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\TextAreaClipboardHandler.cs" />
+    <Compile Include="sharptextedit\Gui\TextAreaControl.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\TextAreaDragDropHandler.cs" />
+    <Compile Include="sharptextedit\Gui\TextAreaMouseHandler.cs" />
+    <Compile Include="sharptextedit\Gui\TextAreaUpdate.cs" />
+    <Compile Include="sharptextedit\Gui\TextEditorControl.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\TextEditorControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="sharptextedit\Gui\TextView.cs" />
+    <Compile Include="sharptextedit\Gui\ToolTipRequestEventArgs.cs" />
+    <Compile Include="sharptextedit\Undo\IUndoableOperation.cs" />
+    <Compile Include="sharptextedit\Undo\UndoableDelete.cs" />
+    <Compile Include="sharptextedit\Undo\UndoableInsert.cs" />
+    <Compile Include="sharptextedit\Undo\UndoableReplace.cs" />
+    <Compile Include="sharptextedit\Undo\UndoQueue.cs" />
+    <Compile Include="sharptextedit\Undo\UndoStack.cs" />
+    <Compile Include="sharptextedit\Util\FileReader.cs" />
+    <Compile Include="sharptextedit\Util\LookupTable.cs" />
+    <Compile Include="sharptextedit\Util\RtfWriter.cs" />
+    <Compile Include="sharptextedit\Util\TextUtility.cs" />
+    <Compile Include="sharptextedit\Util\TipPainter.cs" />
+    <Compile Include="sharptextedit\Util\TipPainterTools.cs" />
+    <Compile Include="sharptextedit\Util\TipSection.cs" />
+    <Compile Include="sharptextedit\Util\TipSpacer.cs" />
+    <Compile Include="sharptextedit\Util\TipSplitter.cs" />
+    <Compile Include="sharptextedit\Util\TipText.cs" />
+    <Compile Include="sharpziplib\Checksums\Adler32.cs" />
+    <Compile Include="sharpziplib\Checksums\CRC32.cs" />
+    <Compile Include="sharpziplib\Checksums\IChecksum.cs" />
+    <Compile Include="sharpziplib\Core\FileSystemScanner.cs" />
+    <Compile Include="sharpziplib\Core\INameTransform.cs" />
+    <Compile Include="sharpziplib\Core\NameFilter.cs" />
+    <Compile Include="sharpziplib\Core\PathFilter.cs" />
+    <Compile Include="sharpziplib\Encryption\PkzipClassic.cs" />
+    <Compile Include="sharpziplib\SharpZipBaseException.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\Deflater.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\DeflaterConstants.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\DeflaterEngine.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\DeflaterHuffman.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\DeflaterPending.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\Inflater.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\InflaterDynHeader.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\InflaterHuffmanTree.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\PendingBuffer.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\Streams\DeflaterOutputStream.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\Streams\InflaterInputStream.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\Streams\OutputWindow.cs" />
+    <Compile Include="sharpziplib\Zip\Compression\Streams\StreamManipulator.cs" />
+    <Compile Include="sharpziplib\Zip\FastZip.cs" />
+    <Compile Include="sharpziplib\Zip\ZipConstants.cs" />
+    <Compile Include="sharpziplib\Zip\ZipEntry.cs" />
+    <Compile Include="sharpziplib\Zip\ZipException.cs" />
+    <Compile Include="sharpziplib\Zip\ZipFile.cs" />
+    <Compile Include="sharpziplib\Zip\ZipInputStream.cs" />
+    <Compile Include="sharpziplib\Zip\ZipNameTransform.cs" />
+    <Compile Include="sharpziplib\Zip\ZipOutputStream.cs" />
+    <Compile Include="Classes\unrar.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TMM-readme.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="app.config" />
+    <None Include="bmps\blue.bmp" />
+    <None Include="bmps\green.bmp" />
+    <None Include="bmps\black.bmp" />
+    <None Include="bmps\bold.bmp" />
+    <None Include="bmps\italic.bmp" />
+    <Content Include="bmps\save.bmp" />
+    <Content Include="icon.ico" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <None Include="Resources\RightArrow.cur" />
+    <None Include="bmps\orange.bmp" />
+    <None Include="bmps\red.bmp" />
+    <None Include="bmps\rtf.bmp" />
+    <None Include="bmps\open.bmp" />
+    <None Include="bmps\underline.bmp" />
+    <None Include="Resources\cSharp.xshd" />
+    <None Include="Resources\IronPythonInterface.py" />
+    <None Include="Resources\Mode.xsd" />
+    <None Include="Resources\obmmScript.xshd" />
+    <None Include="Resources\python.xshd" />
+    <None Include="Resources\vb.xshd" />
+    <None Include="uninstall-TMM.bat" />
+  </ItemGroup>
+  <ItemGroup>
+    <BootstrapperPackage Include="Microsoft.Net.Client.3.5">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1 Client Profile</ProductName>
+      <Install>false</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Net.Framework.3.5.SP1">
+      <Visible>False</Visible>
+      <ProductName>.NET Framework 3.5 SP1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+    <BootstrapperPackage Include="Microsoft.Windows.Installer.3.1">
+      <Visible>False</Visible>
+      <ProductName>Windows Installer 3.1</ProductName>
+      <Install>true</Install>
+    </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <RegisterForComInterop>False</RegisterForComInterop>
+    <GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+    <BaseAddress>4194304</BaseAddress>
+    <FileAlignment>4096</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>\OBMM\package.cmd</PostBuildEvent>
+  </PropertyGroup>
+</Project>

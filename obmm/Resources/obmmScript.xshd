@@ -1,0 +1,214 @@
+<?xml version="1.0"?>
+
+<SyntaxDefinition name="obmmScript" extensions=".obmmscript">
+
+	<Properties>
+		<Property name="LineComment" value=";"/>
+	</Properties>
+
+	<RuleSets>
+		<RuleSet ignorecase="false">
+			<Delimiters>,</Delimiters>
+
+			<Span name="STRING" rule="StringRule" color="Brown" stopateol="true" escapecharacter="\">
+				<Begin>"</Begin>
+				<End>"</End>
+			</Span>
+
+			<Span name="VARIABLE" color="Purple" stopateol="true" noescapesequences="true">
+				<Begin>%</Begin>
+				<End>%</End>
+			</Span>
+
+			<Span name ="IFNOT" rule="IfLine"  stopateol="true" noescapesequences="true">
+				<Begin color="Orange" singleword="true">IfNot</Begin>
+			</Span>
+			<Span name ="IF" rule="IfLine"  stopateol="true" noescapesequences="true">
+				<Begin color="Orange" singleword="true">If</Begin>
+			</Span>
+
+			<Span name ="FOR" rule="ForLine"  stopateol="true" noescapesequences="true">
+				<Begin color="Orange" singleword="true">For</Begin>
+			</Span>
+
+			<Span name ="CASE" rule="CaseLine"  stopateol="true" noescapesequences="true" color="Brown">
+				<Begin color="Orange" singleword="true">Case</Begin>
+			</Span>
+
+			<Span name ="LABEL" rule="CaseLine"  stopateol="true" noescapesequences="true" color="Brown">
+				<Begin color="Orange" singleword="true">Label</Begin>
+			</Span>
+			
+			<Span name="LINECOMMENT" color="Green" stopateol="true" noescapesequences="true">
+				<Begin>;</Begin>
+			</Span>
+
+			<MarkFollowing color="Purple">Let</MarkFollowing>
+			<MarkFollowing color="Purple">SetVar</MarkFollowing>
+			<MarkFollowing color="Purple">SelectVar</MarkFollowing>
+			<MarkFollowing color="Purple">ReadRendererInfo</MarkFollowing>
+			<MarkFollowing color="Purple">ReadINI</MarkFollowing>
+			<MarkFollowing color="Purple">GetFolderName</MarkFollowing>
+			<MarkFollowing color="Purple">GetDirectoryName</MarkFollowing>
+			<MarkFollowing color="Purple">GetFileName</MarkFollowing>
+			<MarkFollowing color="Purple">GetFileNameWithoutExtension</MarkFollowing>
+			<MarkFollowing color="Purple">CombinePaths</MarkFollowing>
+			<MarkFollowing color="Purple">InputString</MarkFollowing>
+			<MarkFollowing color="Purple">Substring</MarkFollowing>
+			<MarkFollowing color="Purple">RemoveString</MarkFollowing>
+			<MarkFollowing color="Purple">StringLength</MarkFollowing>
+			<MarkFollowing color="Purple">fSet</MarkFollowing>
+			<MarkFollowing color="Purple">iSet</MarkFollowing>
+
+			<KeyWords name="Functions" color="Blue">
+				<Key word="Message" />
+        <Key word="LoadEarly" />
+				<Key word="LoadBefore" />
+				<Key word="LoadAfter" />
+				<Key word="ConflictsWith" />
+				<Key word="DependsOn" />
+				<Key word="ConflictsWithRegex" />
+				<Key word="DependsOnRegex" />
+				<Key word="DontInstallAnyPlugins" />
+				<Key word="DontInstallAnyDataFiles" />
+				<Key word="InstallAllPlugins" />
+				<Key word="InstallAllDataFiles" />
+				<Key word="InstallPlugin" />
+				<Key word="DontInstallPlugin" />
+				<Key word="InstallDataFile" />
+				<Key word="DontInstallDataFile" />
+				<Key word="DontInstallDataFolder" />
+				<Key word="InstallDataFolder" />
+				<Key word="RegisterBSA" />
+				<Key word="UnregisterBSA" />
+				<Key word="UncheckESP" />
+				<Key word="SetDeactivationWarning" />
+				<Key word="CopyDataFile" />
+				<Key word="CopyPlugin" />
+				<Key word="CopyDataFolder" />
+				<Key word="PatchPlugin" />
+				<Key word="PatchDataFile" />
+				<Key word="EditINI" />
+				<Key word="EditSDP" />
+				<Key word="EditShader" />
+				<Key word="SetGMST" />
+				<Key word="SetGlobal" />
+				<Key word="SetPluginByte" />
+				<Key word="SetPluginShort" />
+				<Key word="SetPluginInt" />
+				<Key word="SetPluginLong" />
+				<Key word="SetPluginFloat" />
+				<Key word="DisplayImage" />
+				<Key word="DisplayText" />
+				<Key word="SetVar" />
+				<Key word="GetFolderName" />
+				<Key word="GetDirectoryName" />
+				<Key word="GetFileName" />
+				<Key word="GetFileNameWithoutExtension" />
+				<Key word="CombinePaths" />
+				<Key word="Substring" />
+				<Key word="RemoveString" />
+				<Key word="StringLength" />
+				<Key word="iSet" />
+				<Key word="fSet" />
+				<Key word="InputString" />
+				<Key word="ReadINI" />
+				<Key word="ReadRendererInfo" />
+				<Key word="EditXMLLine" />
+				<Key word="EditXMLReplace" />
+				<Key word="ExecLines" />
+				<Key word="AllowRunOnLines" />
+				<Key word="Let" />
+				<Key word="SelectNumber" />
+			</KeyWords>
+
+			<!--If, IfNot and For have their own spans, so are not included here-->
+			<KeyWords name="FlowControl" color="Orange">
+				<Key word="Else" />
+				<Key word="EndIf" />
+				<Key word="EndFor" />
+				<Key word="Select" />
+				<Key word="SelectMany" />
+				<Key word="SelectWithPreview" />
+				<Key word="SelectManyWithPreview" />
+				<Key word="SelectWithDescriptions" />
+				<Key word="SelectManyWithDescriptions" />
+				<Key word="SelectWithDescriptionsAndPreviews" />
+				<Key word="SelectManyWithDescriptionsAndPreviews" />
+				<Key word="SelectVar" />
+				<Key word="SelectString" />
+				<Key word="Case" />
+				<Key word="Break" />
+				<Key word="Default" />
+				<Key word="EndSelect" />
+				<Key word="FatalError" />
+				<Key word="Return" />
+				<Key word="Goto" />
+				<Key word="Continue" />
+				<Key word="Exit" />
+			</KeyWords>
+
+			<KeyWords name="Constants" color="Red">
+				<Key word="True" />
+				<Key word="False" />
+				<Key word="None" />
+			</KeyWords>
+
+		</RuleSet>
+
+		<RuleSet name="IfLine" ignorecase="false">
+			<Delimiters>,</Delimiters>
+
+			<KeyWords name="Functions" color="Blue">
+				<Key word="DialogYesNo" />
+				<Key word="DataFileExists" />
+				<Key word="VersionGreaterThan" />
+				<Key word="VersionLessThan" />
+				<Key word="ScriptExtenderPresent" />
+				<Key word="ScriptExtenderNewerThan" />
+				<Key word="OblivionNewerThan" />
+				<Key word="Equal" />
+				<Key word="GreaterEqual" />
+				<Key word="GreaterThan" />
+				<Key word="fGreaterEqual" />
+				<Key word="fGreaterThan" />
+				<Key word="GraphicsExtenderPresent" />
+				<Key word="GraphicsExtenderNewerThan" />
+			</KeyWords>
+		</RuleSet>
+
+		<RuleSet name="ForLine" ignorecase="false">
+			<Delimiters>,</Delimiters>
+
+			<MarkFollowing color="Purple">Count</MarkFollowing>
+			<MarkFollowing color="Purple">DataFolder</MarkFollowing>
+			<MarkFollowing color="Purple">PluginFolder</MarkFollowing>
+			<MarkFollowing color="Purple">DataFile</MarkFollowing>
+			<MarkFollowing color="Purple">Plugin</MarkFollowing>
+
+			<KeyWords name="Functions" color="Blue">
+				<Key word="Count" />
+				<Key word="Each" />
+				<Key word="DataFolder" />
+				<Key word="PluginFolder" />
+				<Key word="DataFile" />
+				<Key word="Plugin" />
+			</KeyWords>
+		</RuleSet>
+
+		<RuleSet name="CaseLine" ignorecase="false">
+			<KeyWords name="Constants" color="Red">
+				<Key word="True" />
+				<Key word="False" />
+			</KeyWords>
+		</RuleSet>
+
+		<RuleSet name="StringRule" ignorecase="false">
+			<Span name="VARIABLE" color="Purple" stopateol="true" noescapesequences="true">
+				<Begin>%</Begin>
+				<End>%</End>
+			</Span>
+		</RuleSet>
+	</RuleSets>
+
+</SyntaxDefinition>
