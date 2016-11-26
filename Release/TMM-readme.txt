@@ -87,8 +87,8 @@ Optimizations and Skyrim port by monpetitbeurre
 
 Version changes
 ===============
-version 1.6.0
--------------
+version 1.5.10
+--------------
 Omodv2 will be checked if omod2 is your default format even when editing omodv1
 Added better recognition of mod containing a Data folder
 
