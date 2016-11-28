@@ -11,9 +11,9 @@ namespace OblivionModManager
     public class Logger
     {
         Logger.LogLevel m_debug = Logger.LogLevel.Low;
-        string _eventLogSource = "obmm";
-        string logFilePath = "."; //  Environment.GetFolderPath(Environment.SpecialFolder.CommonApplicationData)
-        string logFileName = "obmm.Log";
+        string _eventLogSource = "tmm";
+        string logFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
+        string logFileName = "tmm.Log";
         public string logFile { get; private set; }
 
         public Logger()
@@ -44,9 +44,9 @@ namespace OblivionModManager
                 _eventLogSource = value;
                 try
                 {
-                    if (!System.Diagnostics.EventLog.Exists("obmm") || !System.Diagnostics.EventLog.SourceExists(_eventLogSource))
+                    if (!System.Diagnostics.EventLog.Exists("tmm") || !System.Diagnostics.EventLog.SourceExists(_eventLogSource))
                     {
-                        System.Diagnostics.EventLog.CreateEventSource(_eventLogSource, "obmm");
+                        System.Diagnostics.EventLog.CreateEventSource(_eventLogSource, "tmm");
                     }
                 }
                 catch (System.Security.SecurityException se)
@@ -163,7 +163,7 @@ namespace OblivionModManager
                         //                        {
                         //                            System.Diagnostics.EventLog.CreateEventSource(_eventLogSource, "Oce");
                         //                        }
-                        EventLog myLog = new EventLog("obmm");
+                        EventLog myLog = new EventLog("tmm");
                         myLog.Source = _eventLogSource;
                         myLog.WriteEntry(message, logType);
                         myLog.Close();
