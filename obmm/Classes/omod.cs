@@ -236,7 +236,7 @@ namespace OblivionModManager {
                 }
                 else
                 {
-                    if (File.Exists("obmm\\mods\\"+this.FileName))
+                    if (File.Exists(Path.Combine(Settings.omodDir,this.FileName)))
                         bHasScript = this.DoesScriptExist();
                 }
                 if (version > 6)
@@ -441,7 +441,6 @@ namespace OblivionModManager {
                             default:
                                 // cannot compress it!!!
                                 throw ex;
-                                break;
                         }
                     }
 
@@ -1065,7 +1064,7 @@ namespace OblivionModManager {
                         bBAINpackage = true;
                         break;
                     }
-                    else if (file.ToLower()=="config.ini")
+                    else if (file.ToLower()=="config.ini" || file.ToLower() == "config.txt")
                     {
                         bOmod2 = true;
                         break;
@@ -1079,6 +1078,12 @@ namespace OblivionModManager {
                     if (Config == null)
                     {
                         Config = ExtractWholeFile("config.ini");
+                        if (Config != null)
+                            bOmod2 = true;
+                    }
+                    else if (Config == null)
+                    {
+                        Config = ExtractWholeFile("config.txt");
                         if (Config != null)
                             bOmod2 = true;
                     }
@@ -1114,7 +1119,7 @@ namespace OblivionModManager {
                         strTmpDir = Program.CreateTempDirectory();
                         foreach (string file in sevenZipExtract.ArchiveFileNames)
                         {
-                            if (file.ToLower()=="config.ini")
+                            if (file.ToLower()=="config.ini" || file.ToLower() == "config.txt")
                             {
                                 Config = new MemoryStream();
                                 sevenZipExtract.ExtractFile(file, Config);
@@ -1255,13 +1260,13 @@ namespace OblivionModManager {
                     {
                         if (!Program.IsSafeFileName(s2))
                             throw new obmmException("File " + FileName + " appears to have been modified in a way which could cause a security risk." +
-                                                    Environment.NewLine + "obmm will not load it.");
+                                                    Environment.NewLine + "tmm will not load it.");
                     }
                     foreach (DataFileInfo dfi in AllDataFiles)
                     {
                         if (!Program.IsSafeFileName(dfi.FileName))
                             throw new obmmException("File " + FileName + " appears to have been modified in a way which could cause a security risk." +
-                                                    Environment.NewLine + "obmm will not load it.");
+                                                    Environment.NewLine + "tmm will not load it.");
                     }
                 }
                 else if (bFomod)
@@ -1359,13 +1364,13 @@ namespace OblivionModManager {
                     {
                         if (!Program.IsSafeFileName(s2))
                             throw new obmmException("File " + FileName + " appears to have been modified in a way which could cause a security risk." +
-                                                    Environment.NewLine + "obmm will not load it.");
+                                                    Environment.NewLine + "tmm will not load it.");
                     }
                     foreach (DataFileInfo dfi in AllDataFiles)
                     {
                         if (!Program.IsSafeFileName(dfi.FileName))
                             throw new obmmException("File " + FileName + " appears to have been modified in a way which could cause a security risk." +
-                                                    Environment.NewLine + "obmm will not load it.");
+                                                    Environment.NewLine + "tmm will not load it.");
                     }
                     CRC = CompressionHandler.CRC(FullFilePath);
                 }
@@ -1396,7 +1401,7 @@ namespace OblivionModManager {
 
 		private void CreateTargetDirectoryStructure() {
 			for(int x=0;x<DataFiles.Length;x++) {
-				string s=Path.Combine((bSystemMod?"":Program.DataFolderName),Path.GetDirectoryName(DataFiles[x].FileName));
+				string s=Path.Combine((bSystemMod?"":Program.DataFolderPath),Path.GetDirectoryName(DataFiles[x].FileName));
 				if(s.Length!=0 && !Directory.Exists(s)) Directory.CreateDirectory(s);
 			}
 		}
@@ -1724,7 +1729,7 @@ namespace OblivionModManager {
 			HasClickedYesToAll=false;
 			HasClickedNoToAll=false;
 			for(int i=0;i<Plugins.Length;i++) {
-				if(Program.Data.DoesEspExist(Plugins[i])||File.Exists(Path.Combine(Program.DataFolderName,Plugins[i]))) {
+				if(Program.Data.DoesEspExist(Plugins[i])||File.Exists(Path.Combine(Program.DataFolderPath,Plugins[i]))) {
 					if(Array.IndexOf<string>(Program.BannedFiles, Plugins[i].ToLower())!=-1) {
 						if(warn) MessageBox.Show(Plugins[i]+" is a protected game base file and cannot be overwritten by mods", "Error");
 						Program.ArrayRemoveAt<string>(ref Plugins, i--);
@@ -1740,15 +1745,15 @@ namespace OblivionModManager {
 						if(ei!=null) {
 							if(ei.Parent!=null) ei.Parent.UnlinkPlugin(ei);
 							Program.Data.Esps.Remove(ei);
-							File.Delete(Path.Combine(Program.DataFolderName,ei.FileName));
+							File.Delete(Path.Combine(Program.DataFolderPath,ei.FileName));
 						} else
-                            File.Delete(Path.Combine(Program.DataFolderName,Plugins[i]));
+                            File.Delete(Path.Combine(Program.DataFolderPath,Plugins[i]));
 					}
 				}
 			}
 			//copy plugins
 			for(int i=0;i<Plugins.Length;i++) {
-				File.Move(Path.Combine(PluginsPath,Plugins[i]), Path.Combine(Program.DataFolderName,Plugins[i]));
+				File.Move(Path.Combine(PluginsPath,Plugins[i]), Path.Combine(Program.DataFolderPath,Plugins[i]));
 				EspInfo ei=new EspInfo(Plugins[i], this);
 				Program.Data.InsertESP(ei, sed.PluginOrder, Array.IndexOf<string>(sed.EarlyPlugins, ei.LowerFileName)!=-1);
 				foreach(string s in sed.UncheckedPlugins) {
@@ -1760,8 +1765,8 @@ namespace OblivionModManager {
 				foreach(ScriptEspEdit see in sed.EspEdits) {
 					if(see.Plugin!=Plugins[i].ToLower()) continue;
 					try {
-						if(see.IsGMST) ConflictDetector.TesFile.SetGMST(Path.Combine(Program.DataFolderName,see.Plugin), see.EDID, see.Value);
-						else ConflictDetector.TesFile.SetGLOB(Path.Combine(Program.DataFolderName,see.Plugin), see.EDID, see.Value);
+						if(see.IsGMST) ConflictDetector.TesFile.SetGMST(Path.Combine(Program.DataFolderPath,see.Plugin), see.EDID, see.Value);
+						else ConflictDetector.TesFile.SetGLOB(Path.Combine(Program.DataFolderPath,see.Plugin), see.EDID, see.Value);
 					} catch(Exception ex) {
                         Program.logger.WriteToLog("An error occurred editing plugin " + see.Plugin + "\n" + ex.Message, Logger.LogLevel.Error);
 //                        MessageBox.Show("An error occured editing plugin " + see.Plugin + "\n" +
@@ -1778,7 +1783,7 @@ namespace OblivionModManager {
             List<DataFileInfo> conflicts = new List<DataFileInfo>();
 
             string targetfilename = "";
-            string targetroot = (bSystemMod ? "" : Program.DataFolderName+"\\");
+            string targetroot = (bSystemMod ? "" : Program.DataFolderPath+"\\");
 
 			for(int i=0;i<DataFiles.Length;i++)
 			{
@@ -2024,7 +2029,7 @@ namespace OblivionModManager {
 		public void AquisitionActivate(bool force) {
 			List<DataFileInfo> dataFiles=new List<DataFileInfo>();
 			for(int i=0;i<AllDataFiles.Length;i++) {
-				if(File.Exists(Path.Combine(Program.DataFolderName,AllDataFiles[i].FileName))) {
+				if(File.Exists(Path.Combine(Program.DataFolderPath,AllDataFiles[i].FileName))) {
 					DataFileInfo dfi=Program.Data.GetDataFile(AllDataFiles[i]);
 					if(dfi==null) {
 						dfi=new DataFileInfo(AllDataFiles[i]);
@@ -2100,8 +2105,8 @@ namespace OblivionModManager {
 				foreach(string s in Plugins) {
 					EspInfo ei=Program.Data.GetEsp(s);
 					if(ei!=null) Program.Data.Esps.Remove(ei);
-                    if (File.Exists(Path.Combine(Program.DataFolderName,s))) File.Delete(Path.Combine(Program.DataFolderName,s));
-                    if (File.Exists(Path.Combine(Program.DataFolderName,s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderName,s + ".ghost"));
+                    if (File.Exists(Path.Combine(Program.DataFolderPath,s))) File.Delete(Path.Combine(Program.DataFolderPath,s));
+                    if (File.Exists(Path.Combine(Program.DataFolderPath,s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderPath,s + ".ghost"));
                 }
 				//Clear out the data files
                 foreach (DataFileInfo dfi in DataFiles)
@@ -2153,8 +2158,8 @@ namespace OblivionModManager {
                 {
                     EspInfo ei = Program.Data.GetEsp(s);
                     if (ei != null) Program.Data.Esps.Remove(ei);
-                    if (File.Exists(Path.Combine(Program.DataFolderName, s))) File.Delete(Path.Combine(Program.DataFolderName, s));
-                    if (File.Exists(Path.Combine(Program.DataFolderName, s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderName, s + ".ghost"));
+                    if (File.Exists(Path.Combine(Program.DataFolderPath, s))) File.Delete(Path.Combine(Program.DataFolderPath, s));
+                    if (File.Exists(Path.Combine(Program.DataFolderPath, s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderPath, s + ".ghost"));
                 }
             }
 			//Clear out the data files
@@ -2193,7 +2198,7 @@ namespace OblivionModManager {
 			//}
 			//delete plugins
 			foreach(string s in AllPlugins) {
-                if (!File.Exists(Path.Combine(Program.DataFolderName,s)) && !File.Exists(Path.Combine(Program.DataFolderName,s+".ghost")))
+                if (!File.Exists(Path.Combine(Program.DataFolderPath,s)) && !File.Exists(Path.Combine(Program.DataFolderPath,s+".ghost")))
                 {
 					NotFoundCount++;
 					continue;
@@ -2204,8 +2209,8 @@ namespace OblivionModManager {
 				}
 				EspInfo ei=Program.Data.GetEsp(s);
 				if(ei==null||ei.BelongsTo==EspInfo.UnknownOwner) {
-                    if (File.Exists(Path.Combine(Program.DataFolderName, s))) File.Delete(Path.Combine(Program.DataFolderName, s));
-                    if (File.Exists(Path.Combine(Program.DataFolderName, s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderName, s + ".ghost"));
+                    if (File.Exists(Path.Combine(Program.DataFolderPath, s))) File.Delete(Path.Combine(Program.DataFolderPath, s));
+                    if (File.Exists(Path.Combine(Program.DataFolderPath, s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderPath, s + ".ghost"));
                     if (ei != null) Program.Data.Esps.Remove(ei);
 					DeletedCount++;
 				} else SkippedCount++;
@@ -2213,7 +2218,7 @@ namespace OblivionModManager {
 			//delete data files
 			for(int i=0;i<AllDataFiles.Length;i++) {
 				string s=AllDataFiles[i].FileName;
-				if(!File.Exists(Path.Combine(Program.DataFolderName,s))) {
+				if(!File.Exists(Path.Combine(Program.DataFolderPath,s))) {
 					NotFoundCount++;
 					continue;
 				}
@@ -2222,7 +2227,7 @@ namespace OblivionModManager {
 					continue;
 				}
 				if(!Program.Data.DoesDataFileExist(s)) {
-					File.Delete(Path.Combine(Program.DataFolderName,s));
+					File.Delete(Path.Combine(Program.DataFolderPath,s));
 					DeletedCount++;
 				} else SkippedCount++;
 			}
@@ -3344,7 +3349,7 @@ namespace OblivionModManager {
                 SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
                 foreach (string file in zextract.ArchiveFileNames)
                 {
-                    if (file.ToLower().Contains("config.ini"))
+                    if (file.ToLower().Contains("config.ini") || file.ToLower().Contains("config.txt"))
                     {
                         st = new MemoryStream();
                         zextract.ExtractFile(file, st);
@@ -3507,7 +3512,6 @@ namespace OblivionModManager {
                             default:
                                 // cannot compress it!!!
                                 throw ex;
-                                break;
                         }
                     }
 
@@ -3709,7 +3713,7 @@ namespace OblivionModManager {
                 // check files
                 for (int i = 0; i < AllDataFiles.Length; i++)
                 {
-                    if (File.Exists(Path.Combine(Program.DataFolderName,AllDataFiles[i].FileName)) && !files.Contains(AllDataFiles[i]))
+                    if (File.Exists(Path.Combine(Program.DataFolderPath,AllDataFiles[i].FileName)) && !files.Contains(AllDataFiles[i]))
                     {
                         files.Add(AllDataFiles[i]);
                     }
