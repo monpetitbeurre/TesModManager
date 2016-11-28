@@ -200,7 +200,7 @@ namespace OblivionModManager.Classes {
         public static bool CheckForTexture(string path) {
             if(!Loaded) Load(false);
 
-            if(File.Exists(Path.Combine(Program.DataFolderName,path))) return true;
+            if(File.Exists(Path.Combine(Program.DataFolderPath,path))) return true;
             path=path.ToLower().Replace('/', '\\');
             string ext=Path.GetExtension(path);
             ulong hash=GenHash(Path.ChangeExtension(path,null),ext);
@@ -214,7 +214,7 @@ namespace OblivionModManager.Classes {
             path=path.ToLower().Replace('/', '\\');
             string ext=Path.GetExtension(path);
             if(ext==".nif") {
-                if(File.Exists(Path.Combine(Program.DataFolderName,path))) return File.ReadAllBytes(Path.Combine(Program.DataFolderName,path));
+                if(File.Exists(Path.Combine(Program.DataFolderPath,path))) return File.ReadAllBytes(Path.Combine(Program.DataFolderPath,path));
                 ulong hash=GenHash(Path.ChangeExtension(path, null), ext);
                 if(!Meshes.ContainsKey(hash)) return null;
                 return Meshes[hash].GetRawData();
@@ -278,7 +278,7 @@ namespace OblivionModManager.Classes {
         }
 
         private static void Load(bool populateAll) {
-            foreach(string s in Directory.GetFiles(Program.DataFolderName, "*.bsa")) new BSAArchive(s, populateAll);
+            foreach(string s in Directory.GetFiles(Program.DataFolderPath, "*.bsa")) new BSAArchive(s, populateAll);
             Loaded=true;
         }
 
