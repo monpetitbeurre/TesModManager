@@ -21,14 +21,15 @@ namespace OblivionModManager
 		public static bool AlwaysImportOCD = false, AlwaysImportTES = false, AlwaysImportOCDList = false, IncludeVersionNumber = false;
 		public static bool ShowOMODNames = false;
 		public static string LastTNID = "";
-		
-		public static void LoadSettings()
+        private static string settingsFilename = Path.Combine(Program.BaseDir, "settings.xbt");
+
+        public static void LoadSettings()
 		{
             try
             {
-                if (File.Exists(@"obmm\settings.xbt"))
+                if (File.Exists(settingsFilename))
                 {
-                    ConfigList oeSettings = new GeneralConfig().LoadConfiguration(@"obmm\settings.xbt");
+                    ConfigList oeSettings = new GeneralConfig().LoadConfiguration(settingsFilename);
                     ConfigList aiSettings = oeSettings.GetSection(new SV("Always Import", false));
 
                     ConfigPair cp;
@@ -71,7 +72,7 @@ namespace OblivionModManager
 			cl.AddPair("Show OMOD Names", GlobalSettings.ShowOMODNames);
 			cl.AddPair("Last TESNexus", GlobalSettings.LastTNID);
 			
-			new GeneralConfig().SaveConfiguration(@"obmm\settings.xbt", cl);
+			new GeneralConfig().SaveConfiguration(settingsFilename, cl);
 		}
 	}
 }

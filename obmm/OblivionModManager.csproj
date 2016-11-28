@@ -36,7 +36,7 @@
     <UpdateRequired>false</UpdateRequired>
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
-    <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
+    <ApplicationVersion>1.5.14.0</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -57,7 +57,7 @@
     <AllowUnsafeBlocks>False</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
-    <OutputPath>..\..\steam\steamapps\common\skyrim\</OutputPath>
+    <OutputPath>..\..\..\Program Files %28x86%29\TesModManager\</OutputPath>
     <DebugType>Full</DebugType>
     <ErrorReport>prompt</ErrorReport>
     <PlatformTarget>x86</PlatformTarget>
@@ -92,24 +92,29 @@
     <OutputPath>..\..\steam\steamapps\common\skyrim\</OutputPath>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="BaseTools">
+    <Reference Include="BaseTools, Version=10.10.15.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>.\BaseTools.dll</HintPath>
     </Reference>
     <Reference Include="DevILNet, Version=1.0.0.0, Culture=neutral, processorArchitecture=x86">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\Release\DevILNet.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="IronMath, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\IronMath.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="IronPython, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\IronPython.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="SevenZipSharp, Version=0.64.3890.29348, Culture=neutral, PublicKeyToken=20de82c62b055c88, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>.\SevenZipSharp.dll</HintPath>
+      <Private>False</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
@@ -673,9 +678,7 @@
     <Compile Include="Classes\unrar.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="TMM-readme.txt">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
+    <Content Include="TMM-readme.txt" />
     <None Include="app.config" />
     <None Include="bmps\blue.bmp" />
     <None Include="bmps\green.bmp" />
@@ -735,6 +738,6 @@
     <FileAlignment>4096</FileAlignment>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>\OBMM\package.cmd</PostBuildEvent>
+    <PostBuildEvent>rem {$SolutionDir}..\package.cmd</PostBuildEvent>
   </PropertyGroup>
 </Project>

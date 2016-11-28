@@ -32,7 +32,8 @@ namespace OblivionModManager {
 		public static System.Drawing.Size mfSize;
 		public static bool mfMaximized;
 		public static int mfSplitterPos;
-		public static List<omodGroup> omodGroups;
+        public static int altPanelSplitterDistance;
+        public static List<omodGroup> omodGroups;
 		public static bool AllowInsecureScripts;
 		public static bool WarnOnINIEdit;
 		public static bool WarnOnModDelete;
@@ -187,6 +188,7 @@ namespace OblivionModManager {
                 bw.Write(bPreventMovingESPBeforeESM);
                 bw.Write(bOmod2IsDefault);
                 bw.Write(conflictsBackupDir);
+                bw.Write(altPanelSplitterDistance);
             }
             finally
             {
@@ -366,15 +368,15 @@ namespace OblivionModManager {
 
                     try{ bGhostInactiveMods = br.ReadBoolean(); } catch { bGhostInactiveMods = true; };
                     try { bShowHiddenMods = br.ReadBoolean(); } catch { bShowHiddenMods = false; };
-                    try { bSaveOmod2AsZip = br.ReadBoolean(); } catch { bSaveOmod2AsZip = false; };
+                    try { bSaveOmod2AsZip = br.ReadBoolean(); } catch { bSaveOmod2AsZip = true; };
                     try { bDeactivateMissingOMODs = br.ReadBoolean(); } catch { bDeactivateMissingOMODs = false; };
                     try { bWarnAboutMissingInfo = br.ReadBoolean(); }catch { bWarnAboutMissingInfo = true; };
                     try { bShowSimpleOverwriteForm = br.ReadBoolean(); } catch { bShowSimpleOverwriteForm = false; };
                     try { bPreventMovingESPBeforeESM = br.ReadBoolean(); } catch { bPreventMovingESPBeforeESM = true; };
                     try { bOmod2IsDefault = br.ReadBoolean(); }catch { bOmod2IsDefault = true; };
                     try { conflictsBackupDir = br.ReadString(); }
-                    catch { conflictsBackupDir = "."; };
-                    
+                    catch { conflictsBackupDir = Program.DataFolderPath; };
+                    try { altPanelSplitterDistance = br.ReadInt32(); } catch { altPanelSplitterDistance = -9001; }
                 }
 
 				if(version<15&&(ArchiveInvalidationFlags.EditBSAs&InvalidationFlags)>0) {
@@ -397,6 +399,7 @@ namespace OblivionModManager {
 			mfSize=System.Drawing.Size.Empty;
 			mfMaximized=false;
 			mfSplitterPos=0;
+            altPanelSplitterDistance = -9001;
 			omodGroups=new List<omodGroup>();
 			UpdateInvalidation=false;
 			AllowInsecureScripts=true;
@@ -447,8 +450,9 @@ namespace OblivionModManager {
 
 			omodCreatorFolderBrowserDir="";
 			BSACreatorFolderBrowserDir="";
-			omodDir=Path.GetFullPath(@"obmm\mods\");
-			tempDir="";
+			omodDir=Path.GetFullPath(Path.Combine(Program.BaseDir, "mods"));
+
+            tempDir ="";
 
 			NewEspsLoadLast=true;
             bAskToBeNexusDownloadManager = true;

@@ -276,7 +276,7 @@ namespace OblivionModManager {
             Program.logger.WriteToLog("Sorting ESPs ", Logger.LogLevel.High);
             foreach (EspInfo ei in Esps)
             {
-                ei.DateModified=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,ei.FileName));
+                ei.DateModified=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,ei.FileName));
             }
             Esps.Sort(new PluginSorter());
 
@@ -289,11 +289,11 @@ namespace OblivionModManager {
                 for (int j = 0; j < Esps.Count; j++)
                 {
                     date = date.AddMinutes(1);
-                    if (File.Exists(Path.Combine(Program.DataFolderName,Esps[j].FileName)))
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName,Esps[j].FileName), date);
+                    if (File.Exists(Path.Combine(Program.DataFolderPath,Esps[j].FileName)))
+                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath,Esps[j].FileName), date);
                     string bsa = Esps[j].LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                    if (File.Exists(Path.Combine(Program.DataFolderName,bsa)))
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName,bsa), date);
+                    if (File.Exists(Path.Combine(Program.DataFolderPath,bsa)))
+                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath,bsa), date);
                 }
             }
             catch (Exception ex)
@@ -348,10 +348,10 @@ namespace OblivionModManager {
             DateTime MaxTime;
             DateTime InsertAt=DateTime.Now;
             if(early&&Esps.Count>0) {
-                MaxTime=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,Esps[0].FileName));
+                MaxTime=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,Esps[0].FileName));
                 if(InsertAt+TimeSpan.FromMinutes(1)>=MaxTime) InsertAt=MaxTime-TimeSpan.FromMinutes(1);
             } else if(Settings.NewEspsLoadLast&&Esps.Count>0) {
-                MaxTime=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,(Esps[Esps.Count-1]).FileName));
+                MaxTime=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,(Esps[Esps.Count-1]).FileName));
                 if(InsertAt-TimeSpan.FromMinutes(1)<=MaxTime) InsertAt=MaxTime+TimeSpan.FromMinutes(1);
             }
             MinTime=DateTime.MinValue;
@@ -359,12 +359,12 @@ namespace OblivionModManager {
             foreach(EspInfo esp in Esps) {
                 foreach(string target in esp.MustLoadAfter) {
                     if(target!=ei.LowerFileName) continue;
-                    DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,esp.FileName));
+                    DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,esp.FileName));
                     if(temp<MaxTime) MaxTime=temp;
                 }
                 foreach(string target in esp.MustLoadBefore) {
                     if(target!=ei.LowerFileName) continue;
-                    DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,esp.FileName));
+                    DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,esp.FileName));
                     if(temp>MinTime) MinTime=temp;
                 }
             }
@@ -374,13 +374,13 @@ namespace OblivionModManager {
                 if(pli.LoadAfter) {
                     ei.MustLoadAfter.Add(pli.Target.ToLower());
                     if(target!=null) {
-                        DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,target.FileName));
+                        DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,target.FileName));
                         if(temp>MinTime) MinTime=temp;
                     }
                 } else {
                     ei.MustLoadBefore.Add(pli.Target.ToLower());
                     if(target!=null) {
-                        DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderName,target.FileName));
+                        DateTime temp=File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,target.FileName));
                         if(temp<MaxTime) MaxTime=temp;
                     }
                 }
@@ -401,10 +401,10 @@ namespace OblivionModManager {
                 while(InsertAt<MinTime+TimeSpan.FromSeconds(1)) InsertAt+=TimeSpan.FromSeconds(1);
                 try
                 {
-                    File.SetLastWriteTime(Path.Combine(Program.DataFolderName,ei.FileName), InsertAt);
+                    File.SetLastWriteTime(Path.Combine(Program.DataFolderPath,ei.FileName), InsertAt);
                     string bsa = ei.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                    if (File.Exists(Path.Combine(Program.DataFolderName,bsa)))
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName,bsa), InsertAt);
+                    if (File.Exists(Path.Combine(Program.DataFolderPath,bsa)))
+                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath,bsa), InsertAt);
                 }
                 catch (Exception ex)
                 {

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 //using System.IO;
 using System.Linq;
 using System.Text;
@@ -17,7 +18,7 @@ namespace OblivionModManager.MonoFS
 
         public static bool isFSCaseSensitive()
         {
-            string file = Program.CurrentDir + Guid.NewGuid().ToString().ToLower();
+            string file = Path.Combine(Program.TempDir,Guid.NewGuid().ToString().ToLower());
             File.WriteAllText(file,"");
             bFSIsCaseSensitive = !File.Exists(file.ToUpper());
             File.Delete(file);

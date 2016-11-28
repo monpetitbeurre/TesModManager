@@ -83,10 +83,34 @@ Oblivion Mod Manager - Timeslip
 Oblivion Mod Manager Extended -  Scent Tree
 Icons by SneakyTomato and UESP
 Help Files, OCD List Submissions and Bug Finding in OBMM Extended - Isabelxxx
-Optimizations and Skyrim port by monpetitbeurre
+Optimizations, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+version 1.6.0
+-------------
+* TMM can now be installed in it's own directory.. It will still create an obmm folder under the game directory for mods related to that game
+* new installer
+* omodv2 is the default save format
+
+version 1.5.14
+--------------
+Added support for System mod deactivation and conflict detection
+
+version 1.5.13
+--------------
+Added some protection for ESPM restore
+Changed handling of empty FOMOD dependency flags to TRUE
+
+version 1.5.12
+--------------
+Fixed SKSE auto update
+
+version 1.5.11
+--------------
+config.txt is accepted for configuration
+added a protection for crash when displaying saves' images
+
 version 1.5.10
 -------------
 Omodv2 will be checked if omod2 is your default format even when editing omodv1
