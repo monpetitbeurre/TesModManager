@@ -26,7 +26,7 @@ namespace OblivionModManager {
         public static readonly string loadorder = Program.ESPDir + "loadorder.txt";
         public static readonly string dlclist = Program.ESPDir + "DLCList.txt";
         public static readonly string steammodlist = Program.ESPDir + "SteamModList.txt";
-        private const string bashespfile = @"obmm\loadorder.txt";
+        private static readonly string bashespfile = Path.Combine(Program.BaseDir, @"loadorder.txt");
 
         public class EspPluginSorter : IComparer<EspInfo>
         {
@@ -59,8 +59,8 @@ namespace OblivionModManager {
                 }
                 else
                 {
-                    FileInfo fia = new FileInfo(Path.Combine(Program.DataFolderName,a));
-                    FileInfo fib = new FileInfo(Path.Combine(Program.DataFolderName,b));
+                    FileInfo fia = new FileInfo(Path.Combine(Program.DataFolderPath,a));
+                    FileInfo fib = new FileInfo(Path.Combine(Program.DataFolderPath,b));
                     icomp = DateTime.Compare(fia.LastWriteTime, fib.LastWriteTime);
                 }
                 return icomp;
@@ -98,8 +98,8 @@ namespace OblivionModManager {
                 }
                 else
                 {
-                    FileInfo fia = new FileInfo(Path.Combine(Program.DataFolderName,a));
-                    FileInfo fib = new FileInfo(Path.Combine(Program.DataFolderName,b));
+                    FileInfo fia = new FileInfo(Path.Combine(Program.DataFolderPath,a));
+                    FileInfo fib = new FileInfo(Path.Combine(Program.DataFolderPath,b));
                     icomp= DateTime.Compare(fia.LastWriteTime, fib.LastWriteTime);
                 }
                 return icomp;
@@ -253,7 +253,7 @@ namespace OblivionModManager {
             List<string> ActiveEsps=new List<string>(File.ReadAllLines(espfile, System.Text.Encoding.Default));
             for(int i=0;i<ActiveEsps.Count;i++) {
                 try {
-                    if(ActiveEsps[i].Length==0||ActiveEsps[i][0]=='#'||!File.Exists(Path.Combine(Program.DataFolderName,ActiveEsps[i]))) ActiveEsps.RemoveAt(i--);
+                    if(ActiveEsps[i].Length==0||ActiveEsps[i][0]=='#'||!File.Exists(Path.Combine(Program.DataFolderPath,ActiveEsps[i]))) ActiveEsps.RemoveAt(i--);
                 } catch { ActiveEsps.RemoveAt(i--); }
             }
             ActiveEsps.Sort(new PluginSorter());
@@ -290,9 +290,10 @@ namespace OblivionModManager {
         }
 
         public static void WriteINIValue(string section,string name,string value) {
-            List<string> ss=new List<string>(GetINISection(section));
-            if(ss==null) throw new obmmException("ini section "+section+" does not exist");
-            bool matched=false;
+            string[] ssa = GetINISection(section);
+            if(ssa==null) throw new obmmException("ini section "+section+" does not exist");
+            List<string> ss = new List<string>(ssa);
+            bool matched =false;
             string lname=name.ToLower();
             for(int i=0;i<ss.Count;i++) {
                 string s=ss[i];
@@ -417,7 +418,7 @@ namespace OblivionModManager {
         #endregion
 
         private static readonly string InvalidationFile;
-        private const string RedirectionPath=@"obmm\BSARedirection.bsa";
+        private static readonly string RedirectionPath= Path.Combine(Program.BaseDir,"BSARedirection.bsa");
         public static readonly List<string> Archives=new List<string>();
         private static bool UpdatedList=false;
 
@@ -580,7 +581,7 @@ namespace OblivionModManager {
 
         public static string[] GetBSAEntries() {
             List<string> files=new List<string>();
-            foreach(string path in Directory.GetFiles(Program.DataFolderName, "*.bsa")) {
+            foreach(string path in Directory.GetFiles(Program.DataFolderPath, "*.bsa")) {
                 files.AddRange(GetBSAEntries(path));
             }
             files.Sort();
@@ -752,7 +753,7 @@ namespace OblivionModManager {
             hashCollisions=0;
             List<BSAEdit> Edits=new List<BSAEdit>();
             List<string> ProblemFiles=new List<string>();
-            string[] Paths=Directory.GetFiles(Program.DataFolderName, "*.bsa");
+            string[] Paths=Directory.GetFiles(Program.DataFolderPath, "*.bsa");
             ProgressForm pf=new ProgressForm("", false);
             pf.SetProgressRange(Paths.Length+1);
             pf.ShowInTaskbar = true;
@@ -798,7 +799,7 @@ namespace OblivionModManager {
                         int filecount=br.ReadInt32();
                         br.BaseStream.Position=br.ReadInt32()-TotalFileNameLength+1;
                         string fname=Program.ReadCString(br).Replace('/', '\\');
-                        if(Directory.Exists(Path.Combine(Program.DataFolderName,fname))) {
+                        if(Directory.Exists(Path.Combine(Program.DataFolderPath,fname))) {
                             BSAEditData EditData=new BSAEditData(fname);
                             EditData.Files.Add(new BSAEditFileInfo(0, 0));
                             for(int j=0;j<filecount;j++) {
@@ -811,7 +812,7 @@ namespace OblivionModManager {
                             for(int j=0;j<filecount;j++) {
                                 string FileName=Program.ReadCString(br);
                                 EditData.Files[j+1].FileName=FileName;
-                                EditData.Files[j+1].Exists=File.Exists(Path.Combine(Program.DataFolderName,Path.Combine(fname,FileName)));
+                                EditData.Files[j+1].Exists=File.Exists(Path.Combine(Program.DataFolderPath,Path.Combine(fname,FileName)));
                             }
                             FileNameBlockStart=br.BaseStream.Position;
                             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.EditAllEntries)>0||ShouldFolderBeProcessed(fname)) {
@@ -874,25 +875,25 @@ namespace OblivionModManager {
             }
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.BSARedirection)>0) {
                 if(File.Exists(InvalidationFile)) File.Delete(InvalidationFile);
-                string path=((Settings.InvalidationFlags&ArchiveInvalidationFlags.PackFaceTextures)>0)?Path.GetFullPath(Path.Combine(Program.DataFolderName,"textures\\faces")):null;
+                string path=((Settings.InvalidationFlags&ArchiveInvalidationFlags.PackFaceTextures)>0)?Path.GetFullPath(Path.Combine(Program.DataFolderPath,"textures\\faces")):null;
                 if(path!=null&&!Directory.Exists(path)) path=null;
                 Forms.BSACreator.CreateBSA(RedirectionPath, path, null, 0, 0, true);
                 RegisterBSA(Path.Combine("..\\",RedirectionPath));
                 return;
             }
             List<string> files=new List<string>();
-            string textures = Path.Combine(Program.DataFolderName, "textures");
-            string meshes = Path.Combine(Program.DataFolderName, "meshes");
-            string sound = Path.Combine(Program.DataFolderName, "sound");
-            string music = Path.Combine(Program.DataFolderName, "music");
-            string fonts = Path.Combine(Program.DataFolderName, "fonts");
-            string menus = Path.Combine(Program.DataFolderName, "menus");
-            string video = Path.Combine(Program.DataFolderName, "video");
-            string shaders = Path.Combine(Program.DataFolderName, "shaders");
-            string lsdata = Path.Combine(Program.DataFolderName, "lsdata");
-            string facegen = Path.Combine(Program.DataFolderName, "facegen");
-            string trees = Path.Combine(Program.DataFolderName, "trees");
-            string distantlod = Path.Combine(Program.DataFolderName, "distantlod");
+            string textures = Path.Combine(Program.DataFolderPath, "textures");
+            string meshes = Path.Combine(Program.DataFolderPath, "meshes");
+            string sound = Path.Combine(Program.DataFolderPath, "sound");
+            string music = Path.Combine(Program.DataFolderPath, "music");
+            string fonts = Path.Combine(Program.DataFolderPath, "fonts");
+            string menus = Path.Combine(Program.DataFolderPath, "menus");
+            string video = Path.Combine(Program.DataFolderPath, "video");
+            string shaders = Path.Combine(Program.DataFolderPath, "shaders");
+            string lsdata = Path.Combine(Program.DataFolderPath, "lsdata");
+            string facegen = Path.Combine(Program.DataFolderPath, "facegen");
+            string trees = Path.Combine(Program.DataFolderPath, "trees");
+            string distantlod = Path.Combine(Program.DataFolderPath, "distantlod");
 
             if ((Settings.InvalidationFlags & ArchiveInvalidationFlags.MatchExtensions) > 0)
             {
@@ -1018,7 +1019,7 @@ namespace OblivionModManager {
             }
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.Base)>0) {
                 List<string> temp=new List<string>();
-                temp.AddRange(Directory.GetFiles(Program.DataFolderName, "*"));
+                temp.AddRange(Directory.GetFiles(Program.DataFolderPath, "*"));
                 for(int i=0;i<temp.Count;i++) {
                     switch(Path.GetExtension(temp[i]).ToLower()) {
                     case ".esp":
@@ -1033,8 +1034,7 @@ namespace OblivionModManager {
             }
             for(int i=0;i<files.Count;i++) {
                 files[i]=files[i].ToLower();
-                if(files[i].StartsWith(Program.CurrentDir)) files[i]=files[i].Substring(Program.CurrentDir.Length);
-                if(files[i].StartsWith(Program.DataFolderName)) files[i]=files[i].Substring(5);
+                if(files[i].StartsWith(Program.DataFolderPath)) files[i]=files[i].Substring((Program.DataFolderPath+"\\").Length);
             }
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.BSAOnly)>0) {
                 string[] entries=GetBSAEntries();
@@ -1119,7 +1119,7 @@ namespace OblivionModManager {
             if (Program.bSkyrimMode)
             {
                 // first cover standard BSA
-                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderName, "Skyrim - *.bsa"))
+                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderPath, "Skyrim - *.bsa"))
                 {
                     System.IO.FileInfo fi = new System.IO.FileInfo(s);
                     fi.LastWriteTime = date;
@@ -1127,7 +1127,7 @@ namespace OblivionModManager {
                 // now cover BSAs according to esp/esm order
                 foreach (EspInfo espi in Program.Data.Esps)
                 {
-                    string s = espi.FileName; s = s.Replace(".esm", "").Replace(".esp", ""); s = s + ".bsa"; s = Path.Combine(Program.DataFolderName,s);
+                    string s = espi.FileName; s = s.Replace(".esm", "").Replace(".esp", ""); s = s + ".bsa"; s = Path.Combine(Program.DataFolderPath,s);
                     if (System.IO.File.Exists(s))
                     {
                         date=date.AddMinutes(1);
@@ -1138,7 +1138,7 @@ namespace OblivionModManager {
             }
             else
             {
-                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderName, "*.bsa"))
+                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderPath, "*.bsa"))
                 {
                     System.IO.FileInfo fi = new System.IO.FileInfo(s);
                     fi.LastWriteTime = date;
