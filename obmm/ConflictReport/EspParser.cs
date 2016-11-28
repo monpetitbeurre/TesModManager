@@ -43,7 +43,7 @@ namespace ConflictDetector {
     }
 
     public static class TesFile {
-        [System.Runtime.InteropServices.DllImport("obmm\\NifScanner.dll", CharSet=CharSet.Ansi)]
+        [System.Runtime.InteropServices.DllImport("NifScanner.dll", CharSet=CharSet.Ansi)]
         public static extern string GenList(byte[] data, int datasize);
 
         /*private static string ReadRecName(BinaryReader br) {
@@ -885,7 +885,7 @@ namespace ConflictDetector {
                         line=line.Replace("\r","").Trim().ToLower();
                         if(line.StartsWith("streammusic")) {
                             string[] file=line.Split('"');
-                            if(file.Length>1&&file[1].ToLower().StartsWith(Program.DataFolderName+"\\")) ids.Add(file[1].ToLower().Substring(5));
+                            if(file.Length>1&&file[1].ToLower().StartsWith(Program.DataFolderPath+"\\")) ids.Add(file[1].ToLower().Substring(5));
                             //TODO: get glowmaps/normal maps
                         } else if(line.StartsWith("playbink")) {
                             string[] file=line.Split('"');
@@ -1029,7 +1029,7 @@ namespace ConflictDetector {
                             if (line.StartsWith("streammusic"))
                             {
                                 string[] file = line.Split('"');
-                                if (file.Length > 1 && file[1].ToLower().StartsWith(Program.DataFolderName+"\\")) ids.Add(file[1].ToLower().Substring(5));
+                                if (file.Length > 1 && file[1].ToLower().StartsWith(Program.DataFolderPath+"\\")) ids.Add(file[1].ToLower().Substring(5));
                                 //TODO: get glowmaps/normal maps
                             }
                             else if (line.StartsWith("playbink"))

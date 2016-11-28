@@ -45,18 +45,18 @@ namespace OblivionModManager.Scripting {
 			
             try
 			{
-				if (!new FileInfo(@"obmm\dll.txt").Exists)
+				if (!new FileInfo(Path.Combine(Program.BaseDir, "dll.txt")).Exists)
 				{
-					File.WriteAllText(@"obmm\dll.txt", "");
+					File.WriteAllText(Path.Combine(Program.BaseDir, "dll.txt"), "");
 				}
-				if (!new FileInfo(@"obmm\resx.txt").Exists)
+				if (!new FileInfo(Path.Combine(Program.BaseDir, "resx.txt")).Exists)
 				{
-					File.WriteAllText(@"obmm\resx.txt", "");
+					File.WriteAllText(Path.Combine(Program.BaseDir, "resx.txt"), "");
 				}
 				
 				//
 				{
-					string[] dlls = File.ReadAllLines(@"obmm\dll.txt");
+					string[] dlls = File.ReadAllLines(Path.Combine(Program.BaseDir, "dll.txt"));
 					
 					foreach(string s in dlls)
 					{
@@ -70,7 +70,7 @@ namespace OblivionModManager.Scripting {
 				
 				//
 				{
-					string[] dlls = File.ReadAllLines(@"obmm\resx.txt");
+					string[] dlls = File.ReadAllLines(Path.Combine(Program.BaseDir,"resx.txt"));
 					
 					foreach(string s in dlls)
 					{
@@ -317,8 +317,8 @@ namespace OblivionModManager.Scripting {
                 {
                     // needs to be installed minus the base folder name of course
                     string lowerfilename = path.ToLower();
-                    if (lowerfilename.IndexOf(Program.DataFolderName)!=-1)
-                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.DataFolderName) + 5);
+                    if (lowerfilename.IndexOf(Program.DataFolderName + "\\") !=-1)
+                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.DataFolderName + "\\") + (Program.DataFolderName + "\\").Length);
                     else if (lowerfilename.IndexOf("\\")!=-1)
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("\\") + 1);
                     else if (lowerfilename.IndexOf("/") != -1)
@@ -349,8 +349,8 @@ namespace OblivionModManager.Scripting {
                 {
                     // needs to be installed minus the base folder name of course
                     string lowerfilename = file.Substring(1).ToLower();
-                    if (lowerfilename.IndexOf(Program.DataFolderName+"") != -1)
-                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.DataFolderName+"") + 5);
+                    if (lowerfilename.IndexOf(Program.DataFolderName + "\\") != -1)
+                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.DataFolderName+"\\") + (Program.DataFolderName+"Data\\").Length);
                     else if (lowerfilename.IndexOf("\\") != -1)
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("\\") + 1);
                     else if (lowerfilename.IndexOf("/") != -1)
@@ -437,7 +437,7 @@ namespace OblivionModManager.Scripting {
                             }
                             else if (o is fomod.fileDependency)
                             {
-                                if (File.Exists(Path.Combine(Program.DataFolderName,((fomod.fileDependency)o).file)))
+                                if (File.Exists(Path.Combine(Program.DataFolderPath,((fomod.fileDependency)o).file)))
                                 {
                                     bInstallstep = true;
                                 }
@@ -557,7 +557,7 @@ namespace OblivionModManager.Scripting {
                             string value = flagdep.value.ToLower(); ;
                             // an OFF flag is not stored
                             // the dependency can be on a flag being off
-                            if ((flaglist.Contains(flag) && (value == "on" || value=="yes")) || (!flaglist.Contains(flag) && (value == "off" || value=="no" || value.Length==0))
+                            if ((flaglist.Contains(flag) && (value == "on" || value== "yes" || value.Length == 0)) || (!flaglist.Contains(flag) && (value == "off" || value=="no"))
                                 || (flaglist.Contains(flag) && flaglist.IndexOf(flag)>-1 && value == flagvaluelist[flaglist.IndexOf(flag)]))
                                 condition &= true;
                             else

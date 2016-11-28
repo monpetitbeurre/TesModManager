@@ -16,34 +16,41 @@ namespace DescriptionPanel
         private SplitContainer altPanel = null;
 		public void Execute(MainForm mainForm)
 		{
-			XConf.EnsureXConf();
 			
 			int sd = -9001;
 			
-			ConfigList lst = null;
+            try
+            {
+                sd = OblivionModManager.Settings.altPanelSplitterDistance;
+            }
+            catch
+            { }
+   //         XConf.EnsureXConf();
+   //         ConfigList lst = null;
+   //         string cfg = Path.Combine(Program.BaseDir, "obmm.xbt");
+   //         FileInfo fi = new FileInfo(cfg);
+   //         ConfigList rt = XConf.LoadConfig(fi.FullName);
 			
-			ConfigList rt = XConf.LoadConfig("obmm.xbt");
+			//ConfigPair p;
 			
-			ConfigPair p;
+			//p = rt.GetPair(new ISV("altpanel"));
 			
-			p = rt.GetPair(new ISV("altpanel"));
-			
-			if (p != null)
-			{
-				lst = p.Data as ConfigList;
+			//if (p != null)
+			//{
+			//	lst = p.Data as ConfigList;
 				
-				if (lst != null)
-				{
-					p = lst.GetPair(new ISV("splitterDistance"));
-					if (p != null)
-					{
-						if (p.DataIsInteger)
-						{
-							sd = p.DataAsInteger;
-						}
-					}
-				}
-			}
+			//	if (lst != null)
+			//	{
+			//		p = lst.GetPair(new ISV("splitterDistance"));
+			//		if (p != null)
+			//		{
+			//			if (p.DataIsInteger)
+			//			{
+			//				sd = p.DataAsInteger;
+			//			}
+			//		}
+			//	}
+			//}
 
 
             //descriptionTB = new RichTextBox();
@@ -104,13 +111,14 @@ namespace DescriptionPanel
 		}
 		private void ClosePanel(object sender, FormClosingEventArgs e)
 		{
-			ConfigList lst = new ConfigList();
-			ConfigList rt = XConf.LoadConfig("obmm.xbt");
-			rt.SetPair("altpanel", new ConfigPair("altpanel", lst));
-			
-			lst.AddPair(new ConfigPair("splitterDistance", altPanel.SplitterDistance));
-			
-			XConf.SaveConfig("obmm.xbt", rt);
-		}
+            OblivionModManager.Settings.altPanelSplitterDistance = altPanel.SplitterDistance;
+            //ConfigList lst = new ConfigList();
+            //ConfigList rt = XConf.LoadConfig(Path.Combine(Program.BaseDir, "obmm.xbt"));
+            //rt.SetPair("altpanel", new ConfigPair("altpanel", lst));
+
+            //lst.AddPair(new ConfigPair("splitterDistance", altPanel.SplitterDistance));
+
+            //XConf.SaveConfig(Path.Combine(Program.BaseDir, "obmm.xbt"), rt);
+        }
 	}
 }

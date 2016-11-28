@@ -564,11 +564,9 @@ namespace OblivionModManager {
 				foreach(string s in OpenDialog.FileNames) {
 					string path=s.ToLower();
 					if(rbData.Checked) {
-                        if (path.StartsWith(Path.Combine(Program.CurrentDir, Program.DataFolderName) + "\\"))
+                        if (path.StartsWith(Program.DataFolderPath + "\\"))
                         {
-                            path = s.Substring((Path.Combine(Program.CurrentDir, Program.DataFolderName) + "\\").Length);
-						} else if(path.StartsWith(Program.DataFolderName+"\\")) {
-							path=s.Substring(5);
+                            path = s.Substring((Program.DataFolderPath + "\\").Length);
 						} else {
 							path=Path.GetFileName(s);
 						}
@@ -772,46 +770,26 @@ namespace OblivionModManager {
                 }
 				else if (zipname != null)
 				{
-					/*if (ocdList == null)
-					{
-						if (File.Exists(@"obmm\ocd.xbt"))
-						{
-							ocdList = new GeneralConfig().LoadConfiguration(@"obmm\ocd.xbt");
-						}
-						else
-							ocdList = new ConfigList();
-					}
-					
-					ConfigList config;
-					
-					
-					if ((config = ocdList.GetSection(zipname)) != null)
-					{
-						LoadXBT(config);
-					}*/
-					//if (!OCDCheck(zipname))
-					{
-						try
-						{
-                            string tesid = Program.GetModID(zipname);
-								
-							if (tesid.Length>0 && (ops.Name==null ||ops.Name.Length==0))
-							{
-								if (!alreadyTES && (GlobalSettings.AlwaysImportTES || MessageBox.Show("Import info from Nexus?", "Import", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-									                == DialogResult.Yes))
-								{
-									if (Program.KeyPressed(16))
-										GlobalSettings.AlwaysImportTES = true;
-                                    ApplyTESNexus(zipname, false);
-                                    GlobalSettings.LastTNID = tesid;
-								}
-							}
-						}
-						catch(Exception)
-						{
-						}
-					}
-				}
+                    try
+                    {
+                        string tesid = Program.GetModID(zipname);
+
+                        if (tesid.Length > 0 && (ops.Name == null || ops.Name.Length == 0))
+                        {
+                            if (!alreadyTES && (GlobalSettings.AlwaysImportTES || MessageBox.Show("Import info from Nexus?", "Import", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
+                                                == DialogResult.Yes))
+                            {
+                                if (Program.KeyPressed(16))
+                                    GlobalSettings.AlwaysImportTES = true;
+                                ApplyTESNexus(zipname, false);
+                                GlobalSettings.LastTNID = tesid;
+                            }
+                        }
+                    }
+                    catch (Exception)
+                    {
+                    }
+                }
 			}
             {
 				List<string> MatchedFiles=new List<string>();
@@ -930,8 +908,8 @@ namespace OblivionModManager {
                 for (int i = 0; i < MatchedPaths.Count; i++)
                 {
                     MatchedPaths[i] = MatchedPaths[i].Substring(folder.Length);
-                    if (MatchedPaths[i].ToLower().StartsWith(Program.DataFolderName+"\\"))
-                        MatchedPaths[i] = MatchedPaths[i].Substring((Program.DataFolderName+"\\").Length);
+                    if (MatchedPaths[i].ToLower().StartsWith(Program.DataFolderPath+"\\"))
+                        MatchedPaths[i] = MatchedPaths[i].Substring((Program.DataFolderPath+"\\").Length);
                 }
 				NewFiles=new string[ops.DataFiles.Length+MatchedFiles.Count];
 				NewPaths=new string[ops.DataFiles.Length+MatchedFiles.Count];
@@ -952,9 +930,9 @@ namespace OblivionModManager {
 		}
 		public void NotifyImage()
 		{
-			byte[] buffer=File.ReadAllBytes(@"obmm\temp.png");
+			byte[] buffer=File.ReadAllBytes(Path.Combine(Program.BaseDir, @"temp.png"));
 			MemoryStream ms=new MemoryStream(buffer);
-			SetImage(Image.FromStream(ms), @"obmm\temp.png");
+			SetImage(Image.FromStream(ms), Path.Combine(Program.BaseDir, @"temp.png"));
 		}
 		void LoadXBT(ConfigList config)
 		{
@@ -1043,19 +1021,10 @@ namespace OblivionModManager {
 		}
 		bool OCDCheck(string name)
 		{
-			/*if (ocdList == null)
-			{
-				if (File.Exists(@"obmm\ocd.xbt"))
-				{
-					ocdList = new GeneralConfig().LoadConfiguration(@"obmm\ocd.xbt");
-				}
-				else
-					ocdList = new ConfigList();
-			}*/
-			if (Directory.Exists(@"obmm\ocdlist"))
+			if (Directory.Exists(Path.Combine(Program.BaseDir, @"ocdlist")))
 			{
 				List<FileInfo> files = new List<FileInfo>();
-				DirectoryInfo ocdlist = new DirectoryInfo(@"obmm\ocdlist");
+				DirectoryInfo ocdlist = new DirectoryInfo(Path.Combine(Program.BaseDir, "ocdlist"));
 				
 				
 				files.AddRange(ocdlist.GetFiles("*.xbt", SearchOption.AllDirectories));
@@ -1185,13 +1154,13 @@ namespace OblivionModManager {
 
 				}
 			}
-            if (Directory.Exists(Path.Combine(Dir, Program.DataFolderName)))
+            if (Directory.Exists(Path.Combine(Dir, Program.DataFolderPath)))
             {
 				foreach(string s in Directory.GetFiles(Dir)) {
-                    try { File.Move(s, Path.Combine(Dir, Path.Combine(Program.DataFolderName, Path.GetFileName(s)))); }
+                    try { File.Move(s, Path.Combine(Dir, Path.Combine(Program.DataFolderPath, Path.GetFileName(s)))); }
                     catch { }
 				}
-				Dir=Path.Combine(Dir,Program.DataFolderName);
+				Dir=Path.Combine(Dir,Program.DataFolderPath);
 			}
 			AddFilesFromFolder(Dir, new FileInfo(OpenDialog.FileName).Name,false);
 		}
@@ -1238,7 +1207,7 @@ namespace OblivionModManager {
 			}
 			//Remove missing files
 			for(int i=0;i<toadd.Count;i++) {
-				if(!File.Exists(Path.GetFullPath(Path.Combine(Program.DataFolderName,toadd[i])))) {
+				if(!File.Exists(Path.GetFullPath(Path.Combine(Program.DataFolderPath,toadd[i])))) {
 					toadd.RemoveAt(i--);
 				}
 			}
@@ -1252,7 +1221,7 @@ namespace OblivionModManager {
 			Array.Resize<string>(ref ops.DataFiles, lower+toadd.Count);
 			for(int i=0;i<toadd.Count;i++) {
 				ops.DataFilePaths[lower+i]=toadd[i];
-				ops.DataFiles[lower+i]=Path.GetFullPath(Path.Combine(Program.DataFolderName,toadd[i]));
+				ops.DataFiles[lower+i]=Path.GetFullPath(Path.Combine(Program.DataFolderPath,toadd[i]));
 			}
 		}
 

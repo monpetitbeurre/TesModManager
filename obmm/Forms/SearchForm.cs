@@ -38,7 +38,7 @@ namespace OblivionModManager
 		{
 			StringBuilder sb = new StringBuilder();
 			
-			FileInfo[] files = new DirectoryInfo(@"obmm\ocdlist").GetFiles("*.xbt", SearchOption.AllDirectories);
+			FileInfo[] files = new DirectoryInfo(Path.Combine(Program.BaseDir, "ocdlist")).GetFiles("*.xbt", SearchOption.AllDirectories);
 			
 			foreach(FileInfo fi in files)
 			{

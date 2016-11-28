@@ -74,7 +74,7 @@ namespace OblivionModManager {
                     {
                         uncompressed = new byte[br.ReadUInt32()];
                     }
-                    catch (OutOfMemoryException ex)
+                    catch (OutOfMemoryException)
                     {
                         MessageBox.Show("This file cannot be handled by TMM as it exceeds 2GB unpacked. Please use BSAopt","Out of memory",MessageBoxButtons.OK,MessageBoxIcon.Error);
                         throw;
@@ -363,7 +363,6 @@ namespace OblivionModManager {
                 case ".bmp":
                 case ".jpg":
                     fe.Extract(tmpfilename, false, br);
-//                    System.Diagnostics.Process.Start("obmm\\NifViewer.exe", fe.LowerName);
                     System.Diagnostics.Process.Start("cmd.exe", "/c start " + tmpfilename);
                     break;
                 default:

@@ -146,7 +146,7 @@ namespace OblivionModManager {
             else
                 btnLootSortPlugins.Visible = false;
 			
-			DirectoryInfo ocdlist = new DirectoryInfo(@"obmm\ocdlist");
+			DirectoryInfo ocdlist = new DirectoryInfo(Path.Combine(Program.BaseDir, "ocdlist"));
 			
 			FileInfo[] rootfiles;
 
@@ -169,7 +169,7 @@ namespace OblivionModManager {
 			}
 			
 			
-			DirectoryInfo scriptDir = new DirectoryInfo(@"obmm\scripting");
+			DirectoryInfo scriptDir = new DirectoryInfo(Path.Combine(Program.BaseDir, "scripting"));
 			
 			if (scriptDir.Exists)
 			{
@@ -180,7 +180,7 @@ namespace OblivionModManager {
 				FileInfo[] sCSharp, sVBNet;
 				sCSharp = scriptDir.GetFiles("*.cs");
 				sVBNet = scriptDir.GetFiles("*.vb");
-				string curd = Program.CurrentDir + "obmm\\scripting";
+				string curd = Path.Combine(Program.BaseDir, "scripting");
 				
 				bool se = Scripting.DotNetScriptHandler.ShowError;
 				Scripting.DotNetScriptHandler.ShowError = scripterrors;
@@ -285,23 +285,32 @@ namespace OblivionModManager {
             string latestSEversion = getLatestScriptExtenderVersion();
             FileVersionInfo scriptextenderfvi = null;
             FileVersionInfo gamever = null;
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimSEMode)
             {
-                if (File.Exists("skse_loader.exe") || File.Exists("skse_steam_loader.dll"))
+                if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
                 {
-                    scriptextenderfvi = File.Exists("skse_loader.exe") ? FileVersionInfo.GetVersionInfo("skse_loader.exe") : FileVersionInfo.GetVersionInfo("skse_steam_loader.dll");
+                    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
                 }
-                gamever = FileVersionInfo.GetVersionInfo("tesv.exe");
+                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "SkyrimSE.exe"));
+            }
+            else if (Program.bSkyrimMode)
+            {
+                if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
+                {
+                    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
+                }
+                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "tesv.exe"));
             }
             else if (Program.bMorrowind)
             {
-                gamever = FileVersionInfo.GetVersionInfo("morrowind.exe");
-                scriptextenderfvi = FileVersionInfo.GetVersionInfo("mwse.dll");
+                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "morrowind.exe"));
+
+                scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "mwse.dll")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "mwse.dll")) : null;
             }
             else
             {
-                scriptextenderfvi = File.Exists("obse_loader.exe") ? FileVersionInfo.GetVersionInfo("obse_loader.exe") : null;
-                gamever = FileVersionInfo.GetVersionInfo("oblivion.exe");
+                scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "obse_loader.exe")) : null;
+                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "oblivion.exe"));
             }
             toolStripLblScriptExtenderVersion.Text = "" + Program.gameName + " " + gamever.FileVersion;
             if (scriptextenderfvi != null)
@@ -334,7 +343,7 @@ namespace OblivionModManager {
             else
             {
                 toolStripLblScriptExtenderVersion.ForeColor = Color.Black;
-                toolStripLblScriptExtenderVersion.Text += " - No script extender detected"+(!Program.bMorrowind?" (Click HERE to install)":"");
+                toolStripLblScriptExtenderVersion.Text += " - No script extender detected"+(!(Program.bMorrowind || Program.bSkyrimSEMode)?" (Click HERE to install)":"");
             }
         }
 
@@ -460,10 +469,10 @@ namespace OblivionModManager {
                 {
                     try
                     {
-                        if (File.Exists(Path.Combine(Program.DataFolderName,ei.FileName)))
-                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderName, ei.FileName));
-                        else if (File.Exists(Path.Combine(Program.DataFolderName,ei.FileName + ".ghost")))
-                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderName,ei.FileName + ".ghost"));
+                        if (File.Exists(Path.Combine(Program.DataFolderPath,ei.FileName)))
+                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderPath, ei.FileName));
+                        else if (File.Exists(Path.Combine(Program.DataFolderPath,ei.FileName + ".ghost")))
+                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderPath,ei.FileName + ".ghost"));
                     }
                     catch
                     {
@@ -488,7 +497,7 @@ namespace OblivionModManager {
                             ei.BelongsTo = Program.SteamModList[filename];
 
                             string bsa = filename.Replace(".esp", ".bsa").Replace(".esm", ".bsa");
-                            if (File.Exists(Path.Combine(Program.DataFolderName,bsa)))
+                            if (File.Exists(Path.Combine(Program.DataFolderPath,bsa)))
                             {
                                 toolText += "\n\nData file: " + bsa;
                             }
@@ -820,13 +829,13 @@ namespace OblivionModManager {
 		#endregion
 		void LoadOBMMEX()
 		{
-			if (!File.Exists(@"obmm\obmmex.xbt"))
+			if (!File.Exists(Path.Combine(Program.BaseDir, "obmmex.xbt")))
 			{
-				XSettings.SettingsFolder = new DirectoryInfo(@"obmm\xsettings").FullName;
+				XSettings.SettingsFolder = new DirectoryInfo(Path.Combine(Program.BaseDir, "xsettings")).FullName;
 				return;
 			}
 			
-			ConfigList config = new GeneralConfig().LoadConfiguration(@"obmm\obmmex.xbt");
+			ConfigList config = new GeneralConfig().LoadConfiguration(Path.Combine(Program.BaseDir, "obmmex.xbt"));
 			
 			ConfigPair cp;
 			
@@ -958,7 +967,7 @@ namespace OblivionModManager {
             {
                 return;
             }
-            File.Delete(Path.Combine(Program.DataFolderName,ei.FileName));
+            File.Delete(Path.Combine(Program.DataFolderPath,ei.FileName));
             Program.Data.Esps.Remove(ei);
             lvEspList.Items.RemoveAt(lvEspList.SelectedIndices[0]);
         }
@@ -1108,15 +1117,15 @@ namespace OblivionModManager {
                     if (Settings.bUseTimeStamps)
                     {
                         Program.logger.WriteToLog("Setting timestamps ", Logger.LogLevel.High);
-                        DateTime oldtime = File.GetLastWriteTime(Path.Combine(Program.DataFolderName, bottom.FileName));
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName, bottom.FileName), File.GetLastWriteTime(Path.Combine(Program.DataFolderName, top.FileName)));
+                        DateTime oldtime = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, bottom.FileName));
+                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, bottom.FileName), File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, top.FileName)));
                         string bsa = bottom.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                        if (File.Exists(Path.Combine(Program.DataFolderName, bsa)))
-                            File.SetLastWriteTime(Path.Combine(Program.DataFolderName, bsa), File.GetLastWriteTime(Path.Combine(Program.DataFolderName, top.FileName)));
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName, top.FileName), oldtime);
+                        if (File.Exists(Path.Combine(Program.DataFolderPath, bsa)))
+                            File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, bsa), File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, top.FileName)));
+                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, top.FileName), oldtime);
                         bsa = top.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                        if (File.Exists(Path.Combine(Program.DataFolderName, bsa)))
-                            File.SetLastWriteTime(Path.Combine(Program.DataFolderName, bsa), oldtime);
+                        if (File.Exists(Path.Combine(Program.DataFolderPath, bsa)))
+                            File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, bsa), oldtime);
                         Program.logger.WriteToLog("Done setting timestamps ", Logger.LogLevel.High);
                     }
                 }
@@ -1243,7 +1252,7 @@ namespace OblivionModManager {
 			System.Collections.Generic.List<string> toadd=new System.Collections.Generic.List<string>();
 			foreach(ListViewItem lvi in lvEspList.SelectedItems) {
 				try {
-					toadd.AddRange(ConflictDetector.TesFile.GetDataFileList(Path.Combine(Program.DataFolderName,lvi.Text)));
+					toadd.AddRange(ConflictDetector.TesFile.GetDataFileList(Path.Combine(Program.DataFolderPath,lvi.Text)));
 				} catch(Exception ex) {
 					MessageBox.Show("An error occurred trying to parse plugin "+lvi.SubItems[1].Text+"\n"+
 					                "Error: "+ex.Message, "Error");
@@ -1512,7 +1521,7 @@ namespace OblivionModManager {
 				while(match)
 				{
 					dis.Clear();
-					dis.Add(new DirectoryInfo(Program.DataFolderName));
+					dis.Add(new DirectoryInfo(Program.DataFolderPath));
 					
 					match=false;
 					for(int i=0;i<dis.Count;i++)
@@ -1723,10 +1732,8 @@ namespace OblivionModManager {
 				} else {
 					if(Path.GetExtension(ZipName).ToLower()!=".zip") ZipName+=".zip";
 				}
-				if(File.Exists(ZipName)&&MessageBox.Show("File '"+ZipName+"' already exists.\n"+
-				                                         "Do you wish to overwrite?", "Warning", MessageBoxButtons.YesNo)!=DialogResult.Yes) return;
-				bool CreateConversionData=MessageBox.Show("Create omod conversion information?",
-				                                          "Question", MessageBoxButtons.YesNo)==DialogResult.Yes;
+				if(File.Exists(ZipName)&&MessageBox.Show("File '"+ZipName+"' already exists.\n"+"Do you wish to overwrite?", "Warning", MessageBoxButtons.YesNo)!=DialogResult.Yes) return;
+				bool CreateConversionData=MessageBox.Show("Create omod conversion information?","Question", MessageBoxButtons.YesNo)==DialogResult.Yes;
 				string path=o.GetDataFiles();
 				string temppath=null;
 				if(path==null) {
@@ -1743,24 +1750,24 @@ namespace OblivionModManager {
 					}
 				}
 				if(o.DoesReadmeExist()) {
-					File.WriteAllText(path+o.ModName+"_readme.rtf", o.GetReadme());
+					File.WriteAllText(Path.Combine(Path.Combine(path,o.ModName),"_readme.rtf"), o.GetReadme());
 				}
 				if(CreateConversionData) {
-					Directory.CreateDirectory(path+Program.omodConversionData);
+					Directory.CreateDirectory(Path.Combine(path, Program.omodConversionData));
 					if(o.DoesScriptExist()) {
-						File.WriteAllText(path+Program.omodConversionData+"script.txt", o.GetScript());
+						File.WriteAllText(Path.Combine(Path.Combine(path, Program.omodConversionData),"script.txt"), o.GetScript());
 					}
-					File.WriteAllText(path+Program.omodConversionData+"info.txt", o.GetInfo());
+					File.WriteAllText(Path.Combine(Path.Combine(path, Program.omodConversionData),"info.txt"), o.GetInfo());
 					temppath=o.GetImage();
 					if(temppath!=null) {
                         //System.Drawing.Imaging.ImageFormat imf=o.image.RawFormat;
-						File.Move(temppath, path+Program.omodConversionData+"screenshot");
+						File.Move(temppath, Path.Combine(Path.Combine(path, Program.omodConversionData),"screenshot"));
 					}
 					temppath=o.GetConfig();
-					File.Move(temppath, path+Program.omodConversionData+"config");
+					File.Move(temppath, Path.Combine(Path.Combine(path, Program.omodConversionData),"config"));
 				}
 				if(SaveOmodDialog.FilterIndex==1) {
-					System.Diagnostics.ProcessStartInfo psi=new System.Diagnostics.ProcessStartInfo("obmm\\7zr.exe");
+					System.Diagnostics.ProcessStartInfo psi=new System.Diagnostics.ProcessStartInfo(Path.Combine(Program.BaseDir, "7zr.exe"));
 					psi.Arguments="a -t7z -mx="+(Settings.CompressionBoost?"9":"7")+" \""+ZipName+"\" \""+path+"*\"";
 					psi.CreateNoWindow=true;
 					psi.UseShellExecute=false;
@@ -1783,13 +1790,11 @@ namespace OblivionModManager {
 			folderBrowserDialog1.Description="Select the path to extract "+o.FileName+" to";
 			if(folderBrowserDialog1.ShowDialog()!=DialogResult.OK) return;
 			if(Directory.Exists(folderBrowserDialog1.SelectedPath+"\\"+o.ModName)) {
-				MessageBox.Show("Unable to extract to that directory.\n"+
-				                "The path '"+folderBrowserDialog1.SelectedPath+"\\"+o.ModName+"' already exists", "Error");
+				MessageBox.Show("Unable to extract to that directory.\n"+"The path '"+folderBrowserDialog1.SelectedPath+"\\"+o.ModName+"' already exists", "Error");
 				return;
 			}
 			try {
-				bool CreateConversionData=MessageBox.Show("Create omod conversion information?",
-				                                          "Question", MessageBoxButtons.YesNo)==DialogResult.Yes;
+				bool CreateConversionData=MessageBox.Show("Create omod conversion information?","Question", MessageBoxButtons.YesNo)==DialogResult.Yes;
 				string path=o.GetDataFiles();
 				string temppath=null;
 				if(path==null) {
@@ -1806,23 +1811,23 @@ namespace OblivionModManager {
 					}
 				}
 				if(o.DoesReadmeExist()) {
-					File.WriteAllText(path+o.ModName+"_readme.rtf", o.GetReadme());
+					File.WriteAllText(Path.Combine(Path.Combine(path, o.ModName),"_readme.rtf"), o.GetReadme());
 				}
 				if(CreateConversionData) {
-					Directory.CreateDirectory(path+Program.omodConversionData);
+					Directory.CreateDirectory(Path.Combine(path, Program.omodConversionData));
 					if(o.DoesScriptExist()) {
-						File.WriteAllText(path+Program.omodConversionData+"script.txt", o.GetScript());
+						File.WriteAllText(Path.Combine(Path.Combine(path, Program.omodConversionData),"script.txt"), o.GetScript());
 					}
 					File.WriteAllText(path+Program.omodConversionData+"info.txt", o.GetInfo());
 					temppath=o.GetImage();
 					if(temppath!=null) {
                         //System.Drawing.Imaging.ImageFormat imf=o.image.RawFormat;
-						File.Move(temppath, path+Program.omodConversionData+"screenshot");
+						File.Move(temppath, Path.Combine(Path.Combine(path, Program.omodConversionData),"screenshot"));
 					}
 					temppath=o.GetConfig();
-					if (temppath.Length>0) File.Move(temppath, path+Program.omodConversionData+"config");
+					if (temppath.Length>0) File.Move(temppath, Path.Combine(Path.Combine(path, Program.omodConversionData),"config"));
 				}
-				Program.RecersiveDirectoryMove(path, folderBrowserDialog1.SelectedPath+"\\"+o.ModName, false);
+				Program.RecersiveDirectoryMove(path, Path.Combine(folderBrowserDialog1.SelectedPath,o.ModName), false);
 				MessageBox.Show("Done");
 			} catch(Exception ex) {
 				MessageBox.Show("Extraction failed\nError: "+ex.Message, "Error");
@@ -1834,9 +1839,9 @@ namespace OblivionModManager {
 			omod o=(omod)lvModList.SelectedItems[0].Tag;
 			folderBrowserDialog1.Description="Select the path to extract "+o.FileName+" to";
 			if(folderBrowserDialog1.ShowDialog()!=DialogResult.OK) return;
-			if(Directory.Exists(folderBrowserDialog1.SelectedPath+"\\"+folderBrowserDialog1.SelectedPath)) {
+			if(Directory.Exists(Path.Combine(folderBrowserDialog1.SelectedPath,folderBrowserDialog1.SelectedPath))) {
 				MessageBox.Show("Unable to extract to that directory.\n"+
-				                "The path '"+folderBrowserDialog1.SelectedPath+"\\"+folderBrowserDialog1.SelectedPath+"' already exists", "Error");
+				                "The path '"+ Path.Combine(folderBrowserDialog1.SelectedPath,folderBrowserDialog1.SelectedPath)+"' already exists", "Error");
 				return;
 			}
 			try {
@@ -1844,16 +1849,16 @@ namespace OblivionModManager {
 				string temppath;
 				Directory.CreateDirectory(path);
 				if(o.DoesScriptExist()) {
-					File.WriteAllText(path+"script.txt", o.GetScript());
+					File.WriteAllText(Path.Combine(path,"script.txt"), o.GetScript());
 				}
-				File.WriteAllText(path+"info.txt", o.GetInfo());
+				File.WriteAllText(Path.Combine(path,"info.txt"), o.GetInfo());
 				temppath=o.GetImage();
 				if(temppath!=null) {
                     //System.Drawing.Imaging.ImageFormat imf=o.image.RawFormat;
-					File.Move(temppath, path+"screenshot");
+					File.Move(temppath, Path.Combine(path,"screenshot"));
 				}
 				temppath=o.GetConfig();
-				File.Move(temppath, path+"config");
+				File.Move(temppath, Path.Combine(path,"config"));
 			} catch(Exception ex) {
 				MessageBox.Show("Extraction failed\nError: "+ex.Message, "Error");
 			}
@@ -2116,7 +2121,7 @@ namespace OblivionModManager {
 				EspInfo ei=Program.Data.GetEsp(file);
 				if(ei!=null) {
 					ei.DateModified=pos;
-					FileInfo fi=new FileInfo(Path.Combine(Program.DataFolderName,file));
+					FileInfo fi=new FileInfo(Path.Combine(Program.DataFolderPath,file));
 					fi.LastWriteTime=pos;
                     if (Program.bSkyrimMode)
                         Program.loadOrderList.Add(file.ToLower());
@@ -2294,7 +2299,7 @@ namespace OblivionModManager {
         }
 
 		private void nifViewerToolStripMenuItem_Click(object sender, EventArgs e) {
-			if(!File.Exists("obmm\\NifViewer.exe")) {
+			if(!File.Exists(Path.Combine(Program.BaseDir, "NifViewer.exe"))) {
 				MessageBox.Show("The nifviewer utility could not be found","Error");
 				return;
 			}
@@ -2304,7 +2309,7 @@ namespace OblivionModManager {
                 MessageBox.Show("You do not have the required version of MDX installed.\n"+
                     "Please install the october 2005 DirectX update or newer, and ensure the MDX component is selected to be installed.", "Error");
             }*/
-			System.Diagnostics.Process.Start("obmm\\NifViewer.exe");
+			System.Diagnostics.Process.Start(Path.Combine(Program.BaseDir, "NifViewer.exe"));
 		}
 
 		private void lvEspList_GiveFeedback(object sender, GiveFeedbackEventArgs e) {
@@ -3329,7 +3334,7 @@ namespace OblivionModManager {
             foreach (ListViewItem lvi in lvEspList.Items)
             {
                 EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderName,ea.FileName));
+                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,ea.FileName));
             }
             lvEspList.Sort();
         }
@@ -3762,6 +3767,7 @@ namespace OblivionModManager {
                     return;
                 toolStripProcessingStatusLabel.Visible = true;
                 toolStripProcessingStatusLabel.Text = "Retrieving latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                Application.DoEvents();
                 try
                 {
 
@@ -3773,9 +3779,17 @@ namespace OblivionModManager {
                     File.Delete(Program.TempDir + "\\scriptextender.7z");
                     if (Program.bSkyrimMode)
                     {
+                        string filelink = "";
                         if (page.IndexOf("download/skse_") != -1)
                         {
-                            string filelink = page.Substring(page.LastIndexOf("download/skse_"));
+                            filelink = page.Substring(page.LastIndexOf("download/skse_"));
+                        }
+                        if (filelink.Length == 0  && page.IndexOf("beta/skse_") != -1)
+                        {
+                            filelink = page.Substring(page.LastIndexOf("beta/skse_"));
+                        }
+                        if (filelink.Length>0)
+                        {
                             string extension = "";
                             if (filelink.IndexOf(".7z") != -1)
                                 extension = ".7z";
@@ -3784,6 +3798,7 @@ namespace OblivionModManager {
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
                             filelink = "http://skse.silverlock.org/" + filelink + extension;
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                            Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
                             File.WriteAllBytes(Program.TempDir + "\\scriptextender.7z", bytepage);
                         }
@@ -3801,6 +3816,7 @@ namespace OblivionModManager {
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
                             filelink = "http://" + (Program.bSkyrimMode ? "skse" : "obse") + filelink + extension;
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                            Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
                             File.WriteAllBytes(Program.TempDir + "\\scriptextender.7z", bytepage);
                         }
@@ -3820,12 +3836,14 @@ namespace OblivionModManager {
 
                         }
                         toolStripProcessingStatusLabel.Text = "Extracting latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                        Application.DoEvents();
                         zextract.ExtractFiles(extenderTmpDir, files.ToArray());
                         zextract.Dispose();
                         // make sure that the current dir did not change
                         Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
                         toolStripProcessingStatusLabel.Text = "Installing latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                        Application.DoEvents();
 
                         //List<string> newfiles = new List<string>(files.Count);
 
@@ -3845,11 +3863,11 @@ namespace OblivionModManager {
                             pathtoremove = pathtoremove.Substring(0, pathtoremove.IndexOf("\\"));
                         //else if (pathtoremove.IndexOf(Path.GetFileNameWithoutExtension(filelink))!=-1)
                         //    pathtoremove = pathtoremove.Substring(0, pathtoremove.IndexOf(Path.GetFileNameWithoutExtension(filelink)));
-                        files = new List<string>(Directory.EnumerateFiles(extenderTmpDir + "\\" + pathtoremove, "*.*", SearchOption.AllDirectories));
-                        List<string> dirs = new List<string>(Directory.EnumerateDirectories(extenderTmpDir + "\\" + pathtoremove, "*.*", SearchOption.AllDirectories));
+                        files = new List<string>(Directory.EnumerateFiles(Path.Combine(extenderTmpDir,pathtoremove), "*.*", SearchOption.AllDirectories));
+                        List<string> dirs = new List<string>(Directory.EnumerateDirectories(Path.Combine(extenderTmpDir, pathtoremove), "*.*", SearchOption.AllDirectories));
                         foreach (string dir in dirs)
                         {
-                            string newdir = dir.Replace(extenderTmpDir + "\\" + pathtoremove + "\\", "");
+                            string newdir = dir.Replace(Path.Combine(extenderTmpDir, pathtoremove) + "\\", "");
                             if (!Directory.Exists(newdir))
                                 Directory.CreateDirectory(newdir);
                         }
@@ -3859,7 +3877,7 @@ namespace OblivionModManager {
                         {
                             if (files[j].ToLower().StartsWith(srcdir)) // ignore source code
                                 continue;
-                            string targetfile = files[j].Replace(oldpath+"\\", "");
+                            string targetfile = files[j].Replace(oldpath, Program.gamePath);
                             if (File.Exists(targetfile))
                             {
                                 File.SetAttributes(targetfile, FileAttributes.Normal);
@@ -3882,6 +3900,7 @@ namespace OblivionModManager {
                 }
                 toolStripProcessingStatusLabel.Text = "";
                 toolStripProcessingStatusLabel.Visible = false;
+                Application.DoEvents();
             }
         }
 
@@ -3907,7 +3926,7 @@ namespace OblivionModManager {
             foreach (ListViewItem lvi in lvEspList.Items)
             {
                 EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderName,ea.FileName));
+                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,ea.FileName));
             }
             lvEspList.Sort();
         }
@@ -4058,29 +4077,28 @@ namespace OblivionModManager {
         private void toolStripLblCK_Click(object sender, EventArgs e)
         {
             Process process = new Process();
-            process.StartInfo.FileName= Path.GetDirectoryName(Application.ExecutablePath) + "\\";
-            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-            if (File.Exists("obse_loader.exe"))
+            process.StartInfo.WorkingDirectory = Program.gamePath;
+            if (File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")))
             {
-                process.StartInfo.FileName += "obse_loader.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "obse_loader.exe");
                 process.StartInfo.Arguments = "-editor";
             }
             else if (File.Exists("skse_loader.exe"))
             {
-                process.StartInfo.FileName += "skse_loader.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "skse_loader.exe");
                 process.StartInfo.Arguments = "-altexe creationkit.exe";
             }
             else if (Program.bSkyrimMode)
             {
-                process.StartInfo.FileName += "CreationKit.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "CreationKit.exe");
             }
             else if (Program.bMorrowind)
             {
-                process.StartInfo.FileName += "TES Construction Set.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TES Construction Set.exe");
             }
             else
             {
-                process.StartInfo.FileName += "TESConstructionSet.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TESConstructionSet.exe");
             }
             process.Start();
         }
@@ -4088,29 +4106,29 @@ namespace OblivionModManager {
         private void btnLaunchCreationKit_Click(object sender, EventArgs e)
         {
             Process process = new Process();
-            process.StartInfo.FileName = Path.GetDirectoryName(Application.ExecutablePath) + "\\";
-            process.StartInfo.WorkingDirectory = Path.GetDirectoryName(Application.ExecutablePath);
-            if (File.Exists("obse_loader.exe"))
+            process.StartInfo.FileName = Program.gamePath;
+            process.StartInfo.WorkingDirectory = Program.gamePath;
+            if (File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")))
             {
-                process.StartInfo.FileName += "obse_loader.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "obse_loader.exe");
                 process.StartInfo.Arguments = "-editor";
             }
-            else if (File.Exists("skse_loader.exe"))
+            else if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")))
             {
-                process.StartInfo.FileName += "skse_loader.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "skse_loader.exe");
                 process.StartInfo.Arguments = "-altexe creationkit.exe";
             }
             else if (Program.bSkyrimMode)
             {
-                process.StartInfo.FileName += "CreationKit.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "CreationKit.exe");
             }
             else if (Program.bMorrowind)
             {
-                process.StartInfo.FileName += "TES Construction Set.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TES Construction Set.exe");
             }
             else
             {
-                process.StartInfo.FileName += "TESConstructionSet.exe";
+                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TESConstructionSet.exe");
             }
             process.Start();
         }
@@ -4176,7 +4194,7 @@ namespace OblivionModManager {
             foreach (ListViewItem lvi in lvEspList.Items)
             {
                 EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderName, ea.FileName));
+                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, ea.FileName));
             }
             lvEspList.Sort();
 

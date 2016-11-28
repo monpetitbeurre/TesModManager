@@ -18,7 +18,7 @@ namespace OblivionModManager.Forms
         {
             InitializeComponent();
 
-            string[] patchers = Directory.GetFiles(Path.Combine(Program.DataFolderName, "Skyproc patchers"), "*.jar", SearchOption.AllDirectories);
+            string[] patchers = Directory.GetFiles(Path.Combine(Program.DataFolderPath, "Skyproc patchers"), "*.jar", SearchOption.AllDirectories);
             lbSkyProcPatchers.Items.AddRange(patchers);
 
             foreach (string patcher in patchers)

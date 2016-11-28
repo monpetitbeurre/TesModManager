@@ -594,11 +594,11 @@ namespace OblivionModManager {
                         }
                         foreach (DataFileInfo dfi in conflicts)
                         {
-                            if (dfi == null || !File.Exists(Path.Combine(Program.DataFolderName, dfi.FileName)))
+                            if (dfi == null || !File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)))
                                 continue;
                             if (dfi.Owners != null)
                             {
-                                long filesize = (File.Exists(Path.Combine(Program.DataFolderName, dfi.FileName)) ? new FileInfo(Path.Combine(Program.DataFolderName, dfi.FileName)).Length : 0);
+                                long filesize = (File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)) ? new FileInfo(Path.Combine(Program.DataFolderPath, dfi.FileName)).Length : 0);
                                 // who is the owner?
                                 foreach (string owner in dfi.OwnerList)
                                 {

@@ -167,7 +167,7 @@ namespace ConflictDetector {
                         if(!ei.Active&&IgnoreInactiveEsps) continue;
                         try {
                             plugin p=new plugin(ei.FileName, null, ei.Active);
-                            list.AddRange(TesFile.GetIDList(Path.Combine(Program.DataFolderName,ei.FileName), p));
+                            list.AddRange(TesFile.GetIDList(Path.Combine(Program.DataFolderPath,ei.FileName), p));
                             plugins.Add(p);
                         } catch {
                             Errors.Add("An error occured trying to read plugin '"+ei.FileName+"'");
@@ -177,7 +177,7 @@ namespace ConflictDetector {
                         if(!ei.Active) continue;
                         try {
                             plugin p=new plugin(ei.FileName, ei.BelongsTo, ei.Active);
-                            list.AddRange(TesFile.GetIDList(Path.Combine(Program.DataFolderName,ei.FileName), p));
+                            list.AddRange(TesFile.GetIDList(Path.Combine(Program.DataFolderPath,ei.FileName), p));
                             plugins.Add(p);
                         } catch {
                             Errors.Add("An error occured trying to read plugin '"+ei.FileName+"'");

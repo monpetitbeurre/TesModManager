@@ -52,10 +52,17 @@ namespace OblivionModManager {
                     }
                     else
                     {
-                        image = new Bitmap(ImageWidth, ImageHeight, PixelFormat.Format24bppRgb);
-                        BitmapData bd = image.LockBits(new Rectangle(0, 0, ImageWidth, ImageHeight), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
-                        System.Runtime.InteropServices.Marshal.Copy(ImageData, 0, bd.Scan0, ImageData.Length);
-                        image.UnlockBits(bd);
+                        try
+                        {
+                            image = new Bitmap(ImageWidth, ImageHeight, PixelFormat.Format24bppRgb);
+                            BitmapData bd = image.LockBits(new Rectangle(0, 0, ImageWidth, ImageHeight), ImageLockMode.WriteOnly, PixelFormat.Format24bppRgb);
+                            System.Runtime.InteropServices.Marshal.Copy(ImageData, 0, bd.Scan0, ImageData.Length);
+                            image.UnlockBits(bd);
+                        }
+                        catch
+                        {
+                            image = new Bitmap(640, 480, PixelFormat.Format24bppRgb);
+                        }
                     }
                     return image;
                 }

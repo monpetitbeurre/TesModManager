@@ -46,7 +46,7 @@ namespace OblivionModManager.Scripting {
 
             //engine.InitializeModules(Application.ExecutablePath,typeof(OblivionModManager.Program).Assembly.Location , "1.1");
 
-            engine.AddToPath(Path.GetDirectoryName(Program.CurrentDir));
+            engine.AddToPath(Path.GetDirectoryName(Program.BaseDir));
             engineModule = engine.CreateModule("__main__", new Dictionary<string, object>(), true);
             engine.DefaultModule = engineModule;
 
@@ -115,7 +115,7 @@ namespace OblivionModManager.Scripting {
             System.Security.PermissionSet ps=new System.Security.PermissionSet(PermissionState.None);
             {
                 string[] paths=new string[3];
-                paths[0]=Program.CurrentDir;
+                paths[0]=Program.BaseDir;
                 paths[1]=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\Oblivion");
                 paths[2]=Program.TempDir;
                 ps.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, paths));

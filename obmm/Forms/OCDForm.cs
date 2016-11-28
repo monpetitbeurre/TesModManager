@@ -335,7 +335,7 @@ namespace OblivionModManager
 				OpenFileDialog ofd = new OpenFileDialog();
 				ofd.Filter = "OCD Files|*.xbt";
 				ofd.RestoreDirectory = true;
-				ofd.InitialDirectory = new System.IO.DirectoryInfo(@"obmm\ocdlist").FullName;
+				ofd.InitialDirectory = new System.IO.DirectoryInfo(Path.Combine(Program.BaseDir, "ocdlist")).FullName;
 				
 				if (ofd.ShowDialog() == DialogResult.OK)
 				{
@@ -419,7 +419,7 @@ namespace OblivionModManager
 			SaveFileDialog sfd = new SaveFileDialog();
 			sfd.RestoreDirectory = true;
 			sfd.Filter = "OCD Files|*.xbt;*.json;*.cidb";
-			sfd.InitialDirectory = new System.IO.DirectoryInfo(@"obmm\ocdlist").FullName;
+			sfd.InitialDirectory = new System.IO.DirectoryInfo(Path.Combine(Program.BaseDir, "ocdlist")).FullName;
 			
 			if (sfd.ShowDialog() == DialogResult.OK)
 			{

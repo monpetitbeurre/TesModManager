@@ -161,7 +161,7 @@ namespace OblivionModManager.Forms {
             if(cbDisplayLog.Checked) {
                 (new TextEditor("Background process killer log", string.Join(Environment.NewLine, messages.ToArray()), false, false)).ShowDialog();
             }
-            System.IO.File.WriteAllLines("obmm process killer log.txt", messages.ToArray());
+            System.IO.File.WriteAllLines("tmm process killer log.txt", messages.ToArray());
             Close();
         }
 

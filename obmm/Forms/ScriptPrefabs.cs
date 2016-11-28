@@ -17,7 +17,7 @@ namespace OblivionModManager.Forms
 	{
 		OblivionModManager.Forms.ScriptEditor scriptEditor;
 		ConfigList prefabs;
-		public const string PREFAB_FILE = @"obmm\prefabs.xbt";
+		public static readonly string PREFAB_FILE = Path.Combine(Program.BaseDir, "prefabs.xbt");
 		
 		public PrefabForm(ScriptEditor se)
 		{

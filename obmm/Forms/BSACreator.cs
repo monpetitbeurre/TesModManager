@@ -198,7 +198,7 @@ namespace OblivionModManager.Forms {
                 if(directory.EndsWith("\\")) directory=directory.Remove(directory.Length-1);
                 string s=directory.ToLower();
                 string relative;
-                if(s.StartsWith(Path.Combine(Program.CurrentDir,Program.DataFolderName)+"\\")) relative=s.Substring((Program.CurrentDir+Program.DataFolderName+"\\").Length)+"\\";
+                if(s.StartsWith(Program.DataFolderPath+"\\")) relative=s.Substring((Program.DataFolderPath+"\\").Length)+"\\";
                 else if(prefix!=null) relative=prefix;
                 else relative="";
                 foreach(string file in Directory.GetFiles(s, "*", SearchOption.AllDirectories)) {
@@ -243,10 +243,8 @@ namespace OblivionModManager.Forms {
             if(openFileDialog1.FileNames.Length>1) lvFiles.Sorting=SortOrder.None;
             foreach(string s in openFileDialog1.FileNames) {
                 string path=s.ToLower();
-                if(path.StartsWith(Path.Combine(Program.CurrentDir,Program.DataFolderName)+"\\")) {
-                    path=path.Substring((Path.Combine(Program.CurrentDir,Program.DataFolderName)+"\\").Length);
-                } else if(path.StartsWith(Program.DataFolderName+"\\")) {
-                    path=path.Substring(5);
+                if(path.StartsWith(Program.DataFolderPath+"\\")) {
+                    path=path.Substring((Program.DataFolderPath+"\\").Length);
                 } else {
                     path=Path.GetFileName(path);
                 }
@@ -268,8 +266,8 @@ namespace OblivionModManager.Forms {
             foreach(string file in openFileDialog1.FileNames) {
                 string[] files=ConflictDetector.TesFile.GetDataFileList(file);
                 foreach(string s in files) {
-                    if(!File.Exists(Path.Combine(Program.DataFolderName,s))) continue;
-                    ListViewItem lvi=new ListViewItem(new string[] { s.ToLower(), Path.GetFullPath(Path.Combine(Program.DataFolderName,s)) });
+                    if(!File.Exists(Path.Combine(Program.DataFolderPath,s))) continue;
+                    ListViewItem lvi=new ListViewItem(new string[] { s.ToLower(), Path.GetFullPath(Path.Combine(Program.DataFolderPath,s)) });
                     lvFiles.Items.Add(lvi);
                 }
             }
@@ -308,7 +306,7 @@ namespace OblivionModManager.Forms {
             Settings.BSACreatorFolderBrowserDir=folderBrowserDialog1.SelectedPath;
             string s=folderBrowserDialog1.SelectedPath.ToLower();
             string relative;
-            if(s.StartsWith(Path.Combine(Program.CurrentDir,Program.DataFolderName)+"\\")) relative=s.Substring((Program.CurrentDir+Program.DataFolderName+"\\").Length)+"\\";
+            if(s.StartsWith(Program.DataFolderPath+"\\")) relative=s.Substring((Program.DataFolderPath+"\\").Length)+"\\";
             else relative="";
             lvFiles.Sorting=SortOrder.None;
             foreach(string file in Directory.GetFiles(s, "*", SearchOption.AllDirectories)) {

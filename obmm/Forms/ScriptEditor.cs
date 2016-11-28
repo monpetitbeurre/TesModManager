@@ -204,7 +204,7 @@ namespace OblivionModManager.Forms {
 		}
 
 		private void Help_Click(object sender, EventArgs e) {
-			System.Diagnostics.Process.Start("hh.exe", "obmm\\obmm.chm::/scripting.htm");
+			System.Diagnostics.Process.Start("hh.exe", System.IO.Path.Combine(Program.BaseDir, "obmm.chm::/scripting.htm"));
 		}
 
 		private void cutToolStripMenuItem_Click(object sender, EventArgs e) {

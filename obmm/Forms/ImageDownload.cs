@@ -49,7 +49,7 @@ namespace OblivionModManager
 				string sUrlToReadFileFrom = imageurl;
 
 				// the path to write the file to
-				string sFilePathToWriteFileTo = @"obmm\temp.png";
+				string sFilePathToWriteFileTo = Path.Combine(Program.BaseDir, "temp.png");
 
 				// first, we need to get the exact size (in bytes) of the file we are downloading
 				Uri url = new Uri(sUrlToReadFileFrom);

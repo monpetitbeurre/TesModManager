@@ -590,7 +590,7 @@ namespace OblivionModManager.ConflictReport {
             for(int i=0;i<Active.Length && !bCancelled;i++) {
                 try {
                     pf.Text = "Scanning " + Active[i];
-                    plugins.Add(new Plugin(Path.Combine(Program.DataFolderName,Active[i]), new Node(Active[i], Active[i], null, 0, false, uint.MaxValue, null), (byte)i,
+                    plugins.Add(new Plugin(Path.Combine(Program.DataFolderPath,Active[i]), new Node(Active[i], Active[i], null, 0, false, uint.MaxValue, null), (byte)i,
                         (i==0&&!cbShowMain.Checked)?false:true));
                     pf.UpdateProgress(i);
                     Application.DoEvents();
