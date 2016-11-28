@@ -390,8 +390,8 @@ namespace OblivionModManager {
 
         public void GetHeader()
         {
-            if(!System.IO.File.Exists(Path.Combine(Program.DataFolderName,FileName))) return;
-            header=ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderName,FileName));
+            if(!System.IO.File.Exists(Path.Combine(Program.DataFolderPath,FileName))) return;
+            header=ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderPath,FileName));
         }
 
         public void Unlink() {
@@ -507,19 +507,20 @@ namespace OblivionModManager {
         public void RemoveOwner(omod o) {
             UsedBy.Remove(o.LowerFileName);
             Program.logger.WriteToLog("Deleting " + FileName, Logger.LogLevel.High);
+            string basepath = o.bSystemMod? Path.Combine(Program.DataFolderPath, "..") : Program.DataFolderPath;
             if (UsedBy.Count == 0)
             {
                 Program.Data.DataFiles.Remove(this.LowerFileName);
-                if (File.Exists(Path.Combine(Program.DataFolderName, FileName))) File.Delete(Path.Combine(Program.DataFolderName+"", FileName));
-                if (File.Exists(Path.Combine(Program.DataFolderName, FileName + "." + o.LowerFileName))) File.Delete(Path.Combine(Program.DataFolderName, FileName + "." + o.LowerFileName));
+                if (File.Exists(Path.Combine(basepath, FileName))) File.Delete(Path.Combine(basepath, FileName));
+                if (File.Exists(Path.Combine(basepath, FileName + "." + o.LowerFileName))) File.Delete(Path.Combine(basepath, FileName + "." + o.LowerFileName));
             }
             else
             {
                 // restore the last installed if possible
-                if (File.Exists(Path.Combine(Program.DataFolderName, this.FileName+"."+UsedBy[UsedBy.Count-1])))
-                    File.Copy(Path.Combine(Program.DataFolderName, this.FileName+"."+UsedBy[UsedBy.Count-1]),Path.Combine(Program.DataFolderName, this.FileName), true);
-                if (File.Exists(Path.Combine(Program.DataFolderName, FileName + "." + o.LowerFileName)))
-                    File.Delete(Path.Combine(Program.DataFolderName, FileName + "." + o.LowerFileName));
+                if (File.Exists(Path.Combine(basepath, this.FileName+"."+UsedBy[UsedBy.Count-1])))
+                    File.Copy(Path.Combine(basepath, this.FileName+"."+UsedBy[UsedBy.Count-1]),Path.Combine(basepath, this.FileName), true);
+                if (File.Exists(Path.Combine(basepath, FileName + "." + o.LowerFileName)))
+                    File.Delete(Path.Combine(basepath, FileName + "." + o.LowerFileName));
 
                 // restoring the file that came from the first mod
                 //foreach (omod o2 in Program.Data.omods)
@@ -675,13 +676,13 @@ namespace OblivionModManager {
             case EspSortOrder.Owner:
                 return string.Compare(ea.BelongsTo, eb.BelongsTo);
             case EspSortOrder.FileSize:
-                long sizea=(new System.IO.FileInfo(Path.Combine(Program.DataFolderName,ea.FileName))).Length;
-                long sizeb=(new System.IO.FileInfo(Path.Combine(Program.DataFolderName,eb.FileName))).Length;
+                long sizea=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,ea.FileName))).Length;
+                long sizeb=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,eb.FileName))).Length;
                 if(sizea==sizeb) return 0;
                 if(sizea>sizeb) return -1; else return 1;
             case EspSortOrder.DateCreated:
-                System.DateTime da=(new System.IO.FileInfo(Path.Combine(Program.DataFolderName,ea.FileName))).CreationTime;
-                System.DateTime db=(new System.IO.FileInfo(Path.Combine(Program.DataFolderName,eb.FileName))).CreationTime;
+                System.DateTime da=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,ea.FileName))).CreationTime;
+                System.DateTime db=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,eb.FileName))).CreationTime;
                 return System.DateTime.Compare(da, db);
             default: return 0;
             }
