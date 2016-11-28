@@ -227,30 +227,30 @@ namespace OblivionModManager {
 
             #region Unrar function declarations
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern IntPtr RAROpenArchive(ref RAROpenArchiveData archiveData);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern IntPtr RAROpenArchiveEx(ref RAROpenArchiveDataEx archiveData);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern int RARCloseArchive(IntPtr hArcData);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern int RARReadHeader(IntPtr hArcData, ref RARHeaderData headerData);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern int RARReadHeaderEx(IntPtr hArcData, ref RARHeaderDataEx headerData);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern int RARProcessFile(IntPtr hArcData, int operation,
                 [MarshalAs(UnmanagedType.LPStr)] string destPath,
                 [MarshalAs(UnmanagedType.LPStr)] string destName);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern void RARSetCallback(IntPtr hArcData, UNRARCallback callback, int userData);
 
-            [DllImport(@"obmm\unrar.dll")]
+            [DllImport(@"unrar.dll")]
             private static extern void RARSetPassword(IntPtr hArcData,
                 [MarshalAs(UnmanagedType.LPStr)] string password);
 
