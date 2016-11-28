@@ -41,7 +41,7 @@ namespace OblivionModManager
                     }
                     else
                     {
-                        exepath = "obmm\\7za.exe";
+                        exepath = Path.Combine(Program.BaseDir,"7za.exe");
                     }
                 }
             }
