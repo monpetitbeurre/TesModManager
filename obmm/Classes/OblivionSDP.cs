@@ -28,9 +28,9 @@ using Formatter=System.Runtime.Serialization.Formatters.Binary.BinaryFormatter;
 namespace OblivionModManager.Classes {
 
     public static class OblivionSDP {
-        private static string Path=Program.DataFolderName+"\\shaders\\shaderpackage";
+        private static readonly string EditedShaderFile = System.IO.Path.Combine(Program.BaseDir, @"EditedShaders");
+        private static string Path=Program.DataFolderPath+"\\shaders\\shaderpackage";
         private const string Ext=".sdp";
-        private const string EditedShaderFile=@"obmm\EditedShaders";
 
         [Serializable]
         private class EditedShader {
