@@ -1482,7 +1482,7 @@ namespace OblivionModManager {
             if (Settings.ShowLaunchWarning)
             {
 				MessageBox.Show(
-					"This is a public service announcment, due to the huge number of people who completely missunderstand what this button is for\n"+
+					"This is a public service announcement, due to the huge number of people who completely missunderstand what this button is for\n"+
 					"Basically, YOU DO NOT HAVE TO USE THIS BUTTON FOR TMM TO WORK!!!\n"+
 					"Launching the game via the normal launcher will not magically make obmm lose it's load order or anything.\n"+
 					"If you have obse or skse installed, this button will launch obse instead of oblivion or skse instead of Skyrim, so the two are not incompatible.\n"+
