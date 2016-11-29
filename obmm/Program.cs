@@ -17,16 +17,17 @@
 using System;
 using System.IO;
 using System.Collections.Generic;
-using Application=System.Windows.Forms.Application;
-using MessageBox=System.Windows.Forms.MessageBox;
-using Formatter=System.Runtime.Serialization.Formatters.Binary.BinaryFormatter;
-using Mutex=System.Threading.Mutex;
+using Application = System.Windows.Forms.Application;
+using MessageBox = System.Windows.Forms.MessageBox;
+using Formatter = System.Runtime.Serialization.Formatters.Binary.BinaryFormatter;
+using Mutex = System.Threading.Mutex;
 using System.Security.Principal;
 using System.ServiceModel;
 using System.Net;
 using System.Windows.Forms;
 using System.Text;
 using System.Security.Cryptography;
+using System.Diagnostics;
 //TODO: Scripts shouldn't have write access to the root oblivion folder. Make it read/discovery only
 //TODO: BSA browser should be able to preview text files
 
@@ -2617,10 +2618,14 @@ namespace OblivionModManager {
 					}
 					try
 					{
-						
-						if(Settings.OblivionCommandLine!="")
+
+                        ProcessStartInfo pinfo = new ProcessStartInfo();
+                        pinfo.WorkingDirectory = Program.gamePath;
+
+                        if (!string.IsNullOrWhiteSpace(Settings.OblivionCommandLine))
 						{
-							System.Diagnostics.Process.Start(Settings.OblivionCommandLine);
+                            pinfo.FileName = Path.Combine(System.Environment.SystemDirectory, "cmd.exe");
+                            pinfo.Arguments = "/c " + Settings.OblivionCommandLine;
 						}
 //						else if (File.Exists(@"..\..\..\Steam.exe"))
 //						{
@@ -2631,28 +2636,32 @@ namespace OblivionModManager {
 //                        }
 						else if(File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")))
 						{
-							System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "obse_loader.exe"));
+                            pinfo.FileName = Path.Combine(Program.gamePath, "obse_loader.exe");
 						}
                         else if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")))
                         {
-                            System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "skse_loader.exe"));
+                            pinfo.FileName = Path.Combine(Program.gamePath, "skse_loader.exe");
                         }
                         else if (File.Exists(Path.Combine(Program.gamePath, "mwse.exe")))
                         {
-                            System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "mwse.exe"));
+                            pinfo.FileName = Path.Combine(Program.gamePath, "mwse.exe");
                         }
                         else
 						{
                             if (Program.bSkyrimSEMode)
-                                System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "skyrimSE.exe"));
+                                pinfo.FileName = Path.Combine(Program.gamePath, "skyrimSE.exe");
                             else if (Program.bSkyrimMode)
-                                System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "tesv.exe"));
+                                pinfo.FileName = Path.Combine(Program.gamePath, "tesv.exe");
                             else if (Program.bMorrowind)
-                                System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "morrowind.exe"));
+                                pinfo.FileName = Path.Combine(Program.gamePath, "morrowind.exe");
                             else
-							    System.Diagnostics.Process.Start(Path.Combine(Program.gamePath, "oblivion.exe"));
+							    pinfo.FileName = Path.Combine(Program.gamePath, "oblivion.exe");
 						}
-					}
+                        if (!string.IsNullOrWhiteSpace(pinfo.FileName))
+                        {
+                            System.Diagnostics.Process.Start(pinfo);
+                        }
+                    }
 					catch(Exception ex)
 					{
 						MessageBox.Show("An error occurred attempting to start the game.\n"+ex.Message, "Error");
