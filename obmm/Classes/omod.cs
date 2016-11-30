@@ -1401,7 +1401,7 @@ namespace OblivionModManager {
 
 		private void CreateTargetDirectoryStructure() {
 			for(int x=0;x<DataFiles.Length;x++) {
-				string s=Path.Combine((bSystemMod?"":Program.DataFolderPath),Path.GetDirectoryName(DataFiles[x].FileName));
+				string s=Path.Combine((bSystemMod?Program.gamePath:Program.DataFolderPath),Path.GetDirectoryName(DataFiles[x].FileName));
 				if(s.Length!=0 && !Directory.Exists(s)) Directory.CreateDirectory(s);
 			}
 		}
@@ -1704,6 +1704,19 @@ namespace OblivionModManager {
                         break;
                         //    }
                     }
+                    //if (!bBAINpackage)
+                    //{
+                    //    foreach (string file in Directory.GetFiles(DataPath, "*.*", SearchOption.AllDirectories))
+                    //    {
+                    //        string file2 = file.Replace(DataPath, "");
+                    //        if (file2.ToLower().StartsWith(Program.DataFolderName.ToLower() + "\\"))
+                    //        {
+                    //            // rebase
+                    //            PluginsPath = DataPath = Path.Combine(DataPath, Program.DataFolderName);
+                    //            break;
+                    //        }
+                    //    }
+                    //}
                 }
             }
 			//Run the attached script

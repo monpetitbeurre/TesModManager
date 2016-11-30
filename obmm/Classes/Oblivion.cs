@@ -516,17 +516,17 @@ namespace OblivionModManager {
         }
 
         public static bool RegisterBSA(string name) {
-            if(NoUpdates) {
-//                MessageBox.Show("Failed to register BSA "+name+" because the [Archive] section could not be found in ini file", "Error");
+            if (NoUpdates) {
+                //                MessageBox.Show("Failed to register BSA "+name+" because the [Archive] section could not be found in ini file", "Error");
                 Program.logger.WriteToLog("Failed to register BSA " + name + " because the [Archive] section could not be found in ini file", Logger.LogLevel.Error);
                 return false;
             }
-            string lname=name.ToLower();
-            foreach(string s in Archives) {
-                if(s.ToLower()==lname) return true;
+            string lname = name.ToLower();
+            foreach (string s in Archives) {
+                if (s.ToLower() == lname) return true;
             }
-            UpdatedList=true;
-            if(name==@"..\obmm\BSARedirection.bsa") Archives.Insert(0, name);
+            UpdatedList = true;
+            if (Path.GetFileName(name) == "BSARedirection.bsa") Archives.Insert(0, name);
             else Archives.Add(name);
             return false;
         }
@@ -859,7 +859,7 @@ namespace OblivionModManager {
         }
 
         public static void UpdateInvalidationFile() {
-            if((Settings.InvalidationFlags&ArchiveInvalidationFlags.BSARedirection)==0) UnregisterBSA("..\\"+RedirectionPath);
+            if((Settings.InvalidationFlags&ArchiveInvalidationFlags.BSARedirection)==0) UnregisterBSA(RedirectionPath);
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.EditBSAs)>0) {
                 if(RestoreBSA()==-1) return;
                 SnipBSA();
@@ -878,7 +878,7 @@ namespace OblivionModManager {
                 string path=((Settings.InvalidationFlags&ArchiveInvalidationFlags.PackFaceTextures)>0)?Path.GetFullPath(Path.Combine(Program.DataFolderPath,"textures\\faces")):null;
                 if(path!=null&&!Directory.Exists(path)) path=null;
                 Forms.BSACreator.CreateBSA(RedirectionPath, path, null, 0, 0, true);
-                RegisterBSA(Path.Combine("..\\",RedirectionPath));
+                RegisterBSA(Path.Combine(RedirectionPath));
                 return;
             }
             List<string> files=new List<string>();
