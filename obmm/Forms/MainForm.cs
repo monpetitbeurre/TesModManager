@@ -935,6 +935,10 @@ namespace OblivionModManager {
             if (sender != null && Settings.bDeActivateOnDoubleClick == false) return; // ignore double-click
 			if(lvModList.SelectedItems.Count!=1) return;
 			ActivateOmod((omod)lvModList.SelectedItems[0].Tag, false);
+
+            // save mod list
+            Program.SaveData();
+
 			RefreshLists();
 		}
 
@@ -1410,8 +1414,13 @@ namespace OblivionModManager {
 			OpenDialog.Title="Select mod files to load";
 			OpenDialog.Filter="all files|*.*";
 			OpenDialog.Multiselect=true;
-			if(OpenDialog.ShowDialog()==DialogResult.OK) {
-				foreach(string s in OpenDialog.FileNames) Program.LoadNewOmod(s);
+			if(OpenDialog.ShowDialog()==DialogResult.OK)
+            {
+                foreach (string s in OpenDialog.FileNames)
+                {
+                    Program.LoadNewOmod(s);
+                    Program.SaveData();
+                }
 				UpdateOmodList();
 			}
 		}
@@ -3181,7 +3190,11 @@ namespace OblivionModManager {
                         Program.pf = null;
                     }
                 }
+
+                // save omods to disk
+                Program.SaveData();
             }
+
             importStatusLabel.Text = "No import";
             importStatusLabel.Visible = false;
             Application.UseWaitCursor = false;

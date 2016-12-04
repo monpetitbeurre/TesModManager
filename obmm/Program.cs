@@ -2235,9 +2235,9 @@ namespace OblivionModManager {
                     Directory.CreateDirectory(Path.Combine(Settings.omodDir, "info"));
 
 			} catch(Exception ex) {
-				MessageBox.Show("One or more of Tes Mod Manager's directories do not exist and cannot be created.\n"+
+				MessageBox.Show("One or more of Tes Mod Manager's directories do not exist and cannot be created under "+ BaseDir + ".\n"+
 				                "Error: "+ex.Message, "Error");
-                logger.WriteToLog("One or more of Tes Mod Manager's directories do not exist and cannot be created.\n" +
+                logger.WriteToLog("One or more of Tes Mod Manager's directories do not exist and cannot be created under " + BaseDir + ".\n" +
                                 "Error: " + ex.Message, Logger.LogLevel.Error);
                 return false;
 			}
@@ -2590,22 +2590,33 @@ namespace OblivionModManager {
 				}
 				//Save settings,
 				Settings.SaveSettings();
-//				Stream s=File.Open(DataFile, FileMode.Create);
-//				Formatter f=new Formatter();
-//				f.Serialize(s, Data);
-//				s.Close();
-//                Stream s2 = File.Open(DataFile2, FileMode.Create);
-//                Stream s2 = File.Open(DataFile4, FileMode.Create);
+                //				Stream s=File.Open(DataFile, FileMode.Create);
+                //				Formatter f=new Formatter();
+                //				f.Serialize(s, Data);
+                //				s.Close();
+                //                Stream s2 = File.Open(DataFile2, FileMode.Create);
+                //                Stream s2 = File.Open(DataFile4, FileMode.Create);
                 //Stream s2 = File.Open(DataFile5, FileMode.Create);
                 //Stream s2 = File.Open(DataFile6, FileMode.Create);
-                Stream s2 = File.Open(DataFile7, FileMode.Create);
-                BinaryWriter bw = new BinaryWriter(s2);
-                Data.WriteTo(bw);
-                s2.Close();
+                SaveData();
+                //Stream s2 = File.Open(DataFile7, FileMode.Create);
+                //BinaryWriter bw = new BinaryWriter(s2);
+                //Data.WriteTo(bw);
+                //s2.Close();
 			}
 		}
 
-		public static void PostExit()
+        public static void SaveData()
+        {
+            if (File.Exists(DataFile7 + ".bak")) File.Delete(DataFile7 + ".bak");
+            if (File.Exists(DataFile7)) File.Move(DataFile7, DataFile7 + ".bak");
+            Stream s2 = File.Open(DataFile7, FileMode.Create);
+            BinaryWriter bw = new BinaryWriter(s2);
+            Data.WriteTo(bw);
+            s2.Close();
+        }
+
+        public static void PostExit()
 		{
 			try
 			{

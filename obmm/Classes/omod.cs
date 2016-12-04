@@ -1157,9 +1157,14 @@ namespace OblivionModManager {
                             {
                                 Website = "http://www.nexusmods.com/" + Program.gameName + "/mods/" + s;
                             }
-                            string version = path.Substring(path.IndexOf(s) + s.Length+1);
-                            version = version.Substring(0, version.LastIndexOf("."));
-                            Version = version.Replace('-', '.');
+                            try
+                            {
+                                string version = path.Substring(path.IndexOf(s) + s.Length + 1);
+                                version = version.Substring(0, version.LastIndexOf("."));
+                                Version = version.Replace('-', '.');
+                            }
+                            catch
+                            { }
 
                         }
                         List<DataFileInfo> datafileslist = new List<DataFileInfo>();
