@@ -246,7 +246,7 @@ namespace OblivionModManager {
 			//Run!
 			if(IsLimited) {
 				MessageBox.Show("You appear to be running as a limited user.\n"+
-				                "Most of tmm's functionality will be unavailable.\n"+
+				                "Most of tmm's functionality will be unavailable because TMM cannot write to the game directory.\n"+
 				                "If using windows vista, remember to check the 'run as administrator' checkbox in tmm's compatibility settings (see note 16 in the FAQ)", "Warning");
 				Forms.LimitedUserForm mf=new Forms.LimitedUserForm();
 				Application.Run(mf);
@@ -1965,7 +1965,7 @@ namespace OblivionModManager {
 			mutex=new Mutex(false, Program.gameName+"MM_mutex", out creatednew);
 			if(!creatednew) {
 				if(args.Length>0) {
-                    File.WriteAllLines("obmm\\pipe", args);
+                    File.WriteAllLines(Path.Combine(Program.BaseDir, "pipe"), args);
 					return false;
 				} else {
 					MessageBox.Show("Only one instance of TesModManager may be open at any one time.", "Error");
@@ -2234,7 +2234,6 @@ namespace OblivionModManager {
                 if (!Directory.Exists(Path.Combine(Settings.omodDir, "info")))
                     Directory.CreateDirectory(Path.Combine(Settings.omodDir, "info"));
 
-                File.Delete("obmm\\pipe");
 			} catch(Exception ex) {
 				MessageBox.Show("One or more of Tes Mod Manager's directories do not exist and cannot be created.\n"+
 				                "Error: "+ex.Message, "Error");
@@ -2242,7 +2241,10 @@ namespace OblivionModManager {
                                 "Error: " + ex.Message, Logger.LogLevel.Error);
                 return false;
 			}
-			try {
+
+            try { File.Delete(Path.Combine(Program.BaseDir, "pipe")); } catch { }
+            try
+            {
                 if (!Directory.Exists(INIDir)) Directory.CreateDirectory(INIDir);
                 if (!Directory.Exists(ESPDir)) Directory.CreateDirectory(ESPDir);
             }
@@ -2262,18 +2264,24 @@ namespace OblivionModManager {
 			}
 			
 			try {
-				File.Delete("obmm\\limited");
-				if(File.Exists(VistaVirtualStore+"obmm\\limited")) File.Delete(VistaVirtualStore+"obmm\\limited");
-				FileStream fs=File.Create("obmm\\limited");
+                string testLimitedPath = Path.Combine(Program.gamePath, "obmm\\limited");
+                string vistaLimitedPath = Path.Combine(VistaVirtualStore, "obmm\\limited");
+
+                if (File.Exists(testLimitedPath)) File.Delete(testLimitedPath);
+				if (File.Exists(vistaLimitedPath)) File.Delete(vistaLimitedPath);
+
+				FileStream fs=File.Create(testLimitedPath);
 				fs.Close();
-				if(File.Exists(VistaVirtualStore+"obmm\\limited")) {
-					File.Delete("obmm\\limited");
+				if(File.Exists(vistaLimitedPath)) {
+					File.Delete(testLimitedPath);
 					throw new Exception();
 				}
-				File.Delete("obmm\\limited");
-			} catch {
+				File.Delete(testLimitedPath);
+			}
+            catch
+            {
 				IsLimited=true;
-                logger.WriteToLog("TMM started in limited mode", Logger.LogLevel.Low);
+                logger.WriteToLog("TMM started in limited mode. It cannot write to the game folder.", Logger.LogLevel.Low);
                 Data = new sData();
 				return true;
 			}
@@ -2289,14 +2297,14 @@ namespace OblivionModManager {
 					}
 				} else {
 					MessageBox.Show("Vista appears to have moved some of the game files to the virtual store.\n"+
-					                "Since obmm doesn't have administrative privileges, it can't move them back\n"+
+					                "Since tmm doesn't have administrative privileges, it can't move them back\n"+
 					                "If you have problems with mods not showing up in game, or omods vanishing from obmm, please read entry 16 in the FAQ.",
 					                "Warning");
 				}
 			}
 			//Delete old save files
 			if(File.Exists(Path.Combine(BaseDir, "settings"))) {
-				MessageBox.Show("obmm 0.8 cannot read save files from 0.7.x or earlier.\n"+
+				MessageBox.Show("tmm cannot read save files from 0.7.x or earlier.\n"+
 				                "If you did not deactivate your omods before upgrading, it may be necessary to use 'clean all' to tidy up the mess", "Warning");
 				File.Delete(Path.Combine(BaseDir, "settings"));
 				File.Delete(SettingsFile);

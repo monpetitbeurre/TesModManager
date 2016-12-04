@@ -1881,12 +1881,12 @@ namespace OblivionModManager {
                 //			if(Application.OpenForms.Count>1) {
                 //				MessageBox.Show("You can only import new files when obmm is displaying the data file list", "Error");
                 //			} else {
-                string[] lines = File.ReadAllLines("obmm\\pipe");
+                string[] lines = File.ReadAllLines(Path.Combine(Program.BaseDir,"pipe"));
                 Program.RunCommandLine(lines);
                 //foreach(string s in mods) Program.LoadNewOmod(s);
                 UpdateOmodList();
                 //			}
-                File.Delete("obmm\\pipe");
+                File.Delete(Path.Combine(Program.BaseDir, "pipe"));
             }
             catch (Exception ex)
             {
