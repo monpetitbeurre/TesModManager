@@ -215,7 +215,15 @@ namespace OblivionModManager {
                 string text="File size: "+fe.Size+" bytes\nFile offset: "+fe.Offset+" bytes\n";
                 if(fe.Compressed) text+="Compressed"; else text+="Uncompressed";
                 lvi.ToolTipText=text;
-                lvFiles.Items.Add(lvi);
+                if (txtFilter.Text.Length > 0)
+                {
+                    if (lvi.Text.ToLower().Contains(txtFilter.Text.ToLower()))
+                    {
+                        lvFiles.Items.Add(lvi);
+                    }
+                }
+                else
+                    lvFiles.Items.Add(lvi);
             }
             lvFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             lvFiles.ResumeLayout();
@@ -385,6 +393,11 @@ namespace OblivionModManager {
             sc.Add(path);
             obj.SetFileDropList(sc);
             lvFiles.DoDragDrop(obj, DragDropEffects.Move);
+        }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            UpdateFileList();
         }
     }
 }

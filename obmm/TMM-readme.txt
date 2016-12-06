@@ -92,6 +92,7 @@ version 1.6.0
 * TMM can now be installed in it's own directory.. It will still create an obmm folder under the game directory for mods related to that game
 * new installer
 * omodv2 is the default save format
+* Added ability to filter file list from BSA browser
 
 version 1.5.14
 --------------

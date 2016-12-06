@@ -26,7 +26,7 @@ namespace OblivionModManager {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(BSABrowser));
             this.lvFiles = new System.Windows.Forms.ListView();
-            this.columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.bOpen = new System.Windows.Forms.Button();
             this.bExtractAll = new System.Windows.Forms.Button();
             this.OpenBSA = new System.Windows.Forms.OpenFileDialog();
@@ -37,6 +37,9 @@ namespace OblivionModManager {
             this.DudMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.bSort = new System.Windows.Forms.Button();
             this.bPreview = new System.Windows.Forms.Button();
+            this.btnRefresh = new System.Windows.Forms.Button();
+            this.lblFilter = new System.Windows.Forms.Label();
+            this.txtFilter = new System.Windows.Forms.TextBox();
             this.SuspendLayout();
             // 
             // lvFiles
@@ -51,7 +54,7 @@ namespace OblivionModManager {
             this.lvFiles.Location = new System.Drawing.Point(12, 12);
             this.lvFiles.Name = "lvFiles";
             this.lvFiles.ShowItemToolTips = true;
-            this.lvFiles.Size = new System.Drawing.Size(558, 312);
+            this.lvFiles.Size = new System.Drawing.Size(558, 324);
             this.lvFiles.TabIndex = 0;
             this.lvFiles.UseCompatibleStateImageBehavior = false;
             this.lvFiles.View = System.Windows.Forms.View.Details;
@@ -66,7 +69,7 @@ namespace OblivionModManager {
             // bOpen
             // 
             this.bOpen.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.bOpen.Location = new System.Drawing.Point(12, 330);
+            this.bOpen.Location = new System.Drawing.Point(12, 342);
             this.bOpen.Name = "bOpen";
             this.bOpen.Size = new System.Drawing.Size(75, 23);
             this.bOpen.TabIndex = 1;
@@ -78,7 +81,7 @@ namespace OblivionModManager {
             // 
             this.bExtractAll.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.bExtractAll.Enabled = false;
-            this.bExtractAll.Location = new System.Drawing.Point(273, 330);
+            this.bExtractAll.Location = new System.Drawing.Point(273, 342);
             this.bExtractAll.Name = "bExtractAll";
             this.bExtractAll.Size = new System.Drawing.Size(75, 23);
             this.bExtractAll.TabIndex = 4;
@@ -96,7 +99,7 @@ namespace OblivionModManager {
             // 
             this.bExtract.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.bExtract.Enabled = false;
-            this.bExtract.Location = new System.Drawing.Point(192, 330);
+            this.bExtract.Location = new System.Drawing.Point(192, 342);
             this.bExtract.Name = "bExtract";
             this.bExtract.Size = new System.Drawing.Size(75, 23);
             this.bExtract.TabIndex = 3;
@@ -124,7 +127,7 @@ namespace OblivionModManager {
             "File name",
             "File size",
             "Offset"});
-            this.cmbSortOrder.Location = new System.Drawing.Point(368, 332);
+            this.cmbSortOrder.Location = new System.Drawing.Point(368, 344);
             this.cmbSortOrder.Name = "cmbSortOrder";
             this.cmbSortOrder.Size = new System.Drawing.Size(121, 21);
             this.cmbSortOrder.TabIndex = 5;
@@ -140,7 +143,7 @@ namespace OblivionModManager {
             // bSort
             // 
             this.bSort.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.bSort.Location = new System.Drawing.Point(495, 330);
+            this.bSort.Location = new System.Drawing.Point(495, 342);
             this.bSort.Name = "bSort";
             this.bSort.Size = new System.Drawing.Size(75, 23);
             this.bSort.TabIndex = 6;
@@ -152,7 +155,7 @@ namespace OblivionModManager {
             // 
             this.bPreview.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
             this.bPreview.Enabled = false;
-            this.bPreview.Location = new System.Drawing.Point(111, 330);
+            this.bPreview.Location = new System.Drawing.Point(111, 342);
             this.bPreview.Name = "bPreview";
             this.bPreview.Size = new System.Drawing.Size(75, 23);
             this.bPreview.TabIndex = 2;
@@ -160,11 +163,44 @@ namespace OblivionModManager {
             this.bPreview.UseVisualStyleBackColor = true;
             this.bPreview.Click += new System.EventHandler(this.bPreview_Click);
             // 
+            // btnRefresh
+            // 
+            this.btnRefresh.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.btnRefresh.Location = new System.Drawing.Point(12, 371);
+            this.btnRefresh.Name = "btnRefresh";
+            this.btnRefresh.Size = new System.Drawing.Size(75, 23);
+            this.btnRefresh.TabIndex = 7;
+            this.btnRefresh.Text = "Refresh";
+            this.btnRefresh.UseVisualStyleBackColor = true;
+            this.btnRefresh.Click += new System.EventHandler(this.btnRefresh_Click);
+            // 
+            // lblFilter
+            // 
+            this.lblFilter.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
+            this.lblFilter.AutoSize = true;
+            this.lblFilter.Location = new System.Drawing.Point(108, 376);
+            this.lblFilter.Name = "lblFilter";
+            this.lblFilter.Size = new System.Drawing.Size(32, 13);
+            this.lblFilter.TabIndex = 8;
+            this.lblFilter.Text = "Filter:";
+            // 
+            // txtFilter
+            // 
+            this.txtFilter.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtFilter.Location = new System.Drawing.Point(162, 373);
+            this.txtFilter.Name = "txtFilter";
+            this.txtFilter.Size = new System.Drawing.Size(408, 20);
+            this.txtFilter.TabIndex = 9;
+            // 
             // BSABrowser
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(582, 365);
+            this.ClientSize = new System.Drawing.Size(582, 401);
+            this.Controls.Add(this.txtFilter);
+            this.Controls.Add(this.lblFilter);
+            this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.bPreview);
             this.Controls.Add(this.bExtract);
             this.Controls.Add(this.bExtractAll);
@@ -176,9 +212,10 @@ namespace OblivionModManager {
             this.MinimumSize = new System.Drawing.Size(590, 150);
             this.Name = "BSABrowser";
             this.Text = "BSA Browser";
-            this.Shown += new System.EventHandler(this.BSABrowser_Shown);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.BSABrowser_FormClosing);
+            this.Shown += new System.EventHandler(this.BSABrowser_Shown);
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -196,5 +233,8 @@ namespace OblivionModManager {
         private System.Windows.Forms.ContextMenuStrip DudMenu;
         private System.Windows.Forms.Button bSort;
         private System.Windows.Forms.Button bPreview;
+        private System.Windows.Forms.Button btnRefresh;
+        private System.Windows.Forms.Label lblFilter;
+        private System.Windows.Forms.TextBox txtFilter;
     }
 }
