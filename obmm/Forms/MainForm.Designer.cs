@@ -834,8 +834,8 @@ namespace OblivionModManager {
             // PipeFileWatcher
             // 
             this.PipeFileWatcher.EnableRaisingEvents = true;
-            this.PipeFileWatcher.Filter = "pipe";
-            this.PipeFileWatcher.Path = Program.BaseDir;
+            this.PipeFileWatcher.Filter = System.IO.Path.GetFileName(Program.PipeFilename);
+            this.PipeFileWatcher.Path = System.IO.Path.GetDirectoryName(Program.PipeFilename);
             this.PipeFileWatcher.SynchronizingObject = this;
             this.PipeFileWatcher.Created += new System.IO.FileSystemEventHandler(this.PipeFileWatcher_Created);
             // 
