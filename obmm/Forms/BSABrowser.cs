@@ -207,6 +207,12 @@ namespace OblivionModManager {
 
         private void UpdateFileList() {
             if(Hidden) return;
+            string selectedfilename = string.Empty;
+            if (lvFiles.SelectedItems.Count>0)
+            {
+                selectedfilename = lvFiles.SelectedItems[0].Text; ;
+            }
+
             lvFiles.SuspendLayout();
             lvFiles.Items.Clear();
             foreach(BSAFileEntry fe in Files) {
@@ -227,6 +233,18 @@ namespace OblivionModManager {
             }
             lvFiles.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
             lvFiles.ResumeLayout();
+            if (selectedfilename.Length>0)
+            {
+                foreach (ListViewItem lvi in lvFiles.Items)
+                {
+                    if (lvi.Text == selectedfilename)
+                    {
+                        lvi.Selected = true;
+                        lvFiles.EnsureVisible(lvi.Index);
+                        break;
+                    }
+                }
+            }
         }
 
         private void bOpen_Click(object sender, EventArgs e) {
