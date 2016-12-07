@@ -394,14 +394,31 @@ namespace OblivionModManager.Scripting {
                 // install that one ((fomod.conditionFlagList)(step.optionalFileGroups.group[0].plugins.plugin[0].Items[1])).Items
                 for (int k = 0; k < mc.requiredInstallFiles.Items.GetLength(0); k++)
                 {
-                    string source = mc.requiredInstallFiles.Items[k].source.ToLower();
-                    string dest = mc.requiredInstallFiles.Items[k].destination;
-                    if (source.EndsWith(".esp") || source.EndsWith(".esm"))
-                        functions.CopyPlugin(source, dest);
-                    else if (source.EndsWith(".bsa"))
-                        functions.CopyDataFile(source, dest);
+                    if (mc.requiredInstallFiles.ItemsElementName[k] == fomod.ItemsChoiceType1.file)
+                    {
+                        string source = mc.requiredInstallFiles.Items[k].source.ToLower();
+                        string dest = mc.requiredInstallFiles.Items[k].destination;
+                        if (source.EndsWith(".esp") || source.EndsWith(".esm"))
+                            functions.CopyPlugin(source, dest);
+                        else if (source.EndsWith(".bsa"))
+                            functions.CopyDataFile(source, dest);
+                        else
+                            functions.CopyDataFolder(source, dest, true);
+                    }
                     else
-                        functions.CopyDataFolder(source, dest, true);
+                    {
+                        string sourcedir = mc.requiredInstallFiles.Items[k].source.ToLower();
+                        string destdir = mc.requiredInstallFiles.Items[k].destination;
+                        //string[] files = Directory.GetFiles(sourcedir, "*.*", SearchOption.AllDirectories);
+                        //foreach (string file in files)
+                        //{
+                        //    if (file.EndsWith(".esp") || file.EndsWith(".esm"))
+                        //        functions.CopyPlugin(file, destdir);
+                        //    else
+                        //        functions.CopyDataFile(file, destdir);
+                        //}
+                        functions.CopyDataFolder(sourcedir, destdir, true);
+                    }
                 }
             }
 

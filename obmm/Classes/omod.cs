@@ -2521,10 +2521,15 @@ namespace OblivionModManager {
             if (FileName.ToLower().EndsWith(".omod") || (CompType == CompressionType.Zip && ModFile != null))
             {
                 Stream s = ExtractWholeFile("plugins.crc");
-                if (s != null)
+                Stream s2 = ExtractWholeFile("data.crc");
+                if (s != null || s2 != null)
                 {
-                    s.Close();
-                    path = ParseCompressedStream("plugins.crc", "plugins");
+                    if (s != null)
+                    {
+                        s.Close();
+                        path = ParseCompressedStream("plugins.crc", "plugins");
+                    }
+                    s2?.Close();
                 }
                 else // omod2
                 {
@@ -2690,10 +2695,15 @@ namespace OblivionModManager {
             if (FileName.ToLower().EndsWith(".omod") || (CompType == CompressionType.Zip && ModFile != null))
             {
                 Stream s = ExtractWholeFile("data.crc");
-                if (s != null)
+                Stream s2 = ExtractWholeFile("plugins.crc");
+                if (s != null || s2 != null)
                 {
-                    s.Close();
-                    path = ParseCompressedStream("data.crc", "data");
+                    if (s != null)
+                    {
+                        s.Close();
+                        path = ParseCompressedStream("data.crc", "data");
+                    }
+                    s2?.Close();
                 }
                 else
                 {
@@ -2702,7 +2712,12 @@ namespace OblivionModManager {
                     foreach (ZipEntry e in ModFile)
                     {
                         if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") &&
-                             e.Name.ToLower() != "script.txt" && e.Name.ToLower() != "config.ini" && e.Name.ToLower() != "image.jpg" && e.Name.ToLower() != "readme.txt" && !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
+                             e.Name.ToLower() != "script.txt" && e.Name.ToLower() != "config.ini" && 
+                             e.Name.ToLower() != "image.jpg" && e.Name.ToLower() != "readme.txt" &&
+                             e.Name.ToLower() != "image" && e.Name.ToLower() != "readme" &&
+                             e.Name.ToLower() != "config" && e.Name.ToLower() != "plugins" &&
+                             e.Name.ToLower() != "plugins.crc" &&
+                             !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
                         {
                             ExtractWholeFile(e.Name, ref filepath).Close();
                             if (File.Exists(Path.Combine(path, e.Name))) File.Delete(Path.Combine(path, e.Name));

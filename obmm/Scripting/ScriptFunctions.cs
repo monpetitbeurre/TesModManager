@@ -221,7 +221,10 @@ namespace OblivionModManager.Scripting {
                     strlist.Add(cp.CopyTo);
                 }
                 if (!ExistsIn(path, strlist.ToArray()))
-                    throw new ScriptingException("File '" + path + "' not found");
+                {
+                    // throw new ScriptingException("File '" + path + "' not found");
+                    Program.logger.WriteToLog("File '" + path + "' not found. Skipping... ", Logger.LogLevel.Warning);
+                }
             }
 		}
         private static void CheckDataSafty(string path)
@@ -827,8 +830,11 @@ namespace OblivionModManager.Scripting {
 					    for(int i=0;i<srd.CopyDataFiles.Count;i++) {
 						    if(srd.CopyDataFiles[i].CopyTo==lto) srd.CopyDataFiles.RemoveAt(i--);
 					    }
-					    srd.CopyDataFiles.Add(new ScriptCopyDataFile(filefrom, fileto));
-				    }
+                        if (!lto.EndsWith(".esp") && !lto.EndsWith(".esm"))
+                            srd.CopyDataFiles.Add(new ScriptCopyDataFile(filefrom, fileto));
+                        else
+                            srd.CopyPlugins.Add(new ScriptCopyDataFile(filefrom, fileto));
+                    }
 			    }
             }
             catch (Exception ex)
