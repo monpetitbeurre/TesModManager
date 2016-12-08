@@ -563,33 +563,38 @@ namespace OblivionModManager.Scripting {
                     // dependency flag
                     int nbflags = pattern.dependencies.Items.Length;
 
-                    bool condition = true;
+                    bool patterncondition = true;
 
                     foreach ( object obj in pattern.dependencies.Items)
                     {
-                        if (obj.GetType()==typeof(fomod.flagDependency))
+                        bool condition = true;
+
+                        if (obj.GetType() == typeof(fomod.flagDependency))
                         {
                             fomod.flagDependency flagdep = obj as fomod.flagDependency;
                             string flag = flagdep.flag.ToLower(); ;
                             string value = flagdep.value.ToLower(); ;
                             // an OFF flag is not stored
                             // the dependency can be on a flag being off
-                            if ((flaglist.Contains(flag) && (value == "on" || value== "yes" || value.Length == 0)) || (!flaglist.Contains(flag) && (value == "off" || value=="no"))
-                                || (flaglist.Contains(flag) && flaglist.IndexOf(flag)>-1 && value == flagvaluelist[flaglist.IndexOf(flag)]))
-                                condition &= true;
+                            if ((flaglist.Contains(flag) && (value == "on" || value == "yes" || value.Length == 0)) || (!flaglist.Contains(flag) && (value == "off" || value == "no"))
+                                || (flaglist.Contains(flag) && flaglist.IndexOf(flag) > -1 && value == flagvaluelist[flaglist.IndexOf(flag)]))
+                                condition = true;
                             else
                                 condition = false;
                         }
                         else if (obj.GetType() == typeof(fomod.fileDependency))
                         {
                             fomod.fileDependency filedep = obj as fomod.fileDependency;
+                            string lowerfilename = filedep.file.ToLower();
 
-                            // check if there are actual data files to copy
-                            string[] pluginlist = functions.getpluginList();
+                            // check if the plugins the file depends on are present already or will be copied
+                            List<string> pluginlist = new List<string>(functions.GetActiveEspNames());
+                            pluginlist.AddRange(functions.getpluginList());
+
                             bool bFound = false;
-                            foreach (string data in pluginlist)
+                            foreach (string plugin in pluginlist)
                             {
-                                if (data.Contains(filedep.file))
+                                if (plugin.ToLower().Contains(lowerfilename))
                                 {
                                     bFound = true;
                                     if (filedep.state == fomod.fileDependencyState.Active)
@@ -603,16 +608,86 @@ namespace OblivionModManager.Scripting {
                                     }
                                     else
                                         condition = false;
+                                    break;
                                 }
                             }
                             if (!bFound && (filedep.state == fomod.fileDependencyState.Inactive || filedep.state == fomod.fileDependencyState.Missing))
                                 condition = true;
+                            else
+                                condition = false;
                         }
+                        else if (obj.GetType() == typeof(fomod.compositeDependency))
+                        {
+                            fomod.compositeDependency composite = obj as fomod.compositeDependency;
+
+                            foreach (object item in composite.Items)
+                            {
+                                bool itemcondition = true;
+
+                                if (item.GetType() == typeof(fomod.flagDependency))
+                                {
+                                    fomod.flagDependency flagdep = item as fomod.flagDependency;
+                                    string flag = flagdep.flag.ToLower(); ;
+                                    string value = flagdep.value.ToLower(); ;
+                                    // an OFF flag is not stored
+                                    // the dependency can be on a flag being off
+                                    if ((flaglist.Contains(flag) && (value == "on" || value == "yes" || value.Length == 0)) || (!flaglist.Contains(flag) && (value == "off" || value == "no"))
+                                        || (flaglist.Contains(flag) && flaglist.IndexOf(flag) > -1 && value == flagvaluelist[flaglist.IndexOf(flag)]))
+                                        itemcondition = true;
+                                    else
+                                        itemcondition = false;
+                                }
+                                else if (item.GetType() == typeof(fomod.fileDependency))
+                                {
+                                    fomod.fileDependency filedep = item as fomod.fileDependency;
+                                    string lowerfilename = filedep.file.ToLower();
+
+                                    // check if the plugins the file depends on are present already or will be copied
+                                    List<string> pluginlist = new List<string>(functions.GetActiveEspNames());
+                                    pluginlist.AddRange(functions.getpluginList());
+
+                                    bool bFound = false;
+                                    foreach (string plugin in pluginlist)
+                                    {
+                                        if (plugin.ToLower().Contains(lowerfilename))
+                                        {
+                                            bFound = true;
+                                            if (filedep.state == fomod.fileDependencyState.Active)
+                                            {
+                                                itemcondition = true;
+                                                break;
+                                            }
+                                            else if (filedep.state == fomod.fileDependencyState.Inactive)
+                                            {
+                                                itemcondition = false;
+                                            }
+                                            else
+                                                itemcondition = false;
+                                            break;
+                                        }
+                                    }
+                                    if (!bFound && (filedep.state == fomod.fileDependencyState.Inactive || filedep.state == fomod.fileDependencyState.Missing))
+                                        itemcondition = true;
+                                    else
+                                        itemcondition = false;
+                                }
+                                if (composite.@operator == fomod.compositeDependencyOperator.And)
+                                    condition &= itemcondition;
+                                else if (composite.@operator == fomod.compositeDependencyOperator.Or)
+                                    condition |= itemcondition;
+                            }
+                        }
+                        if (pattern.dependencies.@operator == fomod.compositeDependencyOperator.Or)
+                            patterncondition |= condition;
+                        else if (pattern.dependencies.@operator == fomod.compositeDependencyOperator.And)
+                            patterncondition &= condition;
                     }
+
+
                     //                string flag = ((fomod.flagDependency)(pattern.dependencies.Items[0])).flag;
                     //                string value = ((fomod.flagDependency)(pattern.dependencies.Items[0])).value.ToLower();
 
-                    if (condition)
+                    if (patterncondition)
                     {
                         foreach (fomod.fileSystemItem fsitem in pattern.files.Items)
                         {
