@@ -93,10 +93,20 @@ namespace OblivionModManager {
 
 			GlobalSettings.LoadSettings();
 
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimSEMode)
+            {
+                bLaunch.Text = "Launch SkyrimSE";
+                this.Text = "Tes Mod Manager " + Program.version + " for Skyrim Special Edition (" + Program.gamePath+")";
+                if (File.Exists("CreationKit.exe"))
+                {
+                    btnLaunchCreationKit.Visible = true;
+                    this.btnLaunchCreationKit.Text = "Launch Creation Kit";
+                }
+            }
+            else if (Program.bSkyrimMode)
             {
                 bLaunch.Text = "Launch Skyrim";
-                this.Text = "Tes Mod Manager for Skyrim";
+                this.Text = "Tes Mod Manager " + Program.version + " for Skyrim (" + Program.gamePath + ")";
                 if (File.Exists("CreationKit.exe"))
                 {
                     btnLaunchCreationKit.Visible = true;
@@ -105,7 +115,7 @@ namespace OblivionModManager {
             }
             else if (Program.bMorrowind)
             {
-                this.Text = "Tes Mod Manager for Morrowind";
+                this.Text = "Tes Mod Manager " + Program.version + " for Morrowind (" + Program.gamePath + ")";
                 if (File.Exists("TES Construction Set.exe"))
                 {
                     btnLaunchCreationKit.Visible = true;
@@ -114,15 +124,13 @@ namespace OblivionModManager {
             }
             else
             {
-                this.Text = "Tes Mod Manager for Oblivion";
+                this.Text = "Tes Mod Manager " + Program.version + " for Oblivion (" + Program.gamePath + ")";
                 if (File.Exists("TesConstructionSet.exe"))
                 {
                     btnLaunchCreationKit.Visible = true;
                     this.btnLaunchCreationKit.Text = "Launch Construction Set";
                 }
             }
-            this.Text += " (" + Program.version + ")"; // ++" - [";
-
 //            int[] nexusversion = GetTESVersion("5010");   <-- this is not reliable on the new web site compared to GetTESVersionMP. Both take too long
 //            if (Program.version!=""+nexusversion[0]+"."+nexusversion[1]+"."+nexusversion[2])
 //                this.Text += " [ a new version ("+nexusversion+")is available on nexus]";
@@ -287,10 +295,10 @@ namespace OblivionModManager {
             FileVersionInfo gamever = null;
             if (Program.bSkyrimSEMode)
             {
-                if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
-                {
-                    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
-                }
+                //if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
+                //{
+                //    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
+                //}
                 gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "SkyrimSE.exe"));
             }
             else if (Program.bSkyrimMode)

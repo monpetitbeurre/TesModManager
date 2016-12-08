@@ -262,7 +262,7 @@ namespace OblivionModManager {
     }
 
     public static class INI {
-        private static string inibase = Path.Combine(Program.INIDir,Program.gameName);
+        private static string inibase = Path.Combine(Program.INIDir,Program.gameName == "skyrimSE" ? "skyrim" : Program.gameName);
         private static string ini = inibase+".ini";
         
         public static bool CreateINI() {

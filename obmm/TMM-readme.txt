@@ -94,7 +94,7 @@ version 1.6.0
 * omodv2 is the default save format
 * Added ability to filter file list from BSA browser
 * Data file is now written after each mod creation and activation to minimize loss in case of crash
-* Fixed a fomod script issue
+* Fixed several fomod scripting issues
 
 version 1.5.14
 --------------

@@ -217,14 +217,12 @@ namespace OblivionModManager {
             apppath = apppath.Replace("file:///", "");
             apppath = Path.GetDirectoryName(apppath);
             if (File.Exists(Path.Combine(apppath, "tesv.exe")))
-            {
                 bSkyrimMode = true;
-            }
             else if (File.Exists(Path.Combine(apppath, "SkyrimSE.exe")))
                 bSkyrimSEMode = true;
             else if (File.Exists(Path.Combine(apppath, "morrowind.exe")))
                 bMorrowind = true;
-            gameName = (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion"));
+            gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
             DataFolderName = Program.bMorrowind ?"Data Files":"Data";
 
 			if(!PreInit(args)) return;
@@ -1859,25 +1857,70 @@ namespace OblivionModManager {
 
             if (nxmlink.Length > 0)
             {
-                if (bSkyrimMode)
+                if (bSkyrimSEMode)
                 {
-                    if (nxmlink.Contains("oblivion"))
+                    if (!nxmlink.Contains("skyrimspecialedition"))
                     {
-                        // start TesModManager for Oblivion
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "Oblivion " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
+                        if (nxmlink.Contains("oblivion"))
+                        {
+                            // start TesModManager for Oblivion
+                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                            tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
+                            tmm.StartInfo.Arguments = "Oblivion " + nxmlink;
+                            tmm.Start();
+                            return false; // not for us
+                        }
+                        else if (nxmlink.Contains("morrowind"))
+                        {
+                            // start TesModManager for Morrowind
+                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
+                            tmm.StartInfo.Arguments = "Morrowind " + nxmlink;
+                            tmm.Start();
+                            return false; // not for us
+                        }
+                        else if (nxmlink.Contains("skyrim"))
+                        {
+                            // start TesModManager for Morrowind
+                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
+                            tmm.StartInfo.Arguments = "Skyrim " + nxmlink;
+                            tmm.Start();
+                            return false; // not for us
+                        }
                     }
-                    else if (nxmlink.Contains("morrowind"))
+                }
+                else if (bSkyrimMode)
+                {
+                    if (!nxmlink.Contains("skyrim/"))
                     {
-                        // start TesModManager for Morrowind
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "Morrowind " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
+                        if (nxmlink.Contains("oblivion"))
+                        {
+                            // start TesModManager for Oblivion
+                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                            tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
+                            tmm.StartInfo.Arguments = "Oblivion " + nxmlink;
+                            tmm.Start();
+                            return false; // not for us
+                        }
+                        else if (nxmlink.Contains("morrowind"))
+                        {
+                            // start TesModManager for Morrowind
+                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
+                            tmm.StartInfo.Arguments = "Morrowind " + nxmlink;
+                            tmm.Start();
+                            return false; // not for us
+                        }
+                        else if (nxmlink.Contains("skyrimspecialedition"))
+                        {
+                            // start TesModManager for Morrowind
+                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
+                            tmm.StartInfo.Arguments = "SkyrimSE " + nxmlink;
+                            tmm.Start();
+                            return false; // not for us
+                        }
                     }
                 }
                 else if (bMorrowind)
@@ -1900,6 +1943,15 @@ namespace OblivionModManager {
                         tmm.Start();
                         return false; // not for us
                     }
+                    else if (nxmlink.Contains("skyrimspecialedition"))
+                    {
+                        // start TesModManager for Morrowind
+                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                        tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
+                        tmm.StartInfo.Arguments = "SkyrimSE " + nxmlink;
+                        tmm.Start();
+                        return false; // not for us
+                    }
                 }
                 else // default mode. Just start in whatever is requested
                 {
@@ -1909,6 +1961,10 @@ namespace OblivionModManager {
                         if (nxmlink.Contains("morrowind"))
                         {
                             bMorrowind = true;
+                        }
+                        else if (nxmlink.Contains("skyrimspecialedition"))
+                        {
+                            bSkyrimSEMode = true;
                         }
                         else if (nxmlink.Contains("skyrim"))
                         {
@@ -1933,11 +1989,20 @@ namespace OblivionModManager {
                         tmm.Start();
                         return false; // not for us
                     }
+                    else if (nxmlink.Contains("skyrimspecialedition"))
+                    {
+                        // start TesModManager for Morrowind
+                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                        tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
+                        tmm.StartInfo.Arguments = "SkyrimSE " + nxmlink;
+                        tmm.Start();
+                        return false; // not for us
+                    }
                 }
             }
 
 
-            gameName = (Program.bSkyrimMode || Program.bSkyrimSEMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion"));
+            gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
 
 
             //if (args.Length>0 && args[0] == "-d")
@@ -1946,8 +2011,8 @@ namespace OblivionModManager {
 
             gamePath = (Program.bSkyrimMode ? skyrimpath : (Program.bSkyrimSEMode ? skyrimsepath : (Program.bMorrowind ? morrowindpath : oblivionpath)));
 
-            if (Program.bSkyrimSEMode)
-                Program.bSkyrimMode = true;
+            //if (Program.bSkyrimSEMode)
+            //    Program.bSkyrimMode = true;
 
             DataFolderName = Program.bMorrowind ? "Data Files" : "Data";
             DataFolderPath = Path.Combine(gamePath, DataFolderName);
@@ -1973,7 +2038,12 @@ namespace OblivionModManager {
             LOOTpath = FindSoftware(@"LOOT", "Installed Path");
             logger.WriteToLog("Loot path: " + LOOTpath, Logger.LogLevel.High);
 
-            if (bSkyrimMode)
+            if (bSkyrimSEMode)
+            {
+                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim special edition\\");
+                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim special edition\\");
+            }
+            else if (bSkyrimMode)
             {
                 INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim\\");
                 ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim\\");

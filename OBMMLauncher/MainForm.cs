@@ -39,7 +39,7 @@ namespace ESPMHider
 
             btnOblivion.Enabled = File.Exists("Oblivion.exe") | File.Exists("TesV.exe");
             btnOblivionLauncher.Enabled = File.Exists("OblivionLauncher.exe") | File.Exists("SkyrimLauncher.exe");
-			btnOBMM.Enabled = File.Exists("TesnModManager.exe");
+			btnOBMM.Enabled = File.Exists("TesModManager.exe");
 			btnTESCS.Enabled = File.Exists("TESConstructionSet.exe");
 			btnWryeBash.Enabled = File.Exists(@"Mopy\Wrye Bash Launcher.pyw");
 			btnTES4Edit.Enabled = File.Exists("TES4Edit.exe");
@@ -127,9 +127,6 @@ namespace ESPMHider
 		{
 				Process.Start("TES4Edit.exe");
 				this.Close();
-			
-			
-			
 		}
 	}
 }
