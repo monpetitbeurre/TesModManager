@@ -180,8 +180,20 @@ namespace OblivionModManager {
             try
             {
                 lm = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\" + key, false);
-
                 lu = Microsoft.Win32.Registry.LocalMachine.OpenSubKey("SOFTWARE\\Wow6432Node\\" + key, false);
+            }
+            catch
+            {
+            }
+
+            try
+            {
+                if (lm == null && lu == null)
+                {
+                    Microsoft.Win32.RegistryKey baseReg = Microsoft.Win32.RegistryKey.OpenBaseKey(Microsoft.Win32.RegistryHive.LocalMachine, Microsoft.Win32.RegistryView.Registry64);
+                    lm = baseReg.OpenSubKey("SOFTWARE\\" + key, false);
+                    lu = baseReg.OpenSubKey("SOFTWARE\\Wow6432Node\\" + key, false);
+                }
             }
             catch
             {
