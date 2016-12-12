@@ -95,6 +95,7 @@ version 1.6.0
 * Added ability to filter file list from BSA browser
 * Data file is now written after each mod creation and activation to minimize loss in case of crash
 * Fixed several fomod scripting issues
+* Fioxed an issue with Darnified UI install
 
 version 1.5.14
 --------------

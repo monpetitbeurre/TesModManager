@@ -1663,6 +1663,7 @@ namespace OblivionModManager {
 
             // this could be a FOMOD. Let's double check
             //if (!bFomod)
+            if (!string.IsNullOrWhiteSpace(PluginsPath))
             {
                 // need to change base path?
                 string[] dirs=Directory.GetFiles(PluginsPath, "moduleconfig.xml", SearchOption.AllDirectories);

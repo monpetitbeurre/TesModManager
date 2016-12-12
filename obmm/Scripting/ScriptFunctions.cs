@@ -135,8 +135,8 @@ namespace OblivionModManager.Scripting {
             }
             dataFileList = finalDatafiles.ToArray();
 
-            if (pluginsPath!=null) pluginList = Directory.GetFiles(pluginsPath, "*.es*", System.IO.SearchOption.AllDirectories);
-            for (int i = 0; i < pluginList.Length && pluginsPath!=null; i++) pluginList[i] = pluginList[i].Replace(pluginsPath, "");
+            if (!string.IsNullOrWhiteSpace(pluginsPath)) pluginList = Directory.GetFiles(pluginsPath, "*.es*", System.IO.SearchOption.AllDirectories);
+            for (int i = 0; i < pluginList.Length && !string.IsNullOrWhiteSpace(pluginsPath); i++) pluginList[i] = pluginList[i].Replace(pluginsPath, "");
             testMode = false;
 		}
 
