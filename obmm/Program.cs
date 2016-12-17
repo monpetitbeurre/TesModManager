@@ -2363,12 +2363,12 @@ namespace OblivionModManager {
 				return false;
 			}
 			if(!OblivionESP.CreateList()) {
-				MessageBox.Show("The game's active esp list is missing and could not be created.", "Error");
+				MessageBox.Show("The game's active esp list is missing and could not be created. . You need to start the game at least once.", "Error");
 				return false;
 			}
 			if(!INI.CreateINI()) {
-				MessageBox.Show("The game's ini file is missing and could not be created.", "Error");
-				return false;
+				MessageBox.Show("The game's ini file is missing from '" + INIDir + "' and could not be created. You need to start the game once and set it's options so that TMM can find the ini file. Some options will not work until that is done.", "No INI file found", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+				// return false;
 			}
 			
 			try {
@@ -2396,7 +2396,7 @@ namespace OblivionModManager {
 			//If using windows vista, check that the virtual store is empty
 			if(Directory.Exists(VistaVirtualStore)) {
 				if(new WindowsPrincipal(WindowsIdentity.GetCurrent()).IsInRole(WindowsBuiltInRole.Administrator)) {
-					if(MessageBox.Show("Vista appears to have moved some of the game files to the virtual store.\n"+
+					if(MessageBox.Show("Windows appears to have moved some of the game files to the virtual store.\n"+
 					                   "Do you wish to move them back?\n"+
 					                   "If you don't know what the virtual store is, please read entry 16 in the FAQ.",
 					                   "Warning", System.Windows.Forms.MessageBoxButtons.YesNo)==System.Windows.Forms.DialogResult.Yes) {
@@ -2404,7 +2404,7 @@ namespace OblivionModManager {
 						Directory.Delete(VistaVirtualStore, true);
 					}
 				} else {
-					MessageBox.Show("Vista appears to have moved some of the game files to the virtual store.\n"+
+					MessageBox.Show("Windows appears to have moved some of the game files to the virtual store.\n"+
 					                "Since tmm doesn't have administrative privileges, it can't move them back\n"+
 					                "If you have problems with mods not showing up in game, or omods vanishing from obmm, please read entry 16 in the FAQ.",
 					                "Warning");

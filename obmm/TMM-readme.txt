@@ -60,6 +60,9 @@ How does this compare with Wrye Bash:
 * it recognizes Steam mods
 
 
+This is licensed under GPL.
+Source code is available at https://github.com/monpetitbeurre/TesModManager
+
 Troubleshooting
 ----------------------
 Q: I get "missing basetools.dll".
