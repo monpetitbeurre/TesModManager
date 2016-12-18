@@ -402,7 +402,7 @@ namespace OblivionModManager.Forms {
             bw.Write((byte)'S');
             bw.Write((byte)'A');
             bw.Write((byte)0);
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                 bw.Write((uint)104);
             else if (Program.bMorrowind)
             {

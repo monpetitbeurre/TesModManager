@@ -136,7 +136,7 @@ namespace OblivionModManager {
 
         }
 
-        public static string gameName = (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion"));
+        public static string gameName = (Program.bSkyrimSEMode ? "skyrimSE" :(Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
         public static string gamePath = "";
         public static string DataFolderPath = "Data";
         public static string DataFolderName = "Data";
@@ -2252,7 +2252,7 @@ namespace OblivionModManager {
         }
         public static void loadLoadOrderTxtFile()
         {
-            if (bSkyrimMode)
+            if (bSkyrimMode || bSkyrimSEMode)
             {
                 if (File.Exists(OblivionESP.loadorder))
                 {

@@ -44,7 +44,16 @@ namespace OblivionModManager {
             private Bitmap image;
             public Bitmap Image {
                 get {
-                    if(image!=null) return image;
+                    if (image != null)
+                    {
+                        // test if data is valid. If not fall through to reload image
+                        try
+                        {
+                            int width = image.Width;
+                            return image;
+                        }
+                        catch { };
+                    }
                     if (ImageData == null)
                     {
                         // empty image
@@ -99,9 +108,22 @@ namespace OblivionModManager {
 
         private void FindSaveFolder() {
             if(INI.GetINIValue("[general]", "bUseMyGamesDirectory")=="0") {
-                SaveFolder="saves\\";
+                SaveFolder="saves";
             } else {
-                SaveFolder=Path.Combine(Program.INIDir,(Program.bSkyrimMode?"saves\\":INI.GetINIValue("[general]", "SLocalSavePath")));
+                string saveSubDir = "";
+
+                if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+                    saveSubDir = "saves";
+                else
+                {
+                    if (!string.IsNullOrWhiteSpace(INI.GetINIValue("[general]", "SLocalSavePath")))
+                    {
+                        saveSubDir = INI.GetINIValue("[general]", "SLocalSavePath");
+                    }
+                    else
+                        saveSubDir = "saves";
+                }
+                SaveFolder =Path.Combine(Program.INIDir,saveSubDir);
             }
         }
 
@@ -130,17 +152,19 @@ namespace OblivionModManager {
             SaveFile sf = new SaveFile();
             sf.FileName = Path.GetFileName(file);
 
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
             {
-                br.BaseStream.Position += 13;
+                br.BaseStream.Position = "TESV_SAVEGAME".Length;
 
+                uint headerSize = br.ReadUInt32();
+
+                // header
+                uint version = br.ReadUInt32();
+                uint saveNumber = br.ReadUInt32();
                 int b = br.ReadInt16();
-                sf.Player = "";
+                sf.Player = ""; // br.ReadString();
                 for (int i = 0; i < b; i++) sf.Player += (char)br.ReadByte();
-                byte level = br.ReadByte(); //Read the level
-                br.ReadByte();
-                br.ReadByte();
-                br.ReadByte();
+                uint level = br.ReadUInt32(); //Read the level
                 b = br.ReadInt16();
                 sf.Location = "";
                 for (int i = 0; i < b; i++) sf.Location += (char)br.ReadByte();
@@ -151,23 +175,45 @@ namespace OblivionModManager {
                 sf.race = "";
                 for (int i = 0; i < b; i++) sf.race += (char)br.ReadByte();
 
-                br.ReadInt16();
-                br.ReadInt32();
-                br.ReadInt32();
+                int sex = br.ReadUInt16(); // 1=female, 0=male
+
+                //br.ReadInt16();
+                float currentExperience = (float)br.ReadUInt32();
+                //br.ReadInt32();
+                float levelUpExperience = (float)br.ReadUInt32();
+                // br.ReadInt32();
+
                 sf.saved = DateTime.FromFileTime(br.ReadInt64());
-                sf.ImageWidth = br.ReadInt32();
-                sf.ImageHeight = br.ReadInt32();
+                sf.ImageWidth = (int)br.ReadUInt32();
+                sf.ImageHeight = (int)br.ReadUInt32();
+                // end header
+
+                // br.BaseStream.Position = headerSize + 4 + "TESV_SAVEGAME".Length;
                 sf.ImageData = new byte[sf.ImageHeight * sf.ImageWidth * 3];
-                br.Read(sf.ImageData, 0, sf.ImageData.Length);
-                //Flip the blue and red channels
+                int bpp = (version == 9 ? 24 : 32);
+                byte[] imageData = new byte[sf.ImageHeight * sf.ImageWidth * bpp/8];
+
+                if (version == 12) br.BaseStream.Position += 2;
+                br.Read(imageData, 0, imageData.Length);
+                
                 for (int i = 0; i < sf.ImageWidth * sf.ImageHeight; i++)
                 {
-                    byte temp = sf.ImageData[i * 3];
-                    sf.ImageData[i * 3] = sf.ImageData[i * 3 + 2];
-                    sf.ImageData[i * 3 + 2] = temp;
+                    sf.ImageData[i * 3 + 1] = imageData[i * bpp / 8 + 1];
+                    if (version == 9) // image is BGR instead of RGB
+                    {
+                        sf.ImageData[i * 3] = imageData[i * bpp / 8 + 2];
+                        sf.ImageData[i * 3 + 2] = imageData[i * bpp / 8];
+                    }
+                    else
+                    {
+                        sf.ImageData[i * 3] = imageData[i * bpp / 8];
+                        sf.ImageData[i * 3 + 2] = imageData[i * bpp / 8 + 2];
+                    }
                 }
-                br.ReadByte();
-                br.ReadInt32();
+                int formVersion = br.ReadByte();
+                uint pluginInfoSize = br.ReadUInt32();
+                if (version == 12)
+                    br.BaseStream.Position = 245871;
                 sf.plugins = new string[br.ReadByte()];
                 for (int i = 0; i < sf.plugins.Length; i++)
                 {
@@ -423,8 +469,20 @@ namespace OblivionModManager {
                 //}
                 //br.Close();
 
-                SaveFile sf = DecodeSaveFile(file);
-                if (sf != null) saves.Add(sf);
+                if (Program.bMorrowind)
+                {
+                    ConflictDetector.HeaderInfo info = ConflictDetector.TesFile.MorrowindGetHeader(file);
+                    SaveFile sf = new SaveFile();
+                    sf.FileName = Path.GetFileName(file);
+                    sf.plugins = info.DependsOn.Split(',');
+                    sf.saved = (new FileInfo(file)).LastWriteTime;
+                    if (sf != null) saves.Add(sf);
+                }
+                else
+                {
+                    SaveFile sf = DecodeSaveFile(file);
+                    if (sf != null) saves.Add(sf);
+                }
             }
             UpdateSaveList();
         }
@@ -499,12 +557,16 @@ namespace OblivionModManager {
             else
                 lGametime.Text = "";
             UpdatePluginList(sf.plugins);
-            if (pictureBox1.Image != null)
+            //if (pictureBox1.Image != null)
+            //{
+            //    pictureBox1.Image.Dispose();
+            //    pictureBox1.Image = null;
+            //}
+            try
             {
-                pictureBox1.Image.Dispose();
-                pictureBox1.Image = null;
+                pictureBox1.Image = sf.Image;
             }
-            pictureBox1.Image = sf.Image;
+            catch { }
         }
 
         private void cmbSort_KeyPress(object sender, KeyPressEventArgs e) {
@@ -536,7 +598,7 @@ namespace OblivionModManager {
 /////////////////////////////////////////////////////
 
             // change order
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
             {
                 List<string> oldloadorderlist = new List<string>(Program.loadOrderList);
                 string[] plugins = ((SaveFile)lvSaves.SelectedItems[0].Tag).plugins;

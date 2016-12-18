@@ -214,7 +214,7 @@ namespace OblivionModManager {
 			
 			UpdateESPM();
 
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
             {
                 if (Program.loadOrderList == null || Program.loadOrderList.Count == 0)
                 {
@@ -907,7 +907,7 @@ namespace OblivionModManager {
 			int omodnum = 0;
 			for(int i=0;i<lvEspList.Items.Count;i++)
 			{
-                if (Program.bSkyrimMode && lvEspList.Items[i].SubItems[0].Text == "Skyrim.esm")
+                if ((Program.bSkyrimMode || Program.bSkyrimSEMode) && lvEspList.Items[i].SubItems[0].Text == "Skyrim.esm")
                     lvEspList.Items[i].Checked = true;
                 else if (Program.bMorrowind && lvEspList.Items[i].SubItems[0].Text == "Morrowind.esm")
                     lvEspList.Items[i].Checked = true;
@@ -2140,7 +2140,7 @@ namespace OblivionModManager {
 					ei.DateModified=pos;
 					FileInfo fi=new FileInfo(Path.Combine(Program.DataFolderPath,file));
 					fi.LastWriteTime=pos;
-                    if (Program.bSkyrimMode)
+                    if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                         Program.loadOrderList.Add(file.ToLower());
 				} else {
 					MessageBox.Show("esp '"+file+"' was not found", "Error");
@@ -2538,8 +2538,7 @@ namespace OblivionModManager {
             s = s.Replace("http://www.skyrimnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/skyrim/mods/");
             s = s.Replace("http://www." + Program.gameName + ".nexusmods.com/mods/", "http://www.nexusmods.com/" + Program.gameName + "/mods/");
 
-            if (s.StartsWith("http://www.nexusmods.com/oblivion/mods/", StringComparison.CurrentCultureIgnoreCase) ||
-                s.StartsWith("http://www.nexusmods.com/skyrim/mods/", StringComparison.CurrentCultureIgnoreCase))
+            if (s.StartsWith("http://www.nexusmods.com/" + Program.gameName + "/mods/", StringComparison.CurrentCultureIgnoreCase))
 			{
                 string modid=s.Substring(s.LastIndexOf('/')+1);
                 string name = "", version = "", description = "", author = "", website = "", imagefile = null;

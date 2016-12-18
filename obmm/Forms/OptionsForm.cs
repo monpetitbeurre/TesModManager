@@ -101,7 +101,7 @@ namespace OblivionModManager {
             cbAskToBeNexusDownloadManager.Checked = Settings.bAskToBeNexusDownloadManager;
             cbActivateOnDoubleClick.Checked = Settings.bDeActivateOnDoubleClick;
             cbLoadOrderAsUTF8.Checked = Settings.bLoadOrderAsUTF8;
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
             {
                 cbUseTimeStamps.Checked = Settings.bUseTimeStamps;
             }

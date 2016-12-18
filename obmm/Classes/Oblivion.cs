@@ -442,7 +442,7 @@ namespace OblivionModManager {
         public static void ReadArchives() {
             string s=null;
             try {
-                if (Program.bSkyrimMode)
+                if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                     s = INI.GetINIValue("[Archive]", "sResourceArchiveList");
                 else if (Program.bMorrowind)
                 {
@@ -467,12 +467,32 @@ namespace OblivionModManager {
 //                return;
             }
             if(s==null) {
-                Archives.AddRange((Program.bSkyrimMode ? new string[] { "Skyrim - VoicesExtra.bsa", "Skyrim - Voices.bsa", 
-                    "Skyrim - Textures.bsa", "Skyrim - Sounds.bsa", "Skyrim - Shaders.bsa", "Skyrim - Misc.bsa", 
-                    "Skyrim - Meshes.bsa", "Skyrim - Interface.bsa", "Skyrim - Animations.bsa" } : Program.bMorrowind ? new string[] { "Morrowind.bsa" } : new string[] { "Oblivion - Meshes.bsa", "Oblivion - Textures - Compressed.bsa",
+                if (Program.bSkyrimSEMode)
+                {
+                    Archives.AddRange(new string[] { "Skyrim - Voices_en0.bsa", "Skyrim - Sounds.bsa", "Skyrim - Shaders.bsa", "Skyrim - Misc.bsa",
+                        "Skyrim - Textures0.bsa", "Skyrim - Textures1.bsa", "Skyrim - Textures2.bsa", "Skyrim - Textures3.bsa", "Skyrim - Textures4.bsa",
+                        "Skyrim - Textures5.bsa", "Skyrim - Textures6.bsa", "Skyrim - Textures7.bsa", "Skyrim - Textures8.bsa",
+                        "Skyrim - Meshes0.bsa", "Skyrim - Meshes1.bsa", "Skyrim - Interface.bsa", "Skyrim - Animations.bsa" });
+                }
+                else if (Program.bSkyrimMode)
+                {
+                    Archives.AddRange(new string[] { "Skyrim - VoicesExtra.bsa", "Skyrim - Voices.bsa",
+                        "Skyrim - Textures.bsa", "Skyrim - Sounds.bsa", "Skyrim - Shaders.bsa", "Skyrim - Misc.bsa",
+                        "Skyrim - Meshes.bsa", "Skyrim - Interface.bsa", "Skyrim - Animations.bsa" });
+                }
+                else if (Program.bMorrowind)
+                {
+                    Archives.AddRange(new string[] { "Morrowind.bsa" });
+                }
+                else
+                {
+                    Archives.AddRange(new string[] { "Oblivion - Meshes.bsa", "Oblivion - Textures - Compressed.bsa",
                     "Oblivion - Sounds.bsa", "Oblivion - Voices1.bsa", "Oblivion - Voices2.bsa",
-                    "Oblivion - Misc.bsa" }));
-            } else {
+                    "Oblivion - Misc.bsa" });
+                }
+            }
+            else
+            {
                 Archives.AddRange(s.Split(new char[] { ',' }, StringSplitOptions.RemoveEmptyEntries));
                 for(int i=0;i<Archives.Count;i++) Archives[i]=Archives[i].Trim();
             }
@@ -1116,7 +1136,7 @@ namespace OblivionModManager {
         public static void ResetTimeStamps()
         {
             DateTime date=new DateTime(2006,1,1);
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
             {
                 // first cover standard BSA
                 foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderPath, "Skyrim - *.bsa"))

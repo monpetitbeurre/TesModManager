@@ -165,7 +165,7 @@ namespace OblivionModManager.ConflictReport {
 
             private void ReadGroup(BinaryReader br, long Size, Dictionary<byte, byte> FormIDLookup, Node Parent, List<Node> EDIDs)
             {
-                if (Program.bSkyrimMode)
+                if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                     SkyrimReadGroup(br, Size, FormIDLookup, Parent, EDIDs);
                 else if (Program.bMorrowind)
                 {
@@ -359,7 +359,7 @@ namespace OblivionModManager.ConflictReport {
                     s=Program.ReadBString(br,4);
                     if(s!="TES4") return new Node[0];
                     size=br.ReadUInt32();
-                    if (Program.bSkyrimMode)
+                    if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                         br.BaseStream.Position += 16;
                     else if (Program.bMorrowind)
                     {

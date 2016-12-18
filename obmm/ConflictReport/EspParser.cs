@@ -64,7 +64,7 @@ namespace ConflictDetector {
 
         public static void SetGMST(string file, string edid, string value)
         {
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                 SkyrimSetGMST(file,edid,value);
             else if (Program.bMorrowind)
             {
@@ -332,7 +332,7 @@ namespace ConflictDetector {
         }
         public static void SetGLOB(string file, string edid, string value)
         {
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                 SkyrimSetGLOB(file,edid,value);
             else if (Program.bMorrowind)
             {
@@ -558,7 +558,7 @@ namespace ConflictDetector {
             }
         }
         public static HeaderInfo GetHeader(string FilePath) {
-            if (Program.bSkyrimMode)
+            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
                 return SkyrimGetHeader(FilePath);
             else if (Program.bMorrowind)
             {
@@ -672,7 +672,7 @@ namespace ConflictDetector {
         }
         public static EDID[] GetIDList(string FilePath, plugin p)
         {
-            return (Program.bSkyrimMode ? SkyrimGetIDList(FilePath, p) : Program.bMorrowind? null: OblivionGetIDList(FilePath, p));
+            return (Program.bSkyrimMode || Program.bSkyrimSEMode ? SkyrimGetIDList(FilePath, p) : Program.bMorrowind? null: OblivionGetIDList(FilePath, p));
         }
         public static EDID[] OblivionGetIDList(string FilePath, plugin p) {
             List<EDID> ids=new List<EDID>();
@@ -1078,7 +1078,7 @@ namespace ConflictDetector {
         }
         public static string[] GetDataFileList(string FilePath)
         {
-            return (Program.bSkyrimMode ? SkyrimGetDataFileList(FilePath) : Program.bMorrowind?null:OblivionGetDataFileList(FilePath));
+            return (Program.bSkyrimMode || Program.bSkyrimSEMode ? SkyrimGetDataFileList(FilePath) : Program.bMorrowind?null:OblivionGetDataFileList(FilePath));
         }
 
         public static string[] OblivionGetDataFileList(string FilePath)
