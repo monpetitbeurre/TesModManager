@@ -137,14 +137,14 @@ namespace OblivionModManager {
         SaveFile DecodeSaveFile(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            if (br.BaseStream.Length < 12)
+            if (br.BaseStream.Length < 4)
             {
                 br.Close();
                 return null;
             }
             string s = "";
-            for (int i = 0; i < 12; i++) s += (char)br.ReadByte();
-            if (s != "TES4SAVEGAME" && s != "TESV_SAVEGAM")
+            for (int i = 0; i < 3; i++) s += (char)br.ReadByte();
+            if (s != "TES")
             {
                 br.Close();
                 return null;
@@ -154,8 +154,12 @@ namespace OblivionModManager {
 
             if (Program.bSkyrimMode || Program.bSkyrimSEMode)
             {
-                br.BaseStream.Position = "TESV_SAVEGAME".Length;
-
+                br.BaseStream.Position = 0;
+                string magic = Program.ReadBString(br, "TESV_SAVEGAME".Length);
+                if (magic != "TESV_SAVEGAME")
+                {
+                    return null;
+                }
                 uint headerSize = br.ReadUInt32();
 
                 // header
@@ -193,7 +197,11 @@ namespace OblivionModManager {
                 int bpp = (version == 9 ? 24 : 32);
                 byte[] imageData = new byte[sf.ImageHeight * sf.ImageWidth * bpp/8];
 
-                if (version == 12) br.BaseStream.Position += 2;
+                if (version == 12)
+                {
+                    uint unknown = br.ReadUInt16();
+                }
+
                 br.Read(imageData, 0, imageData.Length);
                 
                 for (int i = 0; i < sf.ImageWidth * sf.ImageHeight; i++)
@@ -211,9 +219,14 @@ namespace OblivionModManager {
                     }
                 }
                 int formVersion = br.ReadByte();
-                uint pluginInfoSize = br.ReadUInt32();
                 if (version == 12)
-                    br.BaseStream.Position = 245871;
+                {
+                    // some bytes/words to go. What are they?
+                    uint un = br.ReadUInt32();
+                    uint deux = br.ReadUInt32();
+                    uint trois = br.ReadUInt16();
+                }
+                uint pluginInfoSize = br.ReadUInt32();
                 sf.plugins = new string[br.ReadByte()];
                 for (int i = 0; i < sf.plugins.Length; i++)
                 {
@@ -224,10 +237,102 @@ namespace OblivionModManager {
             }
             else if (Program.bMorrowind)
             {
+                try
+                {
+                    sf.saved = (new FileInfo(file)).LastWriteTime;
+                    br.BaseStream.Position = 0;
+                    uint size;
+                    s = OblivionModManager.Program.ReadBString(br, 4);
+                    if (s != "TES3") return null;
+                    size = br.ReadUInt32();
+                    br.BaseStream.Position += 8;
+                    s = OblivionModManager.Program.ReadBString(br, 4); // should be HEDR
+                    size = br.ReadUInt32();
+                    uint fversion = br.ReadUInt32(); // supposed to be a 4bytes float
+                    uint fournull = br.ReadUInt32();
+                    Program.ReadBString(br, 32);
+                    Program.ReadBString(br, 260);
+                    List<string> pluginsList = new List<string>();
+                    s = OblivionModManager.Program.ReadBString(br, 4); // should be MAST
+                    while (s == "MAST")
+                    {
+                        size = br.ReadUInt32(); // master file name length
+                        string plugin = Program.ReadBString(br, (int)size - 1);
+                        pluginsList.Add(plugin);
+                        Program.ReadBString(br, 1); // read the terminating NULL character
+                        s = OblivionModManager.Program.ReadBString(br, 4); // should be DATA
+                        size = br.ReadUInt32(); // Data length
+                        double data = br.ReadDouble(); // data itself
+                        s = OblivionModManager.Program.ReadBString(br, 4); // should be DATA
+                    }
+                    sf.plugins = new string[pluginsList.Count];
+                    for (int curPlugin = 0; curPlugin < pluginsList.Count; curPlugin++)
+                    {
+                        sf.plugins[curPlugin] = pluginsList[curPlugin];
+                    }
+                    if (s == "GMDT")
+                    {
+                        size = br.ReadUInt32();
+                        br.ReadUInt32();
+                        br.ReadUInt32();
+                        br.ReadUInt32();
+                        br.ReadUInt32();
+                        br.ReadUInt32();
+                        br.ReadUInt32();
+                        sf.Location = Program.ReadBString(br, 66);
+                        sf.Location = sf.Location.Substring(0, sf.Location.IndexOf('\0'));
+                        br.ReadUInt16();
+                        sf.Player = Program.ReadBString(br, 32);
+                        sf.Player = sf.Player.Substring(0, sf.Player.IndexOf('\0'));
+                    }
+                    s = OblivionModManager.Program.ReadBString(br, 4);
+                    if (s == "SCRD")
+                    {
+                        size = br.ReadUInt32();
+                        Program.ReadBString(br, (int)size);
+                        sf.ImageWidth = 128;
+                        sf.ImageHeight = 128;
+                    }
+                    s = OblivionModManager.Program.ReadBString(br, 4);
+                    if (s == "SCRS")
+                    {
+                        size = br.ReadUInt32();
+                        // Program.ReadBString(br, (int)size);
+                        byte[] imageData = new byte[size];
+                        sf.ImageData = new byte[sf.ImageHeight * sf.ImageWidth * 3];
+                        br.Read(imageData, 0, imageData.Length);
+                        int bpp = 32;
+                        for (int i = 0; i < sf.ImageHeight * sf.ImageWidth; i++) // in pixels
+                        {
+                            sf.ImageData[i * 3 + 1] = imageData[i * bpp / 8 + 1];
+                            //if (version == 9) // image is BGR instead of RGB
+                            //{
+                            //    sf.ImageData[i * 3] = imageData[i * bpp / 8 + 2];
+                            //    sf.ImageData[i * 3 + 2] = imageData[i * bpp / 8];
+                            //}
+                            //else
+                            {
+                                sf.ImageData[i * 3] = imageData[i * bpp / 8];
+                                sf.ImageData[i * 3 + 2] = imageData[i * bpp / 8 + 2];
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    br.Close();
+                }
             }
             else
             {
-                br.BaseStream.Position += 30;
+                br.BaseStream.Position = 0;
+                string magic = Program.ReadBString(br, "TES4SAVEGAME".Length);
+                if (magic != "TES4SAVEGAME")
+                {
+                    return null;
+                }
+
+                br.BaseStream.Position = 42;
 
                 byte b = br.ReadByte();
                 sf.Player = "";
@@ -469,16 +574,16 @@ namespace OblivionModManager {
                 //}
                 //br.Close();
 
-                if (Program.bMorrowind)
-                {
-                    ConflictDetector.HeaderInfo info = ConflictDetector.TesFile.MorrowindGetHeader(file);
-                    SaveFile sf = new SaveFile();
-                    sf.FileName = Path.GetFileName(file);
-                    sf.plugins = info.DependsOn.Split(',');
-                    sf.saved = (new FileInfo(file)).LastWriteTime;
-                    if (sf != null) saves.Add(sf);
-                }
-                else
+                //if (Program.bMorrowind)
+                //{
+                //    ConflictDetector.HeaderInfo info = ConflictDetector.TesFile.MorrowindGetHeader(file);
+                //    SaveFile sf = new SaveFile();
+                //    sf.FileName = Path.GetFileName(file);
+                //    sf.plugins = info.DependsOn.Split(',');
+                //    sf.saved = (new FileInfo(file)).LastWriteTime;
+                //    if (sf != null) saves.Add(sf);
+                //}
+                //else
                 {
                     SaveFile sf = DecodeSaveFile(file);
                     if (sf != null) saves.Add(sf);

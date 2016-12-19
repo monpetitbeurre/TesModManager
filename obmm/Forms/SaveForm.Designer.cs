@@ -31,22 +31,22 @@ namespace OblivionModManager {
             this.lDate = new System.Windows.Forms.Label();
             this.splitContainer1 = new System.Windows.Forms.SplitContainer();
             this.lvPlugins = new System.Windows.Forms.ListView();
+            this.SavePluginColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SaveImageList = new System.Windows.Forms.ImageList(this.components);
             this.lvSaves = new System.Windows.Forms.ListView();
+            this.SaveFileNameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SavePlayerNameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SaveLocationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SaveDateSavedColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.SaveFileSizeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.cmbSort = new System.Windows.Forms.ComboBox();
             this.DudMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.bSync = new System.Windows.Forms.Button();
             this.lGametime = new System.Windows.Forms.Label();
             this.btnActivateMissingMods = new System.Windows.Forms.Button();
-            this.SaveFileNameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SavePluginColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SavePlayerNameColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SaveLocationColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SaveFileSizeColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.SaveDateSavedColumn = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.gView = new System.Windows.Forms.GroupBox();
-            this.radList = new System.Windows.Forms.RadioButton();
             this.radDetails = new System.Windows.Forms.RadioButton();
+            this.radList = new System.Windows.Forms.RadioButton();
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -61,6 +61,7 @@ namespace OblivionModManager {
             this.pictureBox1.Location = new System.Drawing.Point(73, 12);
             this.pictureBox1.Name = "pictureBox1";
             this.pictureBox1.Size = new System.Drawing.Size(256, 192);
+            this.pictureBox1.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
             this.pictureBox1.TabIndex = 0;
             this.pictureBox1.TabStop = false;
             // 
@@ -124,6 +125,11 @@ namespace OblivionModManager {
             this.lvPlugins.UseCompatibleStateImageBehavior = false;
             this.lvPlugins.View = System.Windows.Forms.View.Details;
             // 
+            // SavePluginColumn
+            // 
+            this.SavePluginColumn.Text = "Plugin";
+            this.SavePluginColumn.Width = 561;
+            // 
             // SaveImageList
             // 
             this.SaveImageList.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("SaveImageList.ImageStream")));
@@ -154,6 +160,31 @@ namespace OblivionModManager {
             this.lvSaves.View = System.Windows.Forms.View.Details;
             this.lvSaves.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvSaves_ColumnClick);
             this.lvSaves.SelectedIndexChanged += new System.EventHandler(this.lvSaves_SelectedIndexChanged);
+            // 
+            // SaveFileNameColumn
+            // 
+            this.SaveFileNameColumn.Text = "FileName";
+            this.SaveFileNameColumn.Width = 174;
+            // 
+            // SavePlayerNameColumn
+            // 
+            this.SavePlayerNameColumn.Text = "Player name";
+            this.SavePlayerNameColumn.Width = 106;
+            // 
+            // SaveLocationColumn
+            // 
+            this.SaveLocationColumn.Text = "Location";
+            this.SaveLocationColumn.Width = 96;
+            // 
+            // SaveDateSavedColumn
+            // 
+            this.SaveDateSavedColumn.Text = "Date saved";
+            this.SaveDateSavedColumn.Width = 103;
+            // 
+            // SaveFileSizeColumn
+            // 
+            this.SaveFileSizeColumn.Text = "File size";
+            this.SaveFileSizeColumn.Width = 76;
             // 
             // cmbSort
             // 
@@ -210,36 +241,6 @@ namespace OblivionModManager {
             this.btnActivateMissingMods.UseVisualStyleBackColor = true;
             this.btnActivateMissingMods.Click += new System.EventHandler(this.btnActivateMissingMods_Click);
             // 
-            // SaveFileNameColumn
-            // 
-            this.SaveFileNameColumn.Text = "FileName";
-            this.SaveFileNameColumn.Width = 174;
-            // 
-            // SavePluginColumn
-            // 
-            this.SavePluginColumn.Text = "Plugin";
-            this.SavePluginColumn.Width = 561;
-            // 
-            // SavePlayerNameColumn
-            // 
-            this.SavePlayerNameColumn.Text = "Player name";
-            this.SavePlayerNameColumn.Width = 106;
-            // 
-            // SaveLocationColumn
-            // 
-            this.SaveLocationColumn.Text = "Location";
-            this.SaveLocationColumn.Width = 96;
-            // 
-            // SaveFileSizeColumn
-            // 
-            this.SaveFileSizeColumn.Text = "File size";
-            this.SaveFileSizeColumn.Width = 76;
-            // 
-            // SaveDateSavedColumn
-            // 
-            this.SaveDateSavedColumn.Text = "Date saved";
-            this.SaveDateSavedColumn.Width = 103;
-            // 
             // gView
             // 
             this.gView.Controls.Add(this.radDetails);
@@ -249,18 +250,6 @@ namespace OblivionModManager {
             this.gView.Size = new System.Drawing.Size(107, 66);
             this.gView.TabIndex = 11;
             this.gView.TabStop = false;
-            // 
-            // radList
-            // 
-            this.radList.AutoSize = true;
-            this.radList.Location = new System.Drawing.Point(20, 14);
-            this.radList.Name = "radList";
-            this.radList.Size = new System.Drawing.Size(41, 17);
-            this.radList.TabIndex = 0;
-            this.radList.TabStop = true;
-            this.radList.Text = "List";
-            this.radList.UseVisualStyleBackColor = true;
-            this.radList.CheckedChanged += new System.EventHandler(this.radList_CheckedChanged);
             // 
             // radDetails
             // 
@@ -274,6 +263,18 @@ namespace OblivionModManager {
             this.radDetails.Text = "Details";
             this.radDetails.UseVisualStyleBackColor = true;
             this.radDetails.CheckedChanged += new System.EventHandler(this.radDetails_CheckedChanged);
+            // 
+            // radList
+            // 
+            this.radList.AutoSize = true;
+            this.radList.Location = new System.Drawing.Point(20, 14);
+            this.radList.Name = "radList";
+            this.radList.Size = new System.Drawing.Size(41, 17);
+            this.radList.TabIndex = 0;
+            this.radList.TabStop = true;
+            this.radList.Text = "List";
+            this.radList.UseVisualStyleBackColor = true;
+            this.radList.CheckedChanged += new System.EventHandler(this.radList_CheckedChanged);
             // 
             // SaveForm
             // 
