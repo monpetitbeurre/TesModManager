@@ -55,7 +55,7 @@ namespace OblivionModManager {
         public static string SettingsFile = @"obmm\settings2";
 		public static string BSAEditFile =@"obmm\BSAEdits";
 		public const string omodConversionData=@"omod conversion data\";
-		public static string HelpPath ="obmm\\obmm.chm";
+		public static string HelpPath ="obmm.chm";
         public static string PipeFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "obmm\\pipe");
         public static List<string> loadOrderList = new List<string>();
         //public static int[] progress = { 0, 0 };
@@ -2055,7 +2055,7 @@ namespace OblivionModManager {
             DataFile7 = DataFile + "7";
             SettingsFile = Path.Combine(BaseDir, "Settings2");
             BSAEditFile = Path.Combine(BaseDir, "BSAEdits");
-            HelpPath = Path.Combine(BaseDir, "obmm.chm");
+            HelpPath = Path.Combine(Application.ExecutablePath, "obmm.chm");
             Settings.conflictsBackupDir = Program.DataFolderPath;
 
 
