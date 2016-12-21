@@ -10,7 +10,7 @@ Quick tip for fast and easy mod creation: Use the import button and pick a downl
 
 Description
 -----------
-TesModManager is a new version of OBMM Extended that supports both skyrim and Oblivion. I renamed it TesModManager for this reason.
+TesModManager is a new version of OBMM Extended that supports Skyrim SE, Skyrim, Oblivion and Morrowind. I renamed it TesModManager for this reason.
 
 What you can do with it:
 * create complex mods using simple script or C# scripting to control what files go where and even edit the ini files
@@ -18,8 +18,8 @@ What you can do with it:
 * automatically import obmm/omod mods
 * automatically import NMM/fomod mods (supports both XML and C# fomod scripts)
 * automatically import mods from zip/7z/rar files (some odd mods may need tweaking)
-* use as download manager for Nexus for both Oblivion and Skyrim
-* retrieve Mod Descriptions, Author, Version and pictures from both tesnexus and skyrimnexus.
+* use as download manager for Nexus for all supported games
+* retrieve Mod Descriptions, Author, Version and pictures from nexusmods.
 * sort mods and call BOSS (if installed) to do it
 * start skyrim using SKSE or Oblivion using OBSE
 * installs/updates OBSE/SKSE for you
@@ -86,7 +86,7 @@ Oblivion Mod Manager - Timeslip
 Oblivion Mod Manager Extended -  Scent Tree
 Icons by SneakyTomato and UESP
 Help Files, OCD List Submissions and Bug Finding in OBMM Extended - Isabelxxx
-Optimizations, Skyrim and Morrowind port by monpetitbeurre
+Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
@@ -98,7 +98,7 @@ version 1.6.0
 * Added ability to filter file list from BSA browser
 * Data file is now written after each mod creation and activation to minimize loss in case of crash
 * Fixed several fomod scripting issues
-* Fioxed an issue with Darnified UI install
+* Fixed an issue with Darnified UI install
 
 version 1.5.14
 --------------
