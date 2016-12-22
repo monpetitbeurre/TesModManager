@@ -293,34 +293,57 @@ namespace OblivionModManager {
             string latestSEversion = getLatestScriptExtenderVersion();
             FileVersionInfo scriptextenderfvi = null;
             FileVersionInfo gamever = null;
+            string gameEXE = "";
+            string scriptExtenderLoaderEXE = "";
+            string scriptExtenderLoaderDLL = "";
+            string scriptExtenderName = "";
             if (Program.bSkyrimSEMode)
             {
+                gameEXE = Path.Combine(Program.gamePath, "SkyrimSE.exe");
                 //if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
                 //{
                 //    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
                 //}
-                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "SkyrimSE.exe"));
+                // gamever = FileVersionInfo.GetVersionInfo();
             }
             else if (Program.bSkyrimMode)
             {
-                if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
-                {
-                    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
-                }
-                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "tesv.exe"));
+                gameEXE = Path.Combine(Program.gamePath, "tesv.exe");
+                scriptExtenderLoaderEXE = Path.Combine(Program.gamePath, "skse_loader.exe");
+                scriptExtenderLoaderDLL = Path.Combine(Program.gamePath, "skse_steam_loader.dll");
+                scriptExtenderName = "SKSE";
+                //gamever = FileVersionInfo.GetVersionInfo();
             }
             else if (Program.bMorrowind)
             {
-                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "morrowind.exe"));
-
-                scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "mwse.dll")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "mwse.dll")) : null;
+                gameEXE = Path.Combine(Program.gamePath, "morrowind.exe");
+                scriptExtenderLoaderDLL = Path.Combine(Program.gamePath, "mwse.dll");
+                scriptExtenderName = "MWSE";
             }
             else
             {
-                scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "obse_loader.exe")) : null;
-                gamever = FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "oblivion.exe"));
+                gameEXE = Path.Combine(Program.gamePath, "oblivion.exe");
+                scriptExtenderLoaderEXE = Path.Combine(Program.gamePath, "obse_loader.exe");
+                scriptExtenderName = "OBSE";
             }
-            toolStripLblScriptExtenderVersion.Text = "" + Program.gameName + " " + gamever.FileVersion;
+            if (File.Exists(gameEXE))
+            {
+                gamever = FileVersionInfo.GetVersionInfo(gameEXE);
+            }
+            else
+            {
+
+            }
+            if (File.Exists(scriptExtenderLoaderEXE))
+            {
+                scriptextenderfvi = File.Exists(scriptExtenderLoaderEXE) ? FileVersionInfo.GetVersionInfo(scriptExtenderLoaderEXE) : null;
+            }
+            else if (File.Exists(scriptExtenderLoaderDLL))
+            {
+                scriptextenderfvi = File.Exists(scriptExtenderLoaderDLL) ? FileVersionInfo.GetVersionInfo(scriptExtenderLoaderDLL) : null;
+            }
+
+            toolStripLblScriptExtenderVersion.Text = "" + Program.gameName + " " + (gamever !=null ? gamever.FileVersion : "Game NOT FOUND!!!! (The registry is pointing to the wrong place)");
             if (scriptextenderfvi != null)
             {
                 string currentSEversion = "";
@@ -336,7 +359,7 @@ namespace OblivionModManager {
                 {
                     currentSEversion = scriptextenderfvi.FileVersion;
                 }
-                toolStripLblScriptExtenderVersion.Text += " - " + (Program.bSkyrimMode ? "SKSE" : (Program.bMorrowind?"MWSE":"OBSE")) + " " + currentSEversion;
+                toolStripLblScriptExtenderVersion.Text += " - " + scriptExtenderName + " " + currentSEversion;
 
                 if (IsSrcriptExtenderUpToDate(latestSEversion,currentSEversion)) //latestSEversion.Length > 0 && latestSEversion != currentSEversion)
                 {
@@ -3477,7 +3500,7 @@ namespace OblivionModManager {
                 importStatusLabel.Text = "No import";
                 importStatusLabel.Visible = false;
                 //backgroundModImportWorker.ReportProgress(0, "No import");
-                File.Delete(file);
+                try { File.Delete(file); } catch { };
                 System.Threading.Monitor.Enter(Program.importList);
                 Program.importList.Remove(file);
                 System.Threading.Monitor.Exit(Program.importList);

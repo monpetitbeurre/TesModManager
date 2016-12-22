@@ -12,22 +12,20 @@ namespace OblivionModManager
     {
         Logger.LogLevel m_debug = Logger.LogLevel.Low;
         string _eventLogSource = "tmm";
-        string logFilePath = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-        string logFileName = "tmm.Log";
         public string logFile { get; private set; }
 
         public Logger()
         {
-            logFile = Path.Combine(logFilePath, logFileName); ;
+            logFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), Path.GetFileNameWithoutExtension(Application.ExecutablePath)+".log"); ;
         }
 
         public Logger(LogLevel level)
         {
             _Debug = level;
         }
-        public Logger(string eventSource)
+        public Logger(string logfilename)
         {
-            EventLogSource = eventSource;
+            logFile = logfilename;
         }
         public Logger.LogLevel _Debug
         {

@@ -90,6 +90,13 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+version 1.6.1
+-------------
+* Moved crash dump to My Documents\ as tmm_crashdump.log
+* Moved initial log to My Documents\ as tmm.log
+* Moved game specific log to My Documents <gamer name>_tmm.log
+* Added better handling of cases where game folder is not found
+
 version 1.6.0
 -------------
 * TMM can now be installed in it's own directory.. It will still create an obmm folder under the game directory for mods related to that game

@@ -28,12 +28,12 @@ Compression=lzma
 SolidCompression=yes
 UninstallDisplayName=TesModManager
 UninstallDisplayIcon={app}\TesModManager.exe
-VersionInfoVersion=1.6.0
+VersionInfoVersion=1.6.1
 VersionInfoDescription=Mod manager for Skyrim, Oblivion and Morrowind
-VersionInfoTextVersion=1.6.0
+VersionInfoTextVersion=1.6.1
 VersionInfoProductName=TesModManager
-VersionInfoProductVersion=1.6.0
-VersionInfoProductTextVersion=1.6.0
+VersionInfoProductVersion=1.6.1
+VersionInfoProductTextVersion=1.6.1
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -61,10 +61,10 @@ Source: "..\Release\msvcr110.dll"; DestDir: "{app}"; Flags: ignoreversion; Compo
 Source: "..\Release\SevenZipSharp.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\Tao.DevIl.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\TMM-readme.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
-Source: "..\Release\uninstall-TMM.bat"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\unrar.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\vccorlib110.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
+Source: "..\Release\obmm\obmm.chm"; DestDir: "{app}"; DestName: "obmm.chm"
 
 [Icons]
 Name: "{commonprograms}\TesModManager for Skyrim"; Filename: "{app}\{#MyAppExeName}"; IconFilename: "{app}\TesModManager.exe"; IconIndex: 0; Parameters: "Skyrim"; Components: TesModManagerforSkyrim; Tasks: skyrimshortcut
@@ -84,6 +84,14 @@ Root: "HKLM"; Subkey: "Software\Classes\nxm"; ValueType: string; ValueData: """U
 Root: "HKLM"; Subkey: "Software\Classes\nxm"; ValueType: string; ValueName: """URL Protocol"""; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKLM"; Subkey: "Software\Classes\nxm\DefaultIcon"; ValueType: string; ValueName: "DefaultIcon"; ValueData: "{app}\{#MyAppName},0"; Flags: createvalueifdoesntexist uninsdeletekey
 Root: "HKLM"; Subkey: "Software\Classes\nxm\shell\open\command"; ValueType: string; ValueData: """{app}\{#MyAppName}"" ""%1"""; Flags: createvalueifdoesntexist uninsdeletekey
+Root: HKCR; SubKey: ".omod"; ValueType: string; ValueData: "Tes Mod file"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "Tes Mod file"; ValueType: string; ValueData: "Mod package for use with Oblivion Mod Manager (OBMM) and Tes Mod Manager (TMM)"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "Tes Mod file\Shell\Open\Command"; ValueType: string; ValueData: """{app}\TesModManager.exe"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Tes Mod file\DefaultIcon"; ValueType: string; ValueData: "{app}\TesModManager.exe,0"; Flags: uninsdeletevalue
+Root: HKCR; SubKey: ".omod2"; ValueType: string; ValueData: "Mod package"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "Mod package"; ValueType: string; ValueData: "Mod package associated with Tes Mod Manager (TMM)"; Flags: uninsdeletekey
+Root: HKCR; SubKey: "Mod package\Shell\Open\Command"; ValueType: string; ValueData: """{app}\TesModManager.exe"" ""%1"""; Flags: uninsdeletekey
+Root: HKCR; Subkey: "Mod package\DefaultIcon"; ValueType: string; ValueData: "{app}\TesModManager.exe,0"; Flags: uninsdeletevalue
 
 [Components]
 Name: "TesModManagerforSkyrim"; Description: "TesModManager for Skyrim"; Types: compact custom full; Flags: checkablealone

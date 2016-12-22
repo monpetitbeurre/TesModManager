@@ -38,7 +38,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.0"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.1"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -56,6 +56,8 @@ namespace OblivionModManager {
 		public static string BSAEditFile =@"obmm\BSAEdits";
 		public const string omodConversionData=@"omod conversion data\";
 		public static string HelpPath ="obmm.chm";
+        public static string crashFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "tmm_crashdump.txt");
+        public static string logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "tmm.log");
         public static string PipeFilename = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "obmm\\pipe");
         public static List<string> loadOrderList = new List<string>();
         //public static int[] progress = { 0, 0 };
@@ -112,7 +114,8 @@ namespace OblivionModManager {
             //@"video\OblivionOutro.bik",
             //@"video\BGS_Logo.bik",
 			@"oblivion.esm",
-            @"skyrim.esm"
+            @"skyrim.esm",
+            @"morrowind.esm"
 		};
 
         class serializerThread
@@ -214,6 +217,8 @@ namespace OblivionModManager {
 		[STAThread]
 		public static void Main(string[] args) {
 
+            logger = new OblivionModManager.Logger(logFilePath);
+
             string apppath = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
             apppath = apppath.Replace("file:///", "");
             apppath = Path.GetDirectoryName(apppath);
@@ -223,6 +228,8 @@ namespace OblivionModManager {
                 bSkyrimSEMode = true;
             else if (File.Exists(Path.Combine(apppath, "morrowind.exe")))
                 bMorrowind = true;
+            //else if (File.Exists(Path.Combine(apppath, "oblivion.exe")))
+
             gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
             DataFolderName = Program.bMorrowind ?"Data Files":"Data";
 
@@ -1059,7 +1066,7 @@ namespace OblivionModManager {
                                         if (file.LastIndexOf(header) != file.IndexOf(header))
                                         {
                                             string error = file.Substring(file.LastIndexOf(header));
-                                            error = error.Substring(0, error.IndexOf("<") - 1);
+                                            error = error.Substring(0, error.IndexOf("<"));
                                             throw new Exception("Server returned: "+error);
                                         }
                                         else
@@ -1867,6 +1874,9 @@ namespace OblivionModManager {
                             logger.WriteToLog("Morrowind Mode", Logger.LogLevel.High);
                             bMorrowind = true;
                             break;
+                        case "oblivion":
+                            logger.WriteToLog("Oblivion Mode", Logger.LogLevel.High);
+                            break;
                         case "-d":
                             logger.setLogLevel("high");
                             break;
@@ -2026,6 +2036,35 @@ namespace OblivionModManager {
                 }
             }
 
+            string gameEXEName = "";
+
+
+            if (bSkyrimSEMode)
+            {
+                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim special edition\\");
+                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim special edition\\");
+
+                gameEXEName = "Skyrimse.exe";
+            }
+            else if (bSkyrimMode)
+            {
+                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim\\");
+                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim\\");
+                gameEXEName = "tesv.exe";
+            }
+            else if (bMorrowind)
+            {
+                INIDir = Program.gamePath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "");
+                ESPDir = Program.gamePath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "");
+                gameEXEName = "morrowind.exe";
+            }
+            else
+            {
+                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\oblivion\\");
+                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "oblivion\\");
+                gameEXEName = "oblivion.exe";
+            }
+
 
             gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
 
@@ -2035,6 +2074,56 @@ namespace OblivionModManager {
 
 
             gamePath = (Program.bSkyrimMode ? skyrimpath : (Program.bSkyrimSEMode ? skyrimsepath : (Program.bMorrowind ? morrowindpath : oblivionpath)));
+
+            // check valid path
+            if (!File.Exists(Path.Combine(Program.gamePath, gameEXEName)))
+            {
+                MessageBox.Show(gameEXEName + " was not found! \r\n Make sure you have Skyrim, SkyrimSE, Oblivion or Morrowind properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could nto find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
+
+            if (string.IsNullOrWhiteSpace(gamePath) || !File.Exists(Path.Combine(Program.gamePath, gameEXEName)))
+            {
+                try
+                {
+                    Microsoft.Win32.RegistryKey lm = null;
+                    lm = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\TesModManager", false);
+                    if (lm!=null) gamePath = lm.GetValue(gameName).ToString();
+                }
+                catch (Exception ex)
+                {
+                    logger.WriteToLog("Could not get folder from registry: " + ex.Message, Logger.LogLevel.Low);
+                }
+            }
+            while (string.IsNullOrWhiteSpace(gamePath) || !File.Exists(Path.Combine(Program.gamePath, gameEXEName)))
+            {
+                FolderBrowserDialog dlg = new FolderBrowserDialog();
+                if (string.IsNullOrWhiteSpace(gamePath))
+                    dlg.Description = "Path to " + gameName + " was not found. Please browse to game location";
+                else
+                    dlg.Description = Path.Combine(Program.gamePath, gameEXEName) + " was not found. Please browse to game location";
+
+                if (DialogResult.OK == dlg.ShowDialog())
+                {
+                    gamePath = dlg.SelectedPath;
+                    try
+                    {
+                        Microsoft.Win32.RegistryKey lm = null;
+                        lm = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\TesModManager", true);
+                        if (lm == null)
+                        {
+                            lm = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\TesModManager");
+                        }
+                        lm.SetValue(gameName, gamePath);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Could not save folder to registry: "+ex.Message+". You will need to pick it next time too", "Failed to write to registry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                }
+                else
+                    Application.Exit();
+            }
 
             //if (Program.bSkyrimSEMode)
             //    Program.bSkyrimMode = true;
@@ -2056,8 +2145,18 @@ namespace OblivionModManager {
             SettingsFile = Path.Combine(BaseDir, "Settings2");
             BSAEditFile = Path.Combine(BaseDir, "BSAEdits");
             HelpPath = Path.Combine(Application.ExecutablePath, "obmm.chm");
+            crashFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "tmm_crashdump.txt");
+
+            // switch log file
+            logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), gameName + "_tmm.log");
+            logger = new OblivionModManager.Logger(logFilePath);
             Settings.conflictsBackupDir = Program.DataFolderPath;
 
+            if (!Directory.Exists(Program.DataFolderPath))
+            {
+                MessageBox.Show(Program.DataFolderPath + " was not found! \r\n Make sure you have Skyrim, SkyrimSE, Oblivion or Morrowind properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could not find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Application.Exit();
+            }
 
             BOSSpath = FindSoftware(@"BOSS", "Installed Path");
             logger.WriteToLog("BOSS path: " + BOSSpath, Logger.LogLevel.High);
@@ -2065,32 +2164,10 @@ namespace OblivionModManager {
             LOOTpath = FindSoftware(@"LOOT", "Installed Path");
             logger.WriteToLog("Loot path: " + LOOTpath, Logger.LogLevel.High);
 
-            if (bSkyrimSEMode)
-            {
-                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim special edition\\");
-                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim special edition\\");
-            }
-            else if (bSkyrimMode)
-            {
-                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim\\");
-                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim\\");
-            }
-            else if (bMorrowind)
-            {
-                INIDir = Program.gamePath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "");
-                ESPDir = Program.gamePath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "");
-            }
-            else
-            {
-                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\oblivion\\");
-                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "oblivion\\");
-            }
             logger.WriteToLog("Ini path: " + INIDir, Logger.LogLevel.High);
             logger.WriteToLog("ESP path: " + ESPDir, Logger.LogLevel.High);
 
-
-
-			Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 			Application.EnableVisualStyles();
 			AppDomain.CurrentDomain.UnhandledException+=new UnhandledExceptionEventHandler(CurrentDomain_UnhandledException);
 			Application.ThreadException+=new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
@@ -2865,7 +2942,7 @@ namespace OblivionModManager {
 			string s1=
 				"An unhandled exception occurred."+
 				Environment.NewLine+
-				"Extra information should have been saved to 'tmm_crashdump.txt' in the game's base directory."+
+				"Extra information should have been saved to '" + Program.crashFilePath + "' in the application's base directory."+
 				Environment.NewLine+Environment.NewLine+
 				"Error message: "+((Exception)e.ExceptionObject).Message+Environment.NewLine;
 
@@ -2887,7 +2964,7 @@ namespace OblivionModManager {
 			MessageBox.Show(s1, "Fatal error");
 			try
 			{
-				File.WriteAllText("tmm_crashdump.txt", s2);
+				File.WriteAllText(Program.crashFilePath, s2);
 			} catch { }
 		}
 
