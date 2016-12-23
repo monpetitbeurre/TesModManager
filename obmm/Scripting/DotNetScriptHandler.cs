@@ -317,8 +317,8 @@ namespace OblivionModManager.Scripting {
                 {
                     // needs to be installed minus the base folder name of course
                     string lowerfilename = path.ToLower();
-                    if (lowerfilename.IndexOf(Program.DataFolderName + "\\") !=-1)
-                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.DataFolderName + "\\") + (Program.DataFolderName + "\\").Length);
+                    if (lowerfilename.IndexOf(Program.currentGame.DataFolderName + "\\") !=-1)
+                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.currentGame.DataFolderName + "\\") + (Program.currentGame.DataFolderName + "\\").Length);
                     else if (lowerfilename.IndexOf("\\")!=-1)
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("\\") + 1);
                     else if (lowerfilename.IndexOf("/") != -1)
@@ -349,8 +349,8 @@ namespace OblivionModManager.Scripting {
                 {
                     // needs to be installed minus the base folder name of course
                     string lowerfilename = file.Substring(1).ToLower();
-                    if (lowerfilename.IndexOf(Program.DataFolderName + "\\") != -1)
-                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.DataFolderName+"\\") + (Program.DataFolderName+"Data\\").Length);
+                    if (lowerfilename.IndexOf(Program.currentGame.DataFolderName + "\\") != -1)
+                        lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf(Program.currentGame.DataFolderName +"\\") + (Program.currentGame.DataFolderName +"Data\\").Length);
                     else if (lowerfilename.IndexOf("\\") != -1)
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("\\") + 1);
                     else if (lowerfilename.IndexOf("/") != -1)
@@ -454,7 +454,7 @@ namespace OblivionModManager.Scripting {
                             }
                             else if (o is fomod.fileDependency)
                             {
-                                if (File.Exists(Path.Combine(Program.DataFolderPath,((fomod.fileDependency)o).file)))
+                                if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,((fomod.fileDependency)o).file)))
                                 {
                                     bInstallstep = true;
                                 }

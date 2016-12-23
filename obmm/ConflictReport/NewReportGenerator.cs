@@ -165,9 +165,9 @@ namespace OblivionModManager.ConflictReport {
 
             private void ReadGroup(BinaryReader br, long Size, Dictionary<byte, byte> FormIDLookup, Node Parent, List<Node> EDIDs)
             {
-                if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+                if (Program.currentGame.NickName.Contains("skyrim"))
                     SkyrimReadGroup(br, Size, FormIDLookup, Parent, EDIDs);
-                else if (Program.bMorrowind)
+                else if (Program.currentGame.Name=="Morrowind")
                 {
                 }
                 else
@@ -359,9 +359,9 @@ namespace OblivionModManager.ConflictReport {
                     s=Program.ReadBString(br,4);
                     if(s!="TES4") return new Node[0];
                     size=br.ReadUInt32();
-                    if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+                    if (Program.currentGame.NickName.Contains("skyrim"))
                         br.BaseStream.Position += 16;
-                    else if (Program.bMorrowind)
+                    else if (Program.currentGame.Name == "Morrowind")
                     {
                     }
                     else
@@ -590,7 +590,7 @@ namespace OblivionModManager.ConflictReport {
             for(int i=0;i<Active.Length && !bCancelled;i++) {
                 try {
                     pf.Text = "Scanning " + Active[i];
-                    plugins.Add(new Plugin(Path.Combine(Program.DataFolderPath,Active[i]), new Node(Active[i], Active[i], null, 0, false, uint.MaxValue, null), (byte)i,
+                    plugins.Add(new Plugin(Path.Combine(Program.currentGame.DataFolderPath,Active[i]), new Node(Active[i], Active[i], null, 0, false, uint.MaxValue, null), (byte)i,
                         (i==0&&!cbShowMain.Checked)?false:true));
                     pf.UpdateProgress(i);
                     Application.DoEvents();

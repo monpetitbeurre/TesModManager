@@ -1155,7 +1155,7 @@ namespace OblivionModManager {
                             string s = Program.GetModID(path);
                             if (s.Length != 0)
                             {
-                                Website = "http://www.nexusmods.com/" + Program.gameName + "/mods/" + s;
+                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + s;
                             }
                             try
                             {
@@ -1317,7 +1317,7 @@ namespace OblivionModManager {
                             string modid = Program.GetModID(LowerFileName);
                             if (modid.Length > 0 && (Website == null || Website.Length == 0))
                             {
-                                Website = "http://www.nexusmods.com/" + Program.gameName + "/mods/" + modid;
+                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + modid;
                             }
 
                             Config.Close();
@@ -1406,7 +1406,7 @@ namespace OblivionModManager {
 
 		private void CreateTargetDirectoryStructure() {
 			for(int x=0;x<DataFiles.Length;x++) {
-				string s=Path.Combine((bSystemMod?Program.gamePath:Program.DataFolderPath),Path.GetDirectoryName(DataFiles[x].FileName));
+				string s=Path.Combine((bSystemMod?Program.currentGame.GamePath:Program.currentGame.DataFolderPath),Path.GetDirectoryName(DataFiles[x].FileName));
 				if(s.Length!=0 && !Directory.Exists(s)) Directory.CreateDirectory(s);
 			}
 		}
@@ -1584,7 +1584,7 @@ namespace OblivionModManager {
 			HasClickedNoToAll=false;
 			HasClickedYesToAll=false;
 			foreach(INIEditInfo iei in srd.INIEdits) {
-                if (HasClickedNoToAll || (!HasClickedYesToAll && Settings.WarnOnINIEdit && MessageBox.Show(FileName + " wants to edit " + Program.gameName + "ini.\n" +
+                if (HasClickedNoToAll || (!HasClickedYesToAll && Settings.WarnOnINIEdit && MessageBox.Show(FileName + " wants to edit " + Program.currentGame.Name + "ini.\n" +
 				                                                                                    "Section: "+iei.Section+"\n"+
 				                                                                                    "Key: "+iei.Name+"\n"+
 				                                                                                    "New value: "+iei.NewValue+"\n"+
@@ -1748,7 +1748,7 @@ namespace OblivionModManager {
 			HasClickedYesToAll=false;
 			HasClickedNoToAll=false;
 			for(int i=0;i<Plugins.Length;i++) {
-				if(Program.Data.DoesEspExist(Plugins[i])||File.Exists(Path.Combine(Program.DataFolderPath,Plugins[i]))) {
+				if(Program.Data.DoesEspExist(Plugins[i])||File.Exists(Path.Combine(Program.currentGame.DataFolderPath,Plugins[i]))) {
 					if(Array.IndexOf<string>(Program.BannedFiles, Plugins[i].ToLower())!=-1) {
 						if(warn) MessageBox.Show(Plugins[i]+" is a protected game base file and cannot be overwritten by mods", "Error");
 						Program.ArrayRemoveAt<string>(ref Plugins, i--);
@@ -1764,15 +1764,15 @@ namespace OblivionModManager {
 						if(ei!=null) {
 							if(ei.Parent!=null) ei.Parent.UnlinkPlugin(ei);
 							Program.Data.Esps.Remove(ei);
-							File.Delete(Path.Combine(Program.DataFolderPath,ei.FileName));
+							File.Delete(Path.Combine(Program.currentGame.DataFolderPath,ei.FileName));
 						} else
-                            File.Delete(Path.Combine(Program.DataFolderPath,Plugins[i]));
+                            File.Delete(Path.Combine(Program.currentGame.DataFolderPath,Plugins[i]));
 					}
 				}
 			}
 			//copy plugins
 			for(int i=0;i<Plugins.Length;i++) {
-				File.Move(Path.Combine(PluginsPath,Plugins[i]), Path.Combine(Program.DataFolderPath,Plugins[i]));
+				File.Move(Path.Combine(PluginsPath,Plugins[i]), Path.Combine(Program.currentGame.DataFolderPath,Plugins[i]));
 				EspInfo ei=new EspInfo(Plugins[i], this);
 				Program.Data.InsertESP(ei, sed.PluginOrder, Array.IndexOf<string>(sed.EarlyPlugins, ei.LowerFileName)!=-1);
 				foreach(string s in sed.UncheckedPlugins) {
@@ -1784,8 +1784,8 @@ namespace OblivionModManager {
 				foreach(ScriptEspEdit see in sed.EspEdits) {
 					if(see.Plugin!=Plugins[i].ToLower()) continue;
 					try {
-						if(see.IsGMST) ConflictDetector.TesFile.SetGMST(Path.Combine(Program.DataFolderPath,see.Plugin), see.EDID, see.Value);
-						else ConflictDetector.TesFile.SetGLOB(Path.Combine(Program.DataFolderPath,see.Plugin), see.EDID, see.Value);
+						if(see.IsGMST) ConflictDetector.TesFile.SetGMST(Path.Combine(Program.currentGame.DataFolderPath,see.Plugin), see.EDID, see.Value);
+						else ConflictDetector.TesFile.SetGLOB(Path.Combine(Program.currentGame.DataFolderPath,see.Plugin), see.EDID, see.Value);
 					} catch(Exception ex) {
                         Program.logger.WriteToLog("An error occurred editing plugin " + see.Plugin + "\n" + ex.Message, Logger.LogLevel.Error);
 //                        MessageBox.Show("An error occured editing plugin " + see.Plugin + "\n" +
@@ -1802,7 +1802,7 @@ namespace OblivionModManager {
             List<DataFileInfo> conflicts = new List<DataFileInfo>();
 
             string targetfilename = "";
-            string targetroot = (bSystemMod ? "" : Program.DataFolderPath+"\\");
+            string targetroot = (bSystemMod ? "" : Program.currentGame.DataFolderPath+"\\");
 
 			for(int i=0;i<DataFiles.Length;i++)
 			{
@@ -2048,7 +2048,7 @@ namespace OblivionModManager {
 		public void AquisitionActivate(bool force) {
 			List<DataFileInfo> dataFiles=new List<DataFileInfo>();
 			for(int i=0;i<AllDataFiles.Length;i++) {
-				if(File.Exists(Path.Combine(Program.DataFolderPath,AllDataFiles[i].FileName))) {
+				if(File.Exists(Path.Combine(Program.currentGame.DataFolderPath,AllDataFiles[i].FileName))) {
 					DataFileInfo dfi=Program.Data.GetDataFile(AllDataFiles[i]);
 					if(dfi==null) {
 						dfi=new DataFileInfo(AllDataFiles[i]);
@@ -2124,8 +2124,8 @@ namespace OblivionModManager {
 				foreach(string s in Plugins) {
 					EspInfo ei=Program.Data.GetEsp(s);
 					if(ei!=null) Program.Data.Esps.Remove(ei);
-                    if (File.Exists(Path.Combine(Program.DataFolderPath,s))) File.Delete(Path.Combine(Program.DataFolderPath,s));
-                    if (File.Exists(Path.Combine(Program.DataFolderPath,s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderPath,s + ".ghost"));
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,s))) File.Delete(Path.Combine(Program.currentGame.DataFolderPath,s));
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,s + ".ghost"))) File.Delete(Path.Combine(Program.currentGame.DataFolderPath,s + ".ghost"));
                 }
 				//Clear out the data files
                 foreach (DataFileInfo dfi in DataFiles)
@@ -2177,8 +2177,8 @@ namespace OblivionModManager {
                 {
                     EspInfo ei = Program.Data.GetEsp(s);
                     if (ei != null) Program.Data.Esps.Remove(ei);
-                    if (File.Exists(Path.Combine(Program.DataFolderPath, s))) File.Delete(Path.Combine(Program.DataFolderPath, s));
-                    if (File.Exists(Path.Combine(Program.DataFolderPath, s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderPath, s + ".ghost"));
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, s))) File.Delete(Path.Combine(Program.currentGame.DataFolderPath, s));
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, s + ".ghost"))) File.Delete(Path.Combine(Program.currentGame.DataFolderPath, s + ".ghost"));
                 }
             }
 			//Clear out the data files
@@ -2217,7 +2217,7 @@ namespace OblivionModManager {
 			//}
 			//delete plugins
 			foreach(string s in AllPlugins) {
-                if (!File.Exists(Path.Combine(Program.DataFolderPath,s)) && !File.Exists(Path.Combine(Program.DataFolderPath,s+".ghost")))
+                if (!File.Exists(Path.Combine(Program.currentGame.DataFolderPath,s)) && !File.Exists(Path.Combine(Program.currentGame.DataFolderPath,s+".ghost")))
                 {
 					NotFoundCount++;
 					continue;
@@ -2228,8 +2228,8 @@ namespace OblivionModManager {
 				}
 				EspInfo ei=Program.Data.GetEsp(s);
 				if(ei==null||ei.BelongsTo==EspInfo.UnknownOwner) {
-                    if (File.Exists(Path.Combine(Program.DataFolderPath, s))) File.Delete(Path.Combine(Program.DataFolderPath, s));
-                    if (File.Exists(Path.Combine(Program.DataFolderPath, s + ".ghost"))) File.Delete(Path.Combine(Program.DataFolderPath, s + ".ghost"));
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, s))) File.Delete(Path.Combine(Program.currentGame.DataFolderPath, s));
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, s + ".ghost"))) File.Delete(Path.Combine(Program.currentGame.DataFolderPath, s + ".ghost"));
                     if (ei != null) Program.Data.Esps.Remove(ei);
 					DeletedCount++;
 				} else SkippedCount++;
@@ -2237,7 +2237,7 @@ namespace OblivionModManager {
 			//delete data files
 			for(int i=0;i<AllDataFiles.Length;i++) {
 				string s=AllDataFiles[i].FileName;
-				if(!File.Exists(Path.Combine(Program.DataFolderPath,s))) {
+				if(!File.Exists(Path.Combine(Program.currentGame.DataFolderPath,s))) {
 					NotFoundCount++;
 					continue;
 				}
@@ -2246,7 +2246,7 @@ namespace OblivionModManager {
 					continue;
 				}
 				if(!Program.Data.DoesDataFileExist(s)) {
-					File.Delete(Path.Combine(Program.DataFolderPath,s));
+					File.Delete(Path.Combine(Program.currentGame.DataFolderPath,s));
 					DeletedCount++;
 				} else SkippedCount++;
 			}
@@ -3206,7 +3206,7 @@ namespace OblivionModManager {
 					foreach(string s in BSAs) report+=s+n;
 				}
 				if(INIEdits!=null&&INIEdits.Count>0) {
-					report+=n+"["+Program.gameName+" edits]"+n;
+					report+=n+"["+Program.currentGame.Name + " edits]"+n;
 					foreach(INIEditInfo iei in INIEdits) report+=iei.Section+" "+iei.Name+": "+iei.NewValue+" (Changed from "+iei.OldValue+")"+n;
 				}
 				if(SDPEdits!=null&&SDPEdits.Count>0) {
@@ -3747,7 +3747,7 @@ namespace OblivionModManager {
                 // check files
                 for (int i = 0; i < AllDataFiles.Length; i++)
                 {
-                    if (File.Exists(Path.Combine(Program.DataFolderPath,AllDataFiles[i].FileName)) && !files.Contains(AllDataFiles[i]))
+                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,AllDataFiles[i].FileName)) && !files.Contains(AllDataFiles[i]))
                     {
                         files.Add(AllDataFiles[i]);
                     }

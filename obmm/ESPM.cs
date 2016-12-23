@@ -29,7 +29,7 @@ namespace OblivionModManager
 		public static void RestoreESPM()
 		{
 			{
-				DirectoryInfo dataDir = new DirectoryInfo(Path.Combine(Program.DataFolderPath,"\\OBMM\\Hidden"));
+				DirectoryInfo dataDir = new DirectoryInfo(Path.Combine(Program.currentGame.DataFolderPath,"OBMM\\Hidden"));
 				
 				if (dataDir.Exists)
 				{
@@ -43,7 +43,7 @@ namespace OblivionModManager
 					{
                         try
                         {
-                            string newfile = Path.Combine(Program.DataFolderPath, espm.Name);
+                            string newfile = Path.Combine(Program.currentGame.DataFolderPath, espm.Name);
                             if (!File.Exists(newfile))
                             {
                                 espm.MoveTo(newfile);
@@ -58,7 +58,7 @@ namespace OblivionModManager
 			}
 			
 			{
-				DirectoryInfo dataDir = new DirectoryInfo(Program.DataFolderPath);
+				DirectoryInfo dataDir = new DirectoryInfo(Program.currentGame.DataFolderPath);
 				
 				if (dataDir.Exists)
 				{
@@ -67,7 +67,7 @@ namespace OblivionModManager
 					foreach(FileInfo fi in files)
 					{
 						string newfile;
-						newfile = Path.Combine(Program.DataFolderPath,fi.Name.Replace(".ghost",""));
+						newfile = Path.Combine(Program.currentGame.DataFolderPath,fi.Name.Replace(".ghost",""));
 						
 						if (!File.Exists(newfile))
 							fi.MoveTo(newfile);
@@ -81,7 +81,7 @@ namespace OblivionModManager
 			List<string> activeESPM = new List<string>();
 			
 			{
-				StreamReader sr = new StreamReader(Program.ESPDir + "plugins.txt");
+				StreamReader sr = new StreamReader(Path.Combine(Program.ESPDir,"plugins.txt"));
 				
 				string line;
 				while((line = sr.ReadLine()) != null)
@@ -93,7 +93,7 @@ namespace OblivionModManager
 				sr.Close();
 			}
 			
-			DirectoryInfo dataDir = new DirectoryInfo(Program.DataFolderPath+"");
+			DirectoryInfo dataDir = new DirectoryInfo(Program.currentGame.DataFolderPath+"");
 			
 			//FileInfo[] allESPM = dataDir.GetFiles("*.esp");
 			List<FileInfo> allESPM = new List<FileInfo>();
@@ -104,7 +104,7 @@ namespace OblivionModManager
 			{
 				if (!activeESPM.Contains(espm.Name) && espm.Name.ToLower()!="skyrim.esm" && espm.Name.ToLower()!="update.esm" && Settings.bGhostInactiveMods)
 				{
-					string espmname = Path.Combine(Program.DataFolderPath,espm.Name + ".ghost");
+					string espmname = Path.Combine(Program.currentGame.DataFolderPath,espm.Name + ".ghost");
 					if (File.Exists(espmname))
 					{
 						int num = 0;
@@ -120,7 +120,7 @@ namespace OblivionModManager
 					
 					foreach(FileInfo bsa in bsas)
 					{
-						string destfn = Path.Combine(Program.DataFolderPath,bsa.Name + ".ghost");
+						string destfn = Path.Combine(Program.currentGame.DataFolderPath,bsa.Name + ".ghost");
 						
 						if (File.Exists(destfn))
 						{

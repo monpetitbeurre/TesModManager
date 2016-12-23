@@ -564,9 +564,9 @@ namespace OblivionModManager {
 				foreach(string s in OpenDialog.FileNames) {
 					string path=s.ToLower();
 					if(rbData.Checked) {
-                        if (path.StartsWith(Program.DataFolderPath + "\\"))
+                        if (path.StartsWith(Program.currentGame.DataFolderPath + "\\"))
                         {
-                            path = s.Substring((Program.DataFolderPath + "\\").Length);
+                            path = s.Substring((Program.currentGame.DataFolderPath + "\\").Length);
 						} else {
 							path=Path.GetFileName(s);
 						}
@@ -761,7 +761,7 @@ namespace OblivionModManager {
                                 string modid = Program.GetModID(zipname);
                                 if (modid.Length > 0 && (modWebsite == null || modWebsite.Length == 0))
                                 {
-                                    ops.website = tbWebsite.Text = "http://www.nexusmods.com/" + Program.gameName + "/mods/" + modid;
+                                    ops.website = tbWebsite.Text = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + modid;
                                 }
                             }
                             catch { };
@@ -908,8 +908,8 @@ namespace OblivionModManager {
                 for (int i = 0; i < MatchedPaths.Count; i++)
                 {
                     MatchedPaths[i] = MatchedPaths[i].Substring(folder.Length);
-                    if (MatchedPaths[i].ToLower().StartsWith(Program.DataFolderPath+"\\"))
-                        MatchedPaths[i] = MatchedPaths[i].Substring((Program.DataFolderPath+"\\").Length);
+                    if (MatchedPaths[i].ToLower().StartsWith(Program.currentGame.DataFolderPath+"\\"))
+                        MatchedPaths[i] = MatchedPaths[i].Substring((Program.currentGame.DataFolderPath+"\\").Length);
                 }
 				NewFiles=new string[ops.DataFiles.Length+MatchedFiles.Count];
 				NewPaths=new string[ops.DataFiles.Length+MatchedFiles.Count];
@@ -1154,13 +1154,13 @@ namespace OblivionModManager {
 
 				}
 			}
-            if (Directory.Exists(Path.Combine(Dir, Program.DataFolderPath)))
+            if (Directory.Exists(Path.Combine(Dir, Program.currentGame.DataFolderPath)))
             {
 				foreach(string s in Directory.GetFiles(Dir)) {
-                    try { File.Move(s, Path.Combine(Dir, Path.Combine(Program.DataFolderPath, Path.GetFileName(s)))); }
+                    try { File.Move(s, Path.Combine(Dir, Path.Combine(Program.currentGame.DataFolderPath, Path.GetFileName(s)))); }
                     catch { }
 				}
-				Dir=Path.Combine(Dir,Program.DataFolderPath);
+				Dir=Path.Combine(Dir,Program.currentGame.DataFolderPath);
 			}
 			AddFilesFromFolder(Dir, new FileInfo(OpenDialog.FileName).Name,false);
 		}
@@ -1207,7 +1207,7 @@ namespace OblivionModManager {
 			}
 			//Remove missing files
 			for(int i=0;i<toadd.Count;i++) {
-				if(!File.Exists(Path.GetFullPath(Path.Combine(Program.DataFolderPath,toadd[i])))) {
+				if(!File.Exists(Path.GetFullPath(Path.Combine(Program.currentGame.DataFolderPath,toadd[i])))) {
 					toadd.RemoveAt(i--);
 				}
 			}
@@ -1221,7 +1221,7 @@ namespace OblivionModManager {
 			Array.Resize<string>(ref ops.DataFiles, lower+toadd.Count);
 			for(int i=0;i<toadd.Count;i++) {
 				ops.DataFilePaths[lower+i]=toadd[i];
-				ops.DataFiles[lower+i]=Path.GetFullPath(Path.Combine(Program.DataFolderPath,toadd[i]));
+				ops.DataFiles[lower+i]=Path.GetFullPath(Path.Combine(Program.currentGame.DataFolderPath,toadd[i]));
 			}
 		}
 

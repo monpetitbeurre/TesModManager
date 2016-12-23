@@ -13,7 +13,7 @@ namespace OblivionModManager
 {
     public static class NexusClient
     {
-        public const string version = "Nexus Client v0.52.3.0";
+        public const string version = "Nexus Client v0.63.10";
     }
 
     /// <summary>

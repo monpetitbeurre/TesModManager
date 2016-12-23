@@ -108,21 +108,17 @@ namespace OblivionModManager {
 
         private void FindSaveFolder() {
             if(INI.GetINIValue("[general]", "bUseMyGamesDirectory")=="0") {
-                SaveFolder="saves";
+                SaveFolder=Path.Combine(Program.currentGame.GamePath,"saves");
             } else {
                 string saveSubDir = "";
 
-                if (Program.bSkyrimMode || Program.bSkyrimSEMode)
-                    saveSubDir = "saves";
-                else
+                if (!string.IsNullOrWhiteSpace(INI.GetINIValue("[general]", "SLocalSavePath")))
                 {
-                    if (!string.IsNullOrWhiteSpace(INI.GetINIValue("[general]", "SLocalSavePath")))
-                    {
-                        saveSubDir = INI.GetINIValue("[general]", "SLocalSavePath");
-                    }
-                    else
-                        saveSubDir = "saves";
+                    saveSubDir = INI.GetINIValue("[general]", "SLocalSavePath");
                 }
+                else
+                    saveSubDir = "saves";
+
                 SaveFolder =Path.Combine(Program.INIDir,saveSubDir);
             }
         }
@@ -137,14 +133,14 @@ namespace OblivionModManager {
         SaveFile DecodeSaveFile(string file)
         {
             BinaryReader br = new BinaryReader(File.OpenRead(file));
-            if (br.BaseStream.Length < 4)
+            if (br.BaseStream.Length < 12)
             {
                 br.Close();
                 return null;
             }
             string s = "";
-            for (int i = 0; i < 3; i++) s += (char)br.ReadByte();
-            if (s != "TES")
+            for (int i = 0; i < 13; i++) s += (char)br.ReadByte();
+            if (!s.StartsWith("TES"))
             {
                 br.Close();
                 return null;
@@ -152,7 +148,7 @@ namespace OblivionModManager {
             SaveFile sf = new SaveFile();
             sf.FileName = Path.GetFileName(file);
 
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (s.StartsWith("TESV_SAVEGAME"))
             {
                 br.BaseStream.Position = 0;
                 string magic = Program.ReadBString(br, "TESV_SAVEGAME".Length);
@@ -235,7 +231,7 @@ namespace OblivionModManager {
                     for (int j = 0; j < b; j++) sf.plugins[i] += (char)br.ReadByte();
                 }
             }
-            else if (Program.bMorrowind)
+            else if (s.StartsWith("TES3"))
             {
                 try
                 {
@@ -426,168 +422,8 @@ namespace OblivionModManager {
             lvSaves.ListViewItemSorter=new SaveListSorter();
             CountActiveEsps();
             foreach(string file in Directory.GetFiles(SaveFolder)) {
-                //BinaryReader br=new BinaryReader(File.OpenRead(file));
-                //if(br.BaseStream.Length<12) {
-                //    br.Close();
-                //    continue;
-                //}
-                //string s="";
-                //for(int i=0;i<12;i++) s+=(char)br.ReadByte();
-                //if(s!="TES4SAVEGAME" && s!="TESV_SAVEGAM") {
-                //    br.Close();
-                //    continue;
-                //}
-                //SaveFile sf=new SaveFile();
-                //sf.FileName=Path.GetFileName(file);
-
-                //if (Program.bSkyrimMode)
-                //{
-                //    br.BaseStream.Position += 13;
-
-                //    int b = br.ReadInt16();
-                //    sf.Player = "";
-                //    for (int i = 0; i < b; i++) sf.Player += (char)br.ReadByte();
-                //    byte level=br.ReadByte(); //Read the level
-                //    br.ReadByte();
-                //    br.ReadByte();
-                //    br.ReadByte();
-                //    b = br.ReadInt16();
-                //    sf.Location = "";
-                //    for (int i = 0; i < b; i++) sf.Location += (char)br.ReadByte();
-                //    b = br.ReadInt16();
-                //    sf.gametime = "";
-                //    for (int i = 0; i < b; i++) sf.gametime += (char)br.ReadByte();
-                //    b = br.ReadInt16();
-                //    sf.race = "";
-                //    for (int i = 0; i < b; i++) sf.race += (char)br.ReadByte();
-
-                //    br.ReadInt16();
-                //    br.ReadInt32();
-                //    br.ReadInt32();
-                //    sf.saved = DateTime.FromFileTime(br.ReadInt64());
-                //    sf.ImageWidth = br.ReadInt32();
-                //    sf.ImageHeight = br.ReadInt32();
-                //    sf.ImageData = new byte[sf.ImageHeight * sf.ImageWidth * 3];
-                //    br.Read(sf.ImageData, 0, sf.ImageData.Length);
-                //    //Flip the blue and red channels
-                //    for (int i = 0; i < sf.ImageWidth * sf.ImageHeight; i++)
-                //    {
-                //        byte temp = sf.ImageData[i * 3];
-                //        sf.ImageData[i * 3] = sf.ImageData[i * 3 + 2];
-                //        sf.ImageData[i * 3 + 2] = temp;
-                //    }
-                //    br.ReadByte();
-                //    br.ReadInt32();
-                //    sf.plugins = new string[br.ReadByte()];
-                //    for (int i = 0; i < sf.plugins.Length; i++)
-                //    {
-                //        b = br.ReadInt16();
-                //        sf.plugins[i] = "";
-                //        for (int j = 0; j < b; j++) sf.plugins[i] += (char)br.ReadByte();
-                //    }
-                //}
-                //else
-                //{
-                //    br.BaseStream.Position += 30;
-
-                //    byte b = br.ReadByte();
-                //    sf.Player = "";
-                //    for (int i = 1; i < b; i++) sf.Player += (char)br.ReadByte();
-                //    br.ReadByte(); //Read the terminating \0
-                //    br.ReadInt16();
-                //    b = br.ReadByte();
-                //    sf.Location = "";
-                //    for (int i = 1; i < b; i++) sf.Location += (char)br.ReadByte();
-                //    br.ReadByte(); //Read the terminating \0
-                //    br.ReadSingle();
-                //    br.ReadInt32();
-                //    short year, month, day, hour, minute, second;
-                //    year = br.ReadInt16();
-                //    month = br.ReadInt16();
-                //    br.ReadInt16();
-                //    day = br.ReadInt16();
-                //    hour = br.ReadInt16();
-                //    minute = br.ReadInt16();
-                //    second = br.ReadInt16();
-                //    br.ReadInt16();
-                //    sf.saved = new DateTime(year, month, day, hour, minute, second);
-
-                //    br.ReadInt32();
-                //    sf.ImageWidth = br.ReadInt32();
-                //    sf.ImageHeight = br.ReadInt32();
-                //    sf.ImageData = new byte[sf.ImageHeight * sf.ImageWidth * 3];
-                //    br.Read(sf.ImageData, 0, sf.ImageData.Length);
-                //    //Flip the blue and red channels
-                //    for (int i = 0; i < sf.ImageWidth * sf.ImageHeight; i++)
-                //    {
-                //        byte temp = sf.ImageData[i * 3];
-                //        sf.ImageData[i * 3] = sf.ImageData[i * 3 + 2];
-                //        sf.ImageData[i * 3 + 2] = temp;
-                //    }
-                //    sf.plugins = new string[br.ReadByte()];
-                //    for (int i = 0; i < sf.plugins.Length; i++)
-                //    {
-                //        b = br.ReadByte();
-                //        sf.plugins[i] = "";
-                //        for (int j = 0; j < b; j++) sf.plugins[i] += (char)br.ReadByte();
-                //    }
-                //    /*{
-                //        br.ReadInt32();
-                //        int changerecs=br.ReadInt32();
-                //        br.BaseStream.Position+=32;
-                //        br.BaseStream.Position+=br.ReadUInt16()*8;  //globals
-                //        br.BaseStream.Position+=br.ReadUInt16();    //Class data
-                //        br.BaseStream.Position+=br.ReadUInt16();    //prcoesses data
-                //        br.BaseStream.Position+=br.ReadUInt16();    //spectator data
-                //        br.BaseStream.Position+=br.ReadUInt16();    //weather
-                //        br.ReadInt32();
-                //        for(int i=0;i<br.ReadInt32();i++) {
-                //            s=""+(char)br.ReadByte()+(char)br.ReadByte()+(char)br.ReadByte()+(char)br.ReadByte();
-                //            if(s=="GRUP") br.BaseStream.Position+=br.ReadInt32()-4;
-                //            else br.BaseStream.Position+=br.ReadInt32()+12;
-                //        }
-                //        br.BaseStream.Position+=br.ReadUInt16();    //Quickkeys
-                //        br.BaseStream.Position+=br.ReadUInt16();    //HUD
-                //        br.BaseStream.Position+=br.ReadUInt16();    //Interface
-                //        br.BaseStream.Position+=br.ReadUInt16();    //Regions
-                //        for(int i=0;i<6;i++) {
-                //            int formid=br.ReadInt32();
-                //            br.BaseStream.Position+=6;
-                //            //br.BaseStream.Position+=10;
-                //            br.BaseStream.Position+=br.ReadUInt16();
-                //        }
-                //        uint playerid=br.ReadUInt32();
-                //        byte type=br.ReadByte();
-                //        br.BaseStream.Position+=5;
-                //        ushort playersize=br.ReadUInt16();
-                //        int upto=0;
-                //        for(int i=0;i<playersize;i++) {
-                //            if(br.ReadByte()==(byte)sf.Player[upto]) {
-                //                if(++upto==sf.Player.Length) {
-                //                    sf.FaceOffset=(int)br.BaseStream.Position-(sf.Player.Length+542);
-                //                    br.BaseStream.Position=sf.FaceOffset;
-                //                    sf.face=br.ReadBytes(520);
-                //                }
-                //            } else upto=0;
-                //        }
-                //    }*/
-                //}
-                //br.Close();
-
-                //if (Program.bMorrowind)
-                //{
-                //    ConflictDetector.HeaderInfo info = ConflictDetector.TesFile.MorrowindGetHeader(file);
-                //    SaveFile sf = new SaveFile();
-                //    sf.FileName = Path.GetFileName(file);
-                //    sf.plugins = info.DependsOn.Split(',');
-                //    sf.saved = (new FileInfo(file)).LastWriteTime;
-                //    if (sf != null) saves.Add(sf);
-                //}
-                //else
-                {
-                    SaveFile sf = DecodeSaveFile(file);
-                    if (sf != null) saves.Add(sf);
-                }
+                SaveFile sf = DecodeSaveFile(file);
+                if (sf != null) saves.Add(sf);
             }
             UpdateSaveList();
         }
@@ -703,7 +539,7 @@ namespace OblivionModManager {
 /////////////////////////////////////////////////////
 
             // change order
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.StartsWith("skyrim"))
             {
                 List<string> oldloadorderlist = new List<string>(Program.loadOrderList);
                 string[] plugins = ((SaveFile)lvSaves.SelectedItems[0].Tag).plugins;
@@ -745,9 +581,6 @@ namespace OblivionModManager {
 
 
             }
-            else if (Program.bMorrowind)
-            {
-            }
             else
             {
                 // Oblivion
@@ -759,7 +592,7 @@ namespace OblivionModManager {
                 foreach (ListViewItem lvi in lvEspList2.Items)
                 {
                     string modname = lvi.Text.ToLower();
-                    if (modname == "skyrim.esm" || modname == "oblivion.esm")
+                    if (modname == Program.currentGame.NickName+".esm")
                     {
                         lvEspList2.Items.Remove(lvi);
                         Program.lvEspList.Items.Add(lvi);

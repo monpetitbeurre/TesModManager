@@ -22,10 +22,10 @@ using MessageBox=System.Windows.Forms.MessageBox;
 
 namespace OblivionModManager {
     public static class OblivionESP {
-        private static readonly string espfile=Program.ESPDir+"plugins.txt";
-        public static readonly string loadorder = Program.ESPDir + "loadorder.txt";
-        public static readonly string dlclist = Program.ESPDir + "DLCList.txt";
-        public static readonly string steammodlist = Program.ESPDir + "SteamModList.txt";
+        private static readonly string espfile=Path.Combine(Program.ESPDir,"plugins.txt");
+        public static readonly string loadorder = Path.Combine(Program.ESPDir,"loadorder.txt");
+        public static readonly string dlclist = Path.Combine(Program.ESPDir,"DLCList.txt");
+        public static readonly string steammodlist = Path.Combine(Program.ESPDir,"SteamModList.txt");
         private static readonly string bashespfile = Path.Combine(Program.BaseDir, @"loadorder.txt");
 
         public class EspPluginSorter : IComparer<EspInfo>
@@ -59,8 +59,8 @@ namespace OblivionModManager {
                 }
                 else
                 {
-                    FileInfo fia = new FileInfo(Path.Combine(Program.DataFolderPath,a));
-                    FileInfo fib = new FileInfo(Path.Combine(Program.DataFolderPath,b));
+                    FileInfo fia = new FileInfo(Path.Combine(Program.currentGame.DataFolderPath,a));
+                    FileInfo fib = new FileInfo(Path.Combine(Program.currentGame.DataFolderPath,b));
                     icomp = DateTime.Compare(fia.LastWriteTime, fib.LastWriteTime);
                 }
                 return icomp;
@@ -98,8 +98,8 @@ namespace OblivionModManager {
                 }
                 else
                 {
-                    FileInfo fia = new FileInfo(Path.Combine(Program.DataFolderPath,a));
-                    FileInfo fib = new FileInfo(Path.Combine(Program.DataFolderPath,b));
+                    FileInfo fia = new FileInfo(Path.Combine(Program.currentGame.DataFolderPath,a));
+                    FileInfo fib = new FileInfo(Path.Combine(Program.currentGame.DataFolderPath,b));
                     icomp= DateTime.Compare(fia.LastWriteTime, fib.LastWriteTime);
                 }
                 return icomp;
@@ -120,7 +120,7 @@ namespace OblivionModManager {
             string[] FileNames=new string[fileNames.Length];
             bool[] result=new bool[fileNames.Length];
             List<string> ActiveEsps = new List<string>();
-            if (Program.bMorrowind)
+            if (Program.currentGame.Name=="Morrowind")
             {
                 string valuename = "GameFile";
                 int curini = 0;
@@ -156,7 +156,7 @@ namespace OblivionModManager {
             File.Delete(espfile + ".bak");
             File.Move(espfile, espfile + ".bak");
             StreamWriter sw = new StreamWriter(espfile, false, System.Text.Encoding.Default);
-            sw.WriteLine("# This file is used to tell "+Program.gameName+" which data files to load.");
+            sw.WriteLine("# This file is used to tell "+Program.currentGame.Name + " which data files to load.");
             sw.WriteLine("# Use the game launcher or obmm to choose which files you want.");
             sw.WriteLine("# Please do not modify this file by hand.");
             sw.WriteLine();
@@ -200,7 +200,7 @@ namespace OblivionModManager {
                         sw.WriteLine(ei.FileName);
                     }
                     sw.Close();
-                    if (Program.bMorrowind)
+                    if (Program.currentGame.Name=="Morrowind")
                     {
                         // the load order is under [gamefiles] in morrowind.ini each entry is gamefileX=<espname> where X starts at 0
                         // GetINIValue. WriteINIValue
@@ -253,7 +253,7 @@ namespace OblivionModManager {
             List<string> ActiveEsps=new List<string>(File.ReadAllLines(espfile, System.Text.Encoding.Default));
             for(int i=0;i<ActiveEsps.Count;i++) {
                 try {
-                    if(ActiveEsps[i].Length==0||ActiveEsps[i][0]=='#'||!File.Exists(Path.Combine(Program.DataFolderPath,ActiveEsps[i]))) ActiveEsps.RemoveAt(i--);
+                    if(ActiveEsps[i].Length==0||ActiveEsps[i][0]=='#'||!File.Exists(Path.Combine(Program.currentGame.DataFolderPath,ActiveEsps[i]))) ActiveEsps.RemoveAt(i--);
                 } catch { ActiveEsps.RemoveAt(i--); }
             }
             ActiveEsps.Sort(new PluginSorter());
@@ -262,11 +262,11 @@ namespace OblivionModManager {
     }
 
     public static class INI {
-        private static string inibase = Path.Combine(Program.INIDir,Program.gameName == "skyrimSE" ? "skyrim" : Program.gameName);
+        private static string inibase = Path.Combine(Program.INIDir, Program.currentGame.IniBaseName);
         private static string ini = inibase+".ini";
         
         public static bool CreateINI() {
-            if (Program.bMorrowind) return true;
+            if (Program.currentGame.Name=="Morrowind") return true;
             if(!Directory.Exists(Program.INIDir)) return false;
             if(File.Exists(ini)) return true;
             try { File.Copy(inibase + "_default.ini", ini); }
@@ -442,9 +442,9 @@ namespace OblivionModManager {
         public static void ReadArchives() {
             string s=null;
             try {
-                if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+                if (Program.currentGame.NickName.Contains("skyrim"))
                     s = INI.GetINIValue("[Archive]", "sResourceArchiveList");
-                else if (Program.bMorrowind)
+                else if (Program.currentGame.Name == "Morrowind")
                 {
                     s = "";
                     string valuename = "Archive ";
@@ -467,20 +467,20 @@ namespace OblivionModManager {
 //                return;
             }
             if(s==null) {
-                if (Program.bSkyrimSEMode)
+                if (Program.currentGame.NickName == "skyrimse")
                 {
                     Archives.AddRange(new string[] { "Skyrim - Voices_en0.bsa", "Skyrim - Sounds.bsa", "Skyrim - Shaders.bsa", "Skyrim - Misc.bsa",
                         "Skyrim - Textures0.bsa", "Skyrim - Textures1.bsa", "Skyrim - Textures2.bsa", "Skyrim - Textures3.bsa", "Skyrim - Textures4.bsa",
                         "Skyrim - Textures5.bsa", "Skyrim - Textures6.bsa", "Skyrim - Textures7.bsa", "Skyrim - Textures8.bsa",
                         "Skyrim - Meshes0.bsa", "Skyrim - Meshes1.bsa", "Skyrim - Interface.bsa", "Skyrim - Animations.bsa" });
                 }
-                else if (Program.bSkyrimMode)
+                else if (Program.currentGame.NickName == "skyrim")
                 {
                     Archives.AddRange(new string[] { "Skyrim - VoicesExtra.bsa", "Skyrim - Voices.bsa",
                         "Skyrim - Textures.bsa", "Skyrim - Sounds.bsa", "Skyrim - Shaders.bsa", "Skyrim - Misc.bsa",
                         "Skyrim - Meshes.bsa", "Skyrim - Interface.bsa", "Skyrim - Animations.bsa" });
                 }
-                else if (Program.bMorrowind)
+                else if (Program.currentGame.NickName == "morrowind")
                 {
                     Archives.AddRange(new string[] { "Morrowind.bsa" });
                 }
@@ -501,9 +501,9 @@ namespace OblivionModManager {
         public static void CommitArchives() {
             if (!NoUpdates && UpdatedList)
             {
-                if (Program.bSkyrimMode)
+                if (Program.currentGame.NickName.Contains("skyrim"))
                     INI.WriteINIValue("[Archive]", "sResourceArchiveList", string.Join(", ", Archives.ToArray()));
-                else if (Program.bMorrowind)
+                else if (Program.currentGame.Name=="Morrowind")
                 {
                     // under [Archives]. Each archive is named "Archive x" where x starts at 0
                     // count them
@@ -601,7 +601,7 @@ namespace OblivionModManager {
 
         public static string[] GetBSAEntries() {
             List<string> files=new List<string>();
-            foreach(string path in Directory.GetFiles(Program.DataFolderPath, "*.bsa")) {
+            foreach(string path in Directory.GetFiles(Program.currentGame.DataFolderPath, "*.bsa")) {
                 files.AddRange(GetBSAEntries(path));
             }
             files.Sort();
@@ -773,7 +773,7 @@ namespace OblivionModManager {
             hashCollisions=0;
             List<BSAEdit> Edits=new List<BSAEdit>();
             List<string> ProblemFiles=new List<string>();
-            string[] Paths=Directory.GetFiles(Program.DataFolderPath, "*.bsa");
+            string[] Paths=Directory.GetFiles(Program.currentGame.DataFolderPath, "*.bsa");
             ProgressForm pf=new ProgressForm("", false);
             pf.SetProgressRange(Paths.Length+1);
             pf.ShowInTaskbar = true;
@@ -819,7 +819,7 @@ namespace OblivionModManager {
                         int filecount=br.ReadInt32();
                         br.BaseStream.Position=br.ReadInt32()-TotalFileNameLength+1;
                         string fname=Program.ReadCString(br).Replace('/', '\\');
-                        if(Directory.Exists(Path.Combine(Program.DataFolderPath,fname))) {
+                        if(Directory.Exists(Path.Combine(Program.currentGame.DataFolderPath,fname))) {
                             BSAEditData EditData=new BSAEditData(fname);
                             EditData.Files.Add(new BSAEditFileInfo(0, 0));
                             for(int j=0;j<filecount;j++) {
@@ -832,7 +832,7 @@ namespace OblivionModManager {
                             for(int j=0;j<filecount;j++) {
                                 string FileName=Program.ReadCString(br);
                                 EditData.Files[j+1].FileName=FileName;
-                                EditData.Files[j+1].Exists=File.Exists(Path.Combine(Program.DataFolderPath,Path.Combine(fname,FileName)));
+                                EditData.Files[j+1].Exists=File.Exists(Path.Combine(Program.currentGame.DataFolderPath,Path.Combine(fname,FileName)));
                             }
                             FileNameBlockStart=br.BaseStream.Position;
                             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.EditAllEntries)>0||ShouldFolderBeProcessed(fname)) {
@@ -895,25 +895,25 @@ namespace OblivionModManager {
             }
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.BSARedirection)>0) {
                 if(File.Exists(InvalidationFile)) File.Delete(InvalidationFile);
-                string path=((Settings.InvalidationFlags&ArchiveInvalidationFlags.PackFaceTextures)>0)?Path.GetFullPath(Path.Combine(Program.DataFolderPath,"textures\\faces")):null;
+                string path=((Settings.InvalidationFlags&ArchiveInvalidationFlags.PackFaceTextures)>0)?Path.GetFullPath(Path.Combine(Program.currentGame.DataFolderPath,"textures\\faces")):null;
                 if(path!=null&&!Directory.Exists(path)) path=null;
                 Forms.BSACreator.CreateBSA(RedirectionPath, path, null, 0, 0, true);
                 RegisterBSA(Path.Combine(RedirectionPath));
                 return;
             }
             List<string> files=new List<string>();
-            string textures = Path.Combine(Program.DataFolderPath, "textures");
-            string meshes = Path.Combine(Program.DataFolderPath, "meshes");
-            string sound = Path.Combine(Program.DataFolderPath, "sound");
-            string music = Path.Combine(Program.DataFolderPath, "music");
-            string fonts = Path.Combine(Program.DataFolderPath, "fonts");
-            string menus = Path.Combine(Program.DataFolderPath, "menus");
-            string video = Path.Combine(Program.DataFolderPath, "video");
-            string shaders = Path.Combine(Program.DataFolderPath, "shaders");
-            string lsdata = Path.Combine(Program.DataFolderPath, "lsdata");
-            string facegen = Path.Combine(Program.DataFolderPath, "facegen");
-            string trees = Path.Combine(Program.DataFolderPath, "trees");
-            string distantlod = Path.Combine(Program.DataFolderPath, "distantlod");
+            string textures = Path.Combine(Program.currentGame.DataFolderPath, "textures");
+            string meshes = Path.Combine(Program.currentGame.DataFolderPath, "meshes");
+            string sound = Path.Combine(Program.currentGame.DataFolderPath, "sound");
+            string music = Path.Combine(Program.currentGame.DataFolderPath, "music");
+            string fonts = Path.Combine(Program.currentGame.DataFolderPath, "fonts");
+            string menus = Path.Combine(Program.currentGame.DataFolderPath, "menus");
+            string video = Path.Combine(Program.currentGame.DataFolderPath, "video");
+            string shaders = Path.Combine(Program.currentGame.DataFolderPath, "shaders");
+            string lsdata = Path.Combine(Program.currentGame.DataFolderPath, "lsdata");
+            string facegen = Path.Combine(Program.currentGame.DataFolderPath, "facegen");
+            string trees = Path.Combine(Program.currentGame.DataFolderPath, "trees");
+            string distantlod = Path.Combine(Program.currentGame.DataFolderPath, "distantlod");
 
             if ((Settings.InvalidationFlags & ArchiveInvalidationFlags.MatchExtensions) > 0)
             {
@@ -1039,7 +1039,7 @@ namespace OblivionModManager {
             }
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.Base)>0) {
                 List<string> temp=new List<string>();
-                temp.AddRange(Directory.GetFiles(Program.DataFolderPath, "*"));
+                temp.AddRange(Directory.GetFiles(Program.currentGame.DataFolderPath, "*"));
                 for(int i=0;i<temp.Count;i++) {
                     switch(Path.GetExtension(temp[i]).ToLower()) {
                     case ".esp":
@@ -1054,7 +1054,7 @@ namespace OblivionModManager {
             }
             for(int i=0;i<files.Count;i++) {
                 files[i]=files[i].ToLower();
-                if(files[i].StartsWith(Program.DataFolderPath)) files[i]=files[i].Substring((Program.DataFolderPath+"\\").Length);
+                if(files[i].StartsWith(Program.currentGame.DataFolderPath)) files[i]=files[i].Substring((Program.currentGame.DataFolderPath +"\\").Length);
             }
             if((Settings.InvalidationFlags&ArchiveInvalidationFlags.BSAOnly)>0) {
                 string[] entries=GetBSAEntries();
@@ -1136,10 +1136,10 @@ namespace OblivionModManager {
         public static void ResetTimeStamps()
         {
             DateTime date=new DateTime(2006,1,1);
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
             {
                 // first cover standard BSA
-                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderPath, "Skyrim - *.bsa"))
+                foreach (string s in System.IO.Directory.GetFiles(Program.currentGame.DataFolderPath, "Skyrim - *.bsa"))
                 {
                     System.IO.FileInfo fi = new System.IO.FileInfo(s);
                     fi.LastWriteTime = date;
@@ -1147,7 +1147,7 @@ namespace OblivionModManager {
                 // now cover BSAs according to esp/esm order
                 foreach (EspInfo espi in Program.Data.Esps)
                 {
-                    string s = espi.FileName; s = s.Replace(".esm", "").Replace(".esp", ""); s = s + ".bsa"; s = Path.Combine(Program.DataFolderPath,s);
+                    string s = espi.FileName; s = s.Replace(".esm", "").Replace(".esp", ""); s = s + ".bsa"; s = Path.Combine(Program.currentGame.DataFolderPath,s);
                     if (System.IO.File.Exists(s))
                     {
                         date=date.AddMinutes(1);
@@ -1158,7 +1158,7 @@ namespace OblivionModManager {
             }
             else
             {
-                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderPath, "*.bsa"))
+                foreach (string s in System.IO.Directory.GetFiles(Program.currentGame.DataFolderPath, "*.bsa"))
                 {
                     System.IO.FileInfo fi = new System.IO.FileInfo(s);
                     fi.LastWriteTime = date;
@@ -1170,7 +1170,7 @@ namespace OblivionModManager {
     }
 
     public static class OblivionRenderInfo {
-        private static readonly string info=Program.INIDir+"RendererInfo.txt";
+        private static readonly string info=Path.Combine(Program.INIDir,"RendererInfo.txt");
 
         public static string GetInfo(string s) {
             s=s.ToLower();

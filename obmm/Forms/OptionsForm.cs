@@ -101,7 +101,7 @@ namespace OblivionModManager {
             cbAskToBeNexusDownloadManager.Checked = Settings.bAskToBeNexusDownloadManager;
             cbActivateOnDoubleClick.Checked = Settings.bDeActivateOnDoubleClick;
             cbLoadOrderAsUTF8.Checked = Settings.bLoadOrderAsUTF8;
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.StartsWith("skyrim"))
             {
                 cbUseTimeStamps.Checked = Settings.bUseTimeStamps;
             }
@@ -594,11 +594,11 @@ namespace OblivionModManager {
                         }
                         foreach (DataFileInfo dfi in conflicts)
                         {
-                            if (dfi == null || !File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)))
+                            if (dfi == null || !File.Exists(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)))
                                 continue;
                             if (dfi.Owners != null)
                             {
-                                long filesize = (File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)) ? new FileInfo(Path.Combine(Program.DataFolderPath, dfi.FileName)).Length : 0);
+                                long filesize = (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)) ? new FileInfo(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)).Length : 0);
                                 // who is the owner?
                                 foreach (string owner in dfi.OwnerList)
                                 {

@@ -41,10 +41,10 @@ namespace OblivionModManager
             foreach (DataFileInfo dfi in dfiList)
 			{
                 string sourcefile = "";
-                if (dfi == null || !(File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)) || File.Exists(dfi.FileName)))
+                if (dfi == null || !(File.Exists(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)) || File.Exists(dfi.FileName)))
                     continue;
-                if (File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)))
-                    sourcefile = Path.Combine(Program.DataFolderPath, dfi.FileName);
+                if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)))
+                    sourcefile = Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName);
                 else if (File.Exists(dfi.FileName))
                     sourcefile = dfi.FileName;
 
@@ -96,7 +96,7 @@ namespace OblivionModManager
                 {
                     try
                     {
-                        File.Copy(Path.Combine(Program.ConflictsDir, dfiList[i].FileName + "." + selectedModList[i]), Path.Combine(Program.DataFolderPath, dfiList[i].FileName), true);
+                        File.Copy(Path.Combine(Program.ConflictsDir, dfiList[i].FileName + "." + selectedModList[i]), Path.Combine(Program.currentGame.DataFolderPath, dfiList[i].FileName), true);
                     }
                     catch (Exception ex)
                     {
@@ -306,9 +306,9 @@ namespace OblivionModManager
                         Process.Start(Path.Combine(Program.TempDir,filename + extension));
                     }
                 }
-                else if (File.Exists(Path.Combine(Program.DataFolderPath, dfi.FileName)))
+                else if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)))
                 {
-                    Process.Start(Path.Combine(Program.DataFolderPath,dfi.FileName));
+                    Process.Start(Path.Combine(Program.currentGame.DataFolderPath,dfi.FileName));
                 }
 
             }

@@ -324,7 +324,7 @@ namespace OblivionModManager {
     public class EspInfo {
         public const string UnknownOwner="Unknown";
         public const string BaseOwner="Base";
-        public static string[] BaseFiles = { Program.gameName+".esm" };
+        public static string[] BaseFiles = { Program.currentGame.Name+".esm" };
 
         public readonly string FileName;
         public readonly string LowerFileName;
@@ -390,8 +390,8 @@ namespace OblivionModManager {
 
         public void GetHeader()
         {
-            if(!System.IO.File.Exists(Path.Combine(Program.DataFolderPath,FileName))) return;
-            header=ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderPath,FileName));
+            if(!System.IO.File.Exists(Path.Combine(Program.currentGame.DataFolderPath,FileName))) return;
+            header=ConflictDetector.TesFile.GetHeader(Path.Combine(Program.currentGame.DataFolderPath,FileName));
         }
 
         public void Unlink() {
@@ -507,7 +507,7 @@ namespace OblivionModManager {
         public void RemoveOwner(omod o) {
             UsedBy.Remove(o.LowerFileName);
             Program.logger.WriteToLog("Deleting " + FileName, Logger.LogLevel.High);
-            string basepath = o.bSystemMod? Path.Combine(Program.DataFolderPath, "..") : Program.DataFolderPath;
+            string basepath = o.bSystemMod? Path.Combine(Program.currentGame.DataFolderPath, "..") : Program.currentGame.DataFolderPath;
             if (UsedBy.Count == 0)
             {
                 Program.Data.DataFiles.Remove(this.LowerFileName);
@@ -676,13 +676,13 @@ namespace OblivionModManager {
             case EspSortOrder.Owner:
                 return string.Compare(ea.BelongsTo, eb.BelongsTo);
             case EspSortOrder.FileSize:
-                long sizea=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,ea.FileName))).Length;
-                long sizeb=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,eb.FileName))).Length;
+                long sizea=(new System.IO.FileInfo(Path.Combine(Program.currentGame.DataFolderPath,ea.FileName))).Length;
+                long sizeb=(new System.IO.FileInfo(Path.Combine(Program.currentGame.DataFolderPath,eb.FileName))).Length;
                 if(sizea==sizeb) return 0;
                 if(sizea>sizeb) return -1; else return 1;
             case EspSortOrder.DateCreated:
-                System.DateTime da=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,ea.FileName))).CreationTime;
-                System.DateTime db=(new System.IO.FileInfo(Path.Combine(Program.DataFolderPath,eb.FileName))).CreationTime;
+                System.DateTime da=(new System.IO.FileInfo(Path.Combine(Program.currentGame.DataFolderPath,ea.FileName))).CreationTime;
+                System.DateTime db=(new System.IO.FileInfo(Path.Combine(Program.currentGame.DataFolderPath,eb.FileName))).CreationTime;
                 return System.DateTime.Compare(da, db);
             default: return 0;
             }

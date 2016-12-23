@@ -93,47 +93,14 @@ namespace OblivionModManager {
 
 			GlobalSettings.LoadSettings();
 
-            if (Program.bSkyrimSEMode)
+            bLaunch.Text = "Launch " + Program.currentGame.NickName;
+            this.Text = "Tes Mod Manager " + Program.version + " for "+ Program.currentGame.Name + " (" + Program.currentGame.GamePath+")";
+            if (File.Exists(Program.currentGame.CreationKitExe))
             {
-                bLaunch.Text = "Launch SkyrimSE";
-                this.Text = "Tes Mod Manager " + Program.version + " for Skyrim Special Edition (" + Program.gamePath+")";
-                if (File.Exists("CreationKit.exe"))
-                {
-                    btnLaunchCreationKit.Visible = true;
-                    this.btnLaunchCreationKit.Text = "Launch Creation Kit";
-                }
+                btnLaunchCreationKit.Visible = true;
+                this.btnLaunchCreationKit.Text = "Launch Creation Kit";
             }
-            else if (Program.bSkyrimMode)
-            {
-                bLaunch.Text = "Launch Skyrim";
-                this.Text = "Tes Mod Manager " + Program.version + " for Skyrim (" + Program.gamePath + ")";
-                if (File.Exists("CreationKit.exe"))
-                {
-                    btnLaunchCreationKit.Visible = true;
-                    this.btnLaunchCreationKit.Text = "Launch Creation Kit";
-                }
-            }
-            else if (Program.bMorrowind)
-            {
-                this.Text = "Tes Mod Manager " + Program.version + " for Morrowind (" + Program.gamePath + ")";
-                if (File.Exists("TES Construction Set.exe"))
-                {
-                    btnLaunchCreationKit.Visible = true;
-                    this.btnLaunchCreationKit.Text = "Launch Construction Set";
-                }
-            }
-            else
-            {
-                this.Text = "Tes Mod Manager " + Program.version + " for Oblivion (" + Program.gamePath + ")";
-                if (File.Exists("TesConstructionSet.exe"))
-                {
-                    btnLaunchCreationKit.Visible = true;
-                    this.btnLaunchCreationKit.Text = "Launch Construction Set";
-                }
-            }
-//            int[] nexusversion = GetTESVersion("5010");   <-- this is not reliable on the new web site compared to GetTESVersionMP. Both take too long
-//            if (Program.version!=""+nexusversion[0]+"."+nexusversion[1]+"."+nexusversion[2])
-//                this.Text += " [ a new version ("+nexusversion+")is available on nexus]";
+
             UpdateEspList();
 			UpdateOmodList();
 			UpdateGroups();
@@ -214,7 +181,7 @@ namespace OblivionModManager {
 			
 			UpdateESPM();
 
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
             {
                 if (Program.loadOrderList == null || Program.loadOrderList.Count == 0)
                 {
@@ -232,7 +199,7 @@ namespace OblivionModManager {
             btnToolTip.SetToolTip(this.bActivate, "(De)Activate the selected mod");
             btnToolTip.SetToolTip(this.bEdit, "Edit the selected mod to create an OMOD mod");
 
-            if (Program.bSkyrimMode)
+            if (Program.currentGame.NickName=="skyrim")
                 runASkyProcPatcherToolStripMenuItem.Visible = true;
             else
                 runASkyProcPatcherToolStripMenuItem.Visible = false;
@@ -248,11 +215,11 @@ namespace OblivionModManager {
 			UpdateOmodList();
 		}
 
-        private bool IsSrcriptExtenderUpToDate(string latestSEversion, string currentSEversion)
+        private bool IsScriptExtenderUpToDate(string latestSEversion, string currentSEversion)
         {
             bool bRet = false;
 
-            if (latestSEversion.Length > 0)
+            if (!string.IsNullOrWhiteSpace(latestSEversion) && !string.IsNullOrWhiteSpace(currentSEversion))
             {
                 // extract various components
                 string[] webversion=latestSEversion.Split('.');
@@ -293,57 +260,23 @@ namespace OblivionModManager {
             string latestSEversion = getLatestScriptExtenderVersion();
             FileVersionInfo scriptextenderfvi = null;
             FileVersionInfo gamever = null;
-            string gameEXE = "";
-            string scriptExtenderLoaderEXE = "";
-            string scriptExtenderLoaderDLL = "";
-            string scriptExtenderName = "";
-            if (Program.bSkyrimSEMode)
-            {
-                gameEXE = Path.Combine(Program.gamePath, "SkyrimSE.exe");
-                //if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll")))
-                //{
-                //    scriptextenderfvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) : FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
-                //}
-                // gamever = FileVersionInfo.GetVersionInfo();
-            }
-            else if (Program.bSkyrimMode)
-            {
-                gameEXE = Path.Combine(Program.gamePath, "tesv.exe");
-                scriptExtenderLoaderEXE = Path.Combine(Program.gamePath, "skse_loader.exe");
-                scriptExtenderLoaderDLL = Path.Combine(Program.gamePath, "skse_steam_loader.dll");
-                scriptExtenderName = "SKSE";
-                //gamever = FileVersionInfo.GetVersionInfo();
-            }
-            else if (Program.bMorrowind)
-            {
-                gameEXE = Path.Combine(Program.gamePath, "morrowind.exe");
-                scriptExtenderLoaderDLL = Path.Combine(Program.gamePath, "mwse.dll");
-                scriptExtenderName = "MWSE";
-            }
-            else
-            {
-                gameEXE = Path.Combine(Program.gamePath, "oblivion.exe");
-                scriptExtenderLoaderEXE = Path.Combine(Program.gamePath, "obse_loader.exe");
-                scriptExtenderName = "OBSE";
-            }
+            string gameEXE = Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName);
+            string extenderEXE = (Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe));
+            string extenderDLL = (Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL));
             if (File.Exists(gameEXE))
             {
                 gamever = FileVersionInfo.GetVersionInfo(gameEXE);
             }
-            else
+            if (File.Exists(extenderEXE))
             {
-
+                scriptextenderfvi = FileVersionInfo.GetVersionInfo(extenderEXE);
             }
-            if (File.Exists(scriptExtenderLoaderEXE))
+            else if (File.Exists(extenderDLL))
             {
-                scriptextenderfvi = File.Exists(scriptExtenderLoaderEXE) ? FileVersionInfo.GetVersionInfo(scriptExtenderLoaderEXE) : null;
-            }
-            else if (File.Exists(scriptExtenderLoaderDLL))
-            {
-                scriptextenderfvi = File.Exists(scriptExtenderLoaderDLL) ? FileVersionInfo.GetVersionInfo(scriptExtenderLoaderDLL) : null;
+                scriptextenderfvi = FileVersionInfo.GetVersionInfo(extenderDLL);
             }
 
-            toolStripLblScriptExtenderVersion.Text = "" + Program.gameName + " " + (gamever !=null ? gamever.FileVersion : "Game NOT FOUND!!!! (The registry is pointing to the wrong place)");
+            toolStripLblScriptExtenderVersion.Text = "" + Program.currentGame.Name + " " + (gamever !=null ? gamever.FileVersion : "Game NOT FOUND!!!! (The registry is pointing to the wrong place)");
             if (scriptextenderfvi != null)
             {
                 string currentSEversion = "";
@@ -359,12 +292,12 @@ namespace OblivionModManager {
                 {
                     currentSEversion = scriptextenderfvi.FileVersion;
                 }
-                toolStripLblScriptExtenderVersion.Text += " - " + scriptExtenderName + " " + currentSEversion;
+                toolStripLblScriptExtenderVersion.Text += " - " + Program.currentGame.ScriptExtenderName + " " + currentSEversion;
 
-                if (IsSrcriptExtenderUpToDate(latestSEversion,currentSEversion)) //latestSEversion.Length > 0 && latestSEversion != currentSEversion)
+                if (IsScriptExtenderUpToDate(latestSEversion,currentSEversion)) //latestSEversion.Length > 0 && latestSEversion != currentSEversion)
                 {
                     toolStripLblScriptExtenderVersion.ForeColor = Color.Red;
-                    if (!Program.bMorrowind)
+                    if (!string.IsNullOrWhiteSpace(Program.currentGame.ScriptExtenderName))
                         toolStripLblScriptExtenderVersion.Text += " (Click HERE to UPDATE to latest version:" + latestSEversion + ")";
                 }
                 else
@@ -374,39 +307,28 @@ namespace OblivionModManager {
             else
             {
                 toolStripLblScriptExtenderVersion.ForeColor = Color.Black;
-                toolStripLblScriptExtenderVersion.Text += " - No script extender detected"+(!(Program.bMorrowind || Program.bSkyrimSEMode)?" (Click HERE to install)":"");
+                toolStripLblScriptExtenderVersion.Text += " - No script extender detected"+(!string.IsNullOrWhiteSpace(Program.currentGame.ScriptExtenderName)?" (Click HERE to install)":"");
             }
         }
 
         private string getLatestScriptExtenderVersion()
         {
             string ver = "";
-            if (Program.bMorrowind)
+            if (string.IsNullOrWhiteSpace(Program.currentGame.ScriptExtenderName))
                 return ver;
 
             try
             {
                 System.Net.WebClient wc = new System.Net.WebClient();
-                byte[] bytepage = wc.DownloadData((Program.bSkyrimMode ? "http://skse.silverlock.org/" : "http://obse.silverlock.org/"));
+                byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
                 string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
-                if (Program.bSkyrimMode)
+                if (Program.currentGame.ScriptExtenderName=="SKSE")
                 {
                     if (page.IndexOf("Current build (") != -1)
                     {
                         page = page.Substring(page.IndexOf("Current build (") + "Current build (".Length);
                         page = page.Substring(0, page.IndexOf(","));
-                        //int extensionindex = 0;
-                        //if (page.IndexOf(".7z") != -1)
-                        //    extensionindex = page.IndexOf(".7z");
-                        //else if (page.IndexOf(".zip") != -1)
-                        //    extensionindex = page.IndexOf(".zip");
-                        //else
-                        //    extensionindex = page.IndexOf("<"); ; //??
-
-                        //page = page.Substring(0, extensionindex);
-                        //page = page.Replace(".silverlock.org/download/", "");
-                        //page = page.Replace((Program.bSkyrimMode ? "skse_" : "obse_"), "");
                         char[] separator = { '.' };
                         string[] version = page.Split(separator);
 
@@ -434,7 +356,7 @@ namespace OblivionModManager {
 
                         page = page.Substring(0, extensionindex);
                         page = page.Replace(".silverlock.org/download/", "");
-                        page = page.Replace((Program.bSkyrimMode ? "skse_" : "obse_"), "");
+                        page = page.Replace(Program.currentGame.ScriptExtenderName+"_", "");
                         char[] separator = { '_' };
                         string[] version = page.Split(separator);
 
@@ -450,7 +372,7 @@ namespace OblivionModManager {
             }
             catch (Exception ex)
             {
-                Program.logger.WriteToLog("Could not check for OBSE/SKSE update: "+ex.Message, Logger.LogLevel.Low);
+                Program.logger.WriteToLog("Could not check for "+ Program.currentGame.ScriptExtenderName + " update: "+ex.Message, Logger.LogLevel.Low);
             }
             return ver;
         }
@@ -465,7 +387,7 @@ namespace OblivionModManager {
                 bool bFound = false;
                 foreach (string dep in deps)
                 {
-                    if (dep.Length == 0 || dep.ToLower()=="skyrim.esm")
+                    if (dep.Length == 0 || dep.ToLower()== Program.currentGame.IniBaseName+".esm")
                         continue;
                     foreach (EspInfo ei2 in Program.Data.Esps)
                     {
@@ -500,10 +422,10 @@ namespace OblivionModManager {
                 {
                     try
                     {
-                        if (File.Exists(Path.Combine(Program.DataFolderPath,ei.FileName)))
-                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderPath, ei.FileName));
-                        else if (File.Exists(Path.Combine(Program.DataFolderPath,ei.FileName + ".ghost")))
-                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.DataFolderPath,ei.FileName + ".ghost"));
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,ei.FileName)))
+                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.currentGame.DataFolderPath, ei.FileName));
+                        else if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,ei.FileName + ".ghost")))
+                            ei.header = ConflictDetector.TesFile.GetHeader(Path.Combine(Program.currentGame.DataFolderPath,ei.FileName + ".ghost"));
                     }
                     catch
                     {
@@ -528,7 +450,7 @@ namespace OblivionModManager {
                             ei.BelongsTo = Program.SteamModList[filename];
 
                             string bsa = filename.Replace(".esp", ".bsa").Replace(".esm", ".bsa");
-                            if (File.Exists(Path.Combine(Program.DataFolderPath,bsa)))
+                            if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,bsa)))
                             {
                                 toolText += "\n\nData file: " + bsa;
                             }
@@ -930,9 +852,9 @@ namespace OblivionModManager {
 			int omodnum = 0;
 			for(int i=0;i<lvEspList.Items.Count;i++)
 			{
-                if ((Program.bSkyrimMode || Program.bSkyrimSEMode) && lvEspList.Items[i].SubItems[0].Text == "Skyrim.esm")
+                if ((Program.currentGame.NickName.Contains("skyrim")) && lvEspList.Items[i].SubItems[0].Text == "Skyrim.esm")
                     lvEspList.Items[i].Checked = true;
-                else if (Program.bMorrowind && lvEspList.Items[i].SubItems[0].Text == "Morrowind.esm")
+                else if (Program.currentGame.Name=="Morrowind" && lvEspList.Items[i].SubItems[0].Text == "Morrowind.esm")
                     lvEspList.Items[i].Checked = true;
                 else if (lvEspList.Items[i].SubItems[0].Text == "Oblivion.esm")
                     lvEspList.Items[i].Checked = true;
@@ -1002,7 +924,7 @@ namespace OblivionModManager {
             {
                 return;
             }
-            File.Delete(Path.Combine(Program.DataFolderPath,ei.FileName));
+            File.Delete(Path.Combine(Program.currentGame.DataFolderPath,ei.FileName));
             Program.Data.Esps.Remove(ei);
             lvEspList.Items.RemoveAt(lvEspList.SelectedIndices[0]);
         }
@@ -1152,15 +1074,15 @@ namespace OblivionModManager {
                     if (Settings.bUseTimeStamps)
                     {
                         Program.logger.WriteToLog("Setting timestamps ", Logger.LogLevel.High);
-                        DateTime oldtime = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, bottom.FileName));
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, bottom.FileName), File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, top.FileName)));
+                        DateTime oldtime = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bottom.FileName));
+                        File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bottom.FileName), File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, top.FileName)));
                         string bsa = bottom.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                        if (File.Exists(Path.Combine(Program.DataFolderPath, bsa)))
-                            File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, bsa), File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, top.FileName)));
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, top.FileName), oldtime);
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, bsa)))
+                            File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bsa), File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, top.FileName)));
+                        File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, top.FileName), oldtime);
                         bsa = top.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                        if (File.Exists(Path.Combine(Program.DataFolderPath, bsa)))
-                            File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, bsa), oldtime);
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, bsa)))
+                            File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bsa), oldtime);
                         Program.logger.WriteToLog("Done setting timestamps ", Logger.LogLevel.High);
                     }
                 }
@@ -1287,7 +1209,7 @@ namespace OblivionModManager {
 			System.Collections.Generic.List<string> toadd=new System.Collections.Generic.List<string>();
 			foreach(ListViewItem lvi in lvEspList.SelectedItems) {
 				try {
-					toadd.AddRange(ConflictDetector.TesFile.GetDataFileList(Path.Combine(Program.DataFolderPath,lvi.Text)));
+					toadd.AddRange(ConflictDetector.TesFile.GetDataFileList(Path.Combine(Program.currentGame.DataFolderPath,lvi.Text)));
 				} catch(Exception ex) {
 					MessageBox.Show("An error occurred trying to parse plugin "+lvi.SubItems[1].Text+"\n"+
 					                "Error: "+ex.Message, "Error");
@@ -1561,7 +1483,7 @@ namespace OblivionModManager {
 				while(match)
 				{
 					dis.Clear();
-					dis.Add(new DirectoryInfo(Program.DataFolderPath));
+					dis.Add(new DirectoryInfo(Program.currentGame.DataFolderPath));
 					
 					match=false;
 					for(int i=0;i<dis.Count;i++)
@@ -1867,7 +1789,7 @@ namespace OblivionModManager {
 					temppath=o.GetConfig();
 					if (temppath.Length>0) File.Move(temppath, Path.Combine(Path.Combine(path, Program.omodConversionData),"config"));
 				}
-				Program.RecersiveDirectoryMove(path, Path.Combine(folderBrowserDialog1.SelectedPath,o.ModName), false);
+				Program.RecursiveDirectoryMove(path, Path.Combine(folderBrowserDialog1.SelectedPath,o.ModName), false);
 				MessageBox.Show("Done");
 			} catch(Exception ex) {
 				MessageBox.Show("Extraction failed\nError: "+ex.Message, "Error");
@@ -2161,9 +2083,9 @@ namespace OblivionModManager {
 				EspInfo ei=Program.Data.GetEsp(file);
 				if(ei!=null) {
 					ei.DateModified=pos;
-					FileInfo fi=new FileInfo(Path.Combine(Program.DataFolderPath,file));
+					FileInfo fi=new FileInfo(Path.Combine(Program.currentGame.DataFolderPath,file));
 					fi.LastWriteTime=pos;
-                    if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+                    if (Program.currentGame.NickName.Contains("skyrim"))
                         Program.loadOrderList.Add(file.ToLower());
 				} else {
 					MessageBox.Show("esp '"+file+"' was not found", "Error");
@@ -2548,20 +2470,19 @@ namespace OblivionModManager {
                     //					MessageBox.Show(o.FileName+" does not have a website", "Error");
                     return false;
                 }
-                s = "http://www.nexusmods.com/" + Program.gameName + "/mods/" + s;
+                s = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + s;
 			}
             s=s.Replace("http://tesnexus.com", "http://www.tesnexus.com");
 
-            if (Program.bSkyrimMode)
-                s=s.Replace("tesnexus", "skyrimnexus");
+            s=s.Replace("tesnexus", Program.currentGame.NickName+"nexus");
 
             s = s.Replace("http://skyrimnexus", "http://www.skyrimnexus");
 
             s = s.Replace("http://www.tesnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/oblivion/mods/");
             s = s.Replace("http://www.skyrimnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/skyrim/mods/");
-            s = s.Replace("http://www." + Program.gameName + ".nexusmods.com/mods/", "http://www.nexusmods.com/" + Program.gameName + "/mods/");
+            s = s.Replace("http://www." + Program.currentGame.NexusName + ".nexusmods.com/mods/", "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/");
 
-            if (s.StartsWith("http://www.nexusmods.com/" + Program.gameName + "/mods/", StringComparison.CurrentCultureIgnoreCase))
+            if (s.StartsWith("http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/", StringComparison.CurrentCultureIgnoreCase))
 			{
                 string modid=s.Substring(s.LastIndexOf('/')+1);
                 string name = "", version = "", description = "", author = "", website = "", imagefile = null;
@@ -2803,37 +2724,10 @@ namespace OblivionModManager {
 		{
 			try
 			{
-                string modid="", modName = "", modVersion = "", modDescription = "", modAuthor = "", modWebsite = "", imagefile=null;
-                modid = Program.bSkyrimMode ? "5010" : "41346";
-                Program.GetNexusModInfo("5010", ref modName, ref modVersion, ref modDescription, ref modAuthor, ref modWebsite, ref imagefile, true);
+                string modName = "", modVersion = "", modDescription = "", modAuthor = "", modWebsite = "", imagefile=null;
+                Program.GetNexusModInfo(Program.currentGame.TMMNexusID.ToString(), ref modName, ref modVersion, ref modDescription, ref modAuthor, ref modWebsite, ref imagefile, true);
 
                 if (modVersion.ToLower().CompareTo(Program.version.ToLower())!=0)
-                //string tver = Program.bSkyrimMode ? Program.GetTESVersionMP("5010", false) : Program.GetTESVersionMP("41346", false);
-				
-                //int tvmaj = -1, tvmin = -1, tvbui = -1;
-                //string[] tvers = tver.Split('.');
-				
-                //if (tvers.Length >= 1)
-                //    tvmaj = int.Parse(tvers[0]);
-                //if (tvers.Length >= 2)
-                //{
-                //    tvmin = int.Parse(tvers[1]);
-                //}
-                //if (tver.Length >= 3)
-                //    tvbui = int.Parse(tvers[2]);
-
-                //int curtvmaj = -1, curtvmin = -1, curtvbui = -1;
-                //string[] curtvers = Program.version.Split('.');
-
-                //if (curtvers.Length >= 1)
-                //    curtvmaj = int.Parse(curtvers[0]);
-                //if (curtvers.Length >= 2)
-                //{
-                //    curtvmin = int.Parse(curtvers[1]);
-                //}
-                //if (curtvers.Length >= 3)
-                //    curtvbui = int.Parse(curtvers[2]);
-                //if (VersionCompare(curtvmaj, curtvmin, curtvbui, tvmaj, tvmin, tvbui) == -1)
 				{
 					if (MessageBox.Show("An update is available for TesModManager"+
 					                    ". Do you want to download it now?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
@@ -2841,78 +2735,6 @@ namespace OblivionModManager {
                         System.Diagnostics.Process.Start("http://www.nexusmods.com/skyrim/mods/5010/?tab=2&navtag=http%3A%2F%2Fwww.nexusmods.com%2Fskyrim%2Fajax%2Fmodfiles%2F%3Fid%3D5010&pUp=1");
 					}
 				}
-/*                
-				DateTime localver = new FileInfo("TesModManager.exe").LastWriteTimeUtc;
-				ConfigList manifest;
-				
-				TextReader tr = DownloadFile("http://dl.dropbox.com/u/15040829/OBMMEx.xbt");
-				
-				manifest = new GeneralConfig().ReadConfiguration(tr.ReadToEnd());
-				
-				tr.Close();
-				
-				DateTime newver;
-				
-				{
-					ConfigList versioninfo = manifest.GetSection("Version");
-					
-					int year = versioninfo.GetPair("Year").DataAsInteger;
-					int month = versioninfo.GetPair("Month").DataAsInteger;
-					int day = versioninfo.GetPair("Day").DataAsInteger;
-					
-					int hour = versioninfo.GetPair("Hour").DataAsInteger;
-					int minute = versioninfo.GetPair("Minute").DataAsInteger;
-					
-					int offset = versioninfo.GetPair("Offset").DataAsInteger;
-					
-					newver = new DateTime(year, month, day, hour, minute, 0, DateTimeKind.Utc).AddMinutes(offset);
-					
-				}
-				
-				
-				if (localver >= newver)
-					return;
-				
-				if (MessageBox.Show("An update is available for Oblivion Mod Manager Extended"+
-				                    ". Do you want to download it now?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-				{
-					string basename = manifest["Base"];
-					
-					object[] fileo = manifest.GetPair("Files").DataAsArray;
-					
-					string[] files = new string[fileo.Length];
-					
-					for(int i=0;i<fileo.Length;i++)
-					{
-						if (fileo[i] is string)
-						{
-							files[i] = basename + (string)fileo[i];
-						}
-						else
-						{
-							throw new Exception("Malformed manifest file");
-						}
-					}
-					
-					if (!Directory.Exists("update"))
-					{
-						Directory.CreateDirectory("update");
-					}
-					
-					List<MemoryStream> mstr = DownloadForm.DownloadFiles(files);
-					
-					for(int i=0;i<mstr.Count;i++)
-					{
-						File.WriteAllBytes("update\\" + fileo[i].ToString(), mstr[i].ToArray());
-						
-						mstr[i].Close();
-					}
-					
-					System.Diagnostics.Process.Start("OBMMUpdater.exe", "OblivionModManager \"Oblivion Mod Manager Extended\" update");
-					
-					this.Close();
-				}
- */
 			}
 			catch(Exception ex)
 			{
@@ -3369,7 +3191,7 @@ namespace OblivionModManager {
             System.Diagnostics.Process tmm = new System.Diagnostics.Process();
             tmm.StartInfo.FileName = Program.BOSSpath + "\\BOSS.exe";
             tmm.StartInfo.WorkingDirectory = Program.BOSSpath;
-            tmm.StartInfo.Arguments = "-g "+ Program.gameName;
+            tmm.StartInfo.Arguments = "-g "+ Program.currentGame.Name;
             tmm.Start();
             tmm.WaitForExit();
             Program.loadLoadOrderTxtFile();
@@ -3377,7 +3199,7 @@ namespace OblivionModManager {
             foreach (ListViewItem lvi in lvEspList.Items)
             {
                 EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,ea.FileName));
+                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath,ea.FileName));
             }
             lvEspList.Sort();
         }
@@ -3809,27 +3631,27 @@ namespace OblivionModManager {
                 if (DialogResult.No == MessageBox.Show("Do you want to install the latest Script Extender?", "Script Extender", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                     return;
                 toolStripProcessingStatusLabel.Visible = true;
-                toolStripProcessingStatusLabel.Text = "Retrieving latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                toolStripProcessingStatusLabel.Text = "Retrieving latest " + Program.currentGame.ScriptExtenderName;
                 Application.DoEvents();
                 try
                 {
 
                     // there is an update to install?
                     System.Net.WebClient wc = new System.Net.WebClient();
-                    byte[] bytepage = wc.DownloadData((Program.bSkyrimMode ? "http://skse.silverlock.org/" : "http://obse.silverlock.org/"));
+                    byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
                     string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
                     File.Delete(Program.TempDir + "\\scriptextender.7z");
-                    if (Program.bSkyrimMode)
+                    if (Program.currentGame.ScriptExtenderName=="SKSE")
                     {
                         string filelink = "";
-                        if (page.IndexOf("download/skse_") != -1)
+                        if (page.IndexOf("download/" + Program.currentGame.ScriptExtenderName.ToLower() + "_") != -1)
                         {
-                            filelink = page.Substring(page.LastIndexOf("download/skse_"));
+                            filelink = page.Substring(page.LastIndexOf("download/" + Program.currentGame.ScriptExtenderName.ToLower() + "_"));
                         }
-                        if (filelink.Length == 0  && page.IndexOf("beta/skse_") != -1)
+                        if (filelink.Length == 0  && page.IndexOf("beta/" + Program.currentGame.ScriptExtenderName.ToLower() + "_") != -1)
                         {
-                            filelink = page.Substring(page.LastIndexOf("beta/skse_"));
+                            filelink = page.Substring(page.LastIndexOf("beta/" + Program.currentGame.ScriptExtenderName.ToLower() + "_"));
                         }
                         if (filelink.Length>0)
                         {
@@ -3839,8 +3661,8 @@ namespace OblivionModManager {
                             else
                                 extension = ".zip";
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "http://skse.silverlock.org/" + filelink + extension;
-                            toolStripProcessingStatusLabel.Text = "Downloading latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                            filelink = "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
+                            toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
                             File.WriteAllBytes(Program.TempDir + "\\scriptextender.7z", bytepage);
@@ -3857,8 +3679,8 @@ namespace OblivionModManager {
                             else
                                 extension = ".zip";
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "http://" + (Program.bSkyrimMode ? "skse" : "obse") + filelink + extension;
-                            toolStripProcessingStatusLabel.Text = "Downloading latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                            filelink = "http://" + Program.currentGame.ScriptExtenderName + filelink + extension;
+                            toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
                             File.WriteAllBytes(Program.TempDir + "\\scriptextender.7z", bytepage);
@@ -3878,14 +3700,14 @@ namespace OblivionModManager {
                             }
 
                         }
-                        toolStripProcessingStatusLabel.Text = "Extracting latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                        toolStripProcessingStatusLabel.Text = "Extracting latest " + Program.currentGame.ScriptExtenderName;
                         Application.DoEvents();
                         zextract.ExtractFiles(extenderTmpDir, files.ToArray());
                         zextract.Dispose();
                         // make sure that the current dir did not change
                         Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 
-                        toolStripProcessingStatusLabel.Text = "Installing latest " + (Program.bSkyrimMode ? "SKSE" : "OBSE");
+                        toolStripProcessingStatusLabel.Text = "Installing latest " + Program.currentGame.ScriptExtenderName;
                         Application.DoEvents();
 
                         //List<string> newfiles = new List<string>(files.Count);
@@ -3894,9 +3716,9 @@ namespace OblivionModManager {
                         string pathtoremove = "";
                         foreach (string file in files)
                         {
-                            if (file.ToLower().EndsWith(Program.bSkyrimMode?"skse_loader.exe":"obse_loader.exe"))
+                            if (file.ToLower().EndsWith(Program.currentGame.ScriptExtenderExe))
                             {
-                                pathtoremove=file.ToLower().Replace((Program.bSkyrimMode?"skse_loader.exe":"obse_loader.exe"),"");
+                                pathtoremove=file.ToLower().Replace((Program.currentGame.ScriptExtenderExe),"");
                                 break;
                             }
                         }
@@ -3920,7 +3742,7 @@ namespace OblivionModManager {
                         {
                             if (files[j].ToLower().StartsWith(srcdir)) // ignore source code
                                 continue;
-                            string targetfile = files[j].Replace(oldpath, Program.gamePath);
+                            string targetfile = files[j].Replace(oldpath, Program.currentGame.GamePath);
                             if (File.Exists(targetfile))
                             {
                                 File.SetAttributes(targetfile, FileAttributes.Normal);
@@ -3969,7 +3791,7 @@ namespace OblivionModManager {
             foreach (ListViewItem lvi in lvEspList.Items)
             {
                 EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath,ea.FileName));
+                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath,ea.FileName));
             }
             lvEspList.Sort();
         }
@@ -4119,59 +3941,26 @@ namespace OblivionModManager {
 
         private void toolStripLblCK_Click(object sender, EventArgs e)
         {
-            Process process = new Process();
-            process.StartInfo.WorkingDirectory = Program.gamePath;
-            if (File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")))
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "obse_loader.exe");
-                process.StartInfo.Arguments = "-editor";
-            }
-            else if (File.Exists("skse_loader.exe"))
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "skse_loader.exe");
-                process.StartInfo.Arguments = "-altexe creationkit.exe";
-            }
-            else if (Program.bSkyrimMode)
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "CreationKit.exe");
-            }
-            else if (Program.bMorrowind)
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TES Construction Set.exe");
-            }
-            else
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TESConstructionSet.exe");
-            }
-            process.Start();
+            btnLaunchCreationKit_Click(sender, e);
         }
 
         private void btnLaunchCreationKit_Click(object sender, EventArgs e)
         {
             Process process = new Process();
-            process.StartInfo.FileName = Program.gamePath;
-            process.StartInfo.WorkingDirectory = Program.gamePath;
-            if (File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")))
+            process.StartInfo.WorkingDirectory = Program.currentGame.GamePath;
+            if (File.Exists(Path.Combine(Program.currentGame.GamePath, "obse_loader.exe")))
             {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "obse_loader.exe");
+                process.StartInfo.FileName = Path.Combine(Program.currentGame.GamePath, "obse_loader.exe");
                 process.StartInfo.Arguments = "-editor";
             }
-            else if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")))
+            else if (File.Exists(Path.Combine(Program.currentGame.GamePath, "skse_loader.exe")))
             {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "skse_loader.exe");
+                process.StartInfo.FileName = Path.Combine(Program.currentGame.GamePath, "skse_loader.exe");
                 process.StartInfo.Arguments = "-altexe creationkit.exe";
-            }
-            else if (Program.bSkyrimMode)
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "CreationKit.exe");
-            }
-            else if (Program.bMorrowind)
-            {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TES Construction Set.exe");
             }
             else
             {
-                process.StartInfo.FileName = Path.Combine(Program.gamePath, "TESConstructionSet.exe");
+                process.StartInfo.FileName = Path.Combine(Program.currentGame.GamePath, Program.currentGame.CreationKitExe);
             }
             process.Start();
         }
@@ -4227,7 +4016,7 @@ namespace OblivionModManager {
         {
 
             System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-            tmm.StartInfo.FileName = Program.LOOTpath + "\\LOOT.exe";
+            tmm.StartInfo.FileName = Path.Combine(Program.LOOTpath, "LOOT.exe");
             tmm.StartInfo.WorkingDirectory = Program.LOOTpath;
             //tmm.StartInfo.Arguments = "-g " + Program.gameName;
             tmm.Start();
@@ -4237,7 +4026,7 @@ namespace OblivionModManager {
             foreach (ListViewItem lvi in lvEspList.Items)
             {
                 EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, ea.FileName));
+                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, ea.FileName));
             }
             lvEspList.Sort();
 

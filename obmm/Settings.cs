@@ -375,7 +375,7 @@ namespace OblivionModManager {
                     try { bPreventMovingESPBeforeESM = br.ReadBoolean(); } catch { bPreventMovingESPBeforeESM = true; };
                     try { bOmod2IsDefault = br.ReadBoolean(); }catch { bOmod2IsDefault = true; };
                     try { conflictsBackupDir = br.ReadString(); }
-                    catch { conflictsBackupDir = Program.DataFolderPath; };
+                    catch { conflictsBackupDir = Program.currentGame.DataFolderPath; };
                     try { altPanelSplitterDistance = br.ReadInt32(); } catch { altPanelSplitterDistance = -9001; }
                 }
 

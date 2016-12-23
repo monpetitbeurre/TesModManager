@@ -42,24 +42,24 @@ namespace OblivionModManager.Forms {
         private TreeNode FullBackup;
 
         private void BuildTreeView() {
-            RootNode=new TreeNode(Program.DataFolderPath);
-            RootNode.Name=Program.DataFolderPath;
+            RootNode=new TreeNode(Program.currentGame.DataFolderPath);
+            RootNode.Name=Program.currentGame.DataFolderPath;
             RootNode.Tag=TreeNodeType.Any;
             if(BSAs) {
-                foreach(string file in Directory.GetFiles(Program.DataFolderPath, "*.bsa")) {
+                foreach(string file in Directory.GetFiles(Program.currentGame.DataFolderPath, "*.bsa")) {
                     string[] files=OblivionBSA.GetBSAEntries(file);
                     string tooltip="Contained in "+Path.GetFileName(file);
                     foreach(string s in files) AddNode(s, tooltip, TreeNodeType.BSA);
                 }
             }
-            foreach(string file in Directory.GetFiles(Program.DataFolderPath, "*", SearchOption.AllDirectories)) {
+            foreach(string file in Directory.GetFiles(Program.currentGame.DataFolderPath, "*", SearchOption.AllDirectories)) {
                 switch(Path.GetExtension(file)) {
                 case ".esp":
                 case ".esm":
                     continue;
                 }
                 string file2;
-                if(Path.IsPathRooted(file)) file2=file.Substring((Program.DataFolderPath+"\\").Length);
+                if(Path.IsPathRooted(file)) file2=file.Substring((Program.currentGame.DataFolderPath+"\\").Length);
                 else file2=file.Substring(5);
                 DataFileInfo dfi=Program.Data.GetDataFile(file2);
                 long len=(new FileInfo(file)).Length;

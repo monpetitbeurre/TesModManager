@@ -207,7 +207,7 @@ namespace OblivionModManager.Scripting {
 						Warn("Missing arguments to function 'If DataFileExists'");
 						return false;
 					}
-					return File.Exists(Path.Combine(Program.DataFolderPath,line[2]));
+					return File.Exists(Path.Combine(Program.currentGame.DataFolderPath,line[2]));
 				case "VersionGreaterThan":
 					if(line.Length==2) {
 						Warn("Missing arguments to function 'If VersionGreaterThan'");
@@ -237,35 +237,19 @@ namespace OblivionModManager.Scripting {
 						return false;
 					}
 				case "ScriptExtenderPresent":
-                    if (Program.bMorrowind) return false;
 					if(line.Length>2) Warn("Unexpected arguments to 'If ScriptExtenderPresent'");
-					return File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "obse_steam_loader.dll")) ||
-                        File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) || File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
+					return File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) || File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL));
 				case "ScriptExtenderNewerThan":
-                    if (Program.bMorrowind) return false;
 					if(line.Length==2) {
 						Warn("Missing arguments to function 'If ScriptExtenderNewerThan'");
 						return false;
 					}
 					if(line.Length>3) Warn("Unexpected arguments to 'If ScriptExtenderNewerThan'");
-					if(!((File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) && File.Exists(Path.Combine(Program.gamePath, "obse_steam_loader.dll"))) ||
-                       (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) && File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll"))))) return false;
+					if(!(File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) && File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL)))) return false;
 					try {
 						System.Diagnostics.FileVersionInfo fvi;
-                        if (Program.bSkyrimMode)
-                        {
-                            fvi = File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_loader.exe")) :
-                                System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "skse_steam_loader.dll"));
-                        }
-                        else if (Program.bMorrowind)
-                        {
-                            fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "mwse.dll"));
-                        }
-                        else
-                        {
-                            fvi = File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) ? System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "obse_loader.exe")) :
-                                System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "obse_steam_loader.dll"));
-                        }
+                        fvi = File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) ? System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) :
+                            System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL));
 						if(fvi.FileVersion==null) return false;
 						Version v=new Version(line[2]); ;
 						Version v2=new Version(fvi.FileVersion.Replace(", ", "."));
@@ -275,19 +259,18 @@ namespace OblivionModManager.Scripting {
 						return false;
 					}
 				case "GraphicsExtenderPresent":
-                    if (Program.bMorrowind) return false;
 					if(line.Length>2) Warn("Unexpected arguments to 'If GraphicsExtenderPresent'");
-                    return File.Exists(Path.Combine(Program.DataFolderPath, "\\obse\\plugins\\obge.dll")) || File.Exists(Path.Combine(Program.DataFolderPath, "\\obse\\plugins\\skge.dll"));
-				case "GraphicsExtenderNewerThan":
-                    if (Program.bMorrowind) return false;
+                    return File.Exists(Path.Combine(Program.currentGame.DataFolderPath, Program.currentGame.GraphicsExtenderPath));
+                case "GraphicsExtenderNewerThan":
 					if(line.Length==2) {
 						Warn("Missing arguments to function 'If GraphicsExtenderNewerThan'");
 						return false;
 					}
 					if(line.Length>3) Warn("Unexpected arguments to 'If GraphicsExtenderNewerThan'");
-                    if (!File.Exists(Path.Combine(Program.DataFolderPath, "\\obse\\plugins\\obge.dll")) && !File.Exists(Path.Combine(Program.DataFolderPath,"\\skse\\plugins\\obge.dll")) && !File.Exists(Path.Combine(Program.DataFolderPath, "..\\mge3\\MGEfuncs.dll"))) return false;
+                    if (!File.Exists(Path.Combine(Program.currentGame.DataFolderPath, Program.currentGame.GraphicsExtenderPath)))
+                        return false;
 					try {
-                        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.DataFolderPath, (Program.bSkyrimMode ? @"skse\plugins\obge.dll" : Program.bMorrowind ? "..\\mge3\\MGEfuncs.dll" : @"obse\plugins\obge.dll")));
+                        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.DataFolderPath, Program.currentGame.GraphicsExtenderPath));
 						if(fvi.FileVersion==null) return false;
 						Version v=new Version(line[2]); ;
 						Version v2=new Version(fvi.FileVersion.Replace(", ", "."));
@@ -1083,7 +1066,7 @@ namespace OblivionModManager.Scripting {
 				}
 			}
 			DateTime timestamp=File.GetLastWriteTime(copypath);
-			if(File.Exists(Path.Combine(Program.DataFolderPath,line[2]))) {
+			if(File.Exists(Path.Combine(Program.currentGame.DataFolderPath,line[2]))) {
 				if(Plugin) {
 					if(!Program.Data.DoesEspExist(line[2])) {
 						Warn("Cannot patch file '"+line[2]+"' because it already exists but is not parented to an omod");
@@ -1095,11 +1078,11 @@ namespace OblivionModManager.Scripting {
 						return;
 					}
 				}
-                timestamp = File.GetLastWriteTime(Path.Combine(Program.DataFolderPath, line[2]));
-				File.Delete(Path.Combine(Program.DataFolderPath,line[2]));
+                timestamp = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, line[2]));
+				File.Delete(Path.Combine(Program.currentGame.DataFolderPath,line[2]));
 			} else if(line.Length<4||line[3]!="True") return;
-            File.Move(copypath, Path.Combine(Program.DataFolderPath, line[2]));
-            File.SetLastWriteTime(Path.Combine(Program.DataFolderPath, line[2]), timestamp);
+            File.Move(copypath, Path.Combine(Program.currentGame.DataFolderPath, line[2]));
+            File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, line[2]), timestamp);
 		}
 
 		private static void FunctionEditINI(string[] line) {

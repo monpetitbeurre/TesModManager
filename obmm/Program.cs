@@ -28,6 +28,7 @@ using System.Windows.Forms;
 using System.Text;
 using System.Security.Cryptography;
 using System.Diagnostics;
+using OblivionModManager.Classes;
 //TODO: Scripts shouldn't have write access to the root oblivion folder. Make it read/discovery only
 //TODO: BSA browser should be able to preview text files
 
@@ -38,7 +39,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.1"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.2"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -117,6 +118,31 @@ namespace OblivionModManager {
             @"skyrim.esm",
             @"morrowind.esm"
 		};
+        //public static readonly string[][] games =
+        //{
+        //    // game name, game Nexus name, game Data folder, game Saves folder, game Nexus ID, game nickname
+        //    new string[] { "Oblivion", "oblivion", "Data", "", "110", "oblivion" },
+        //    new string[] { "Skyrim", "" }
+        //};
+
+        public static readonly Game[] games =
+        {
+            // game name, game Nexus name, game Data folder, game Saves folder, game Nexus ID, game nickname
+            new Game { Name="Oblivion", NickName="oblivion", DataFolderName = "Data", SaveFolder="", IniBaseName="oblivion",
+                NexusID =101, TMMNexusID=41346, NexusName="oblivion", ExeName="Oblivion.exe", CreationKitExe="TESConstructionSet.exe",
+                ScriptExtenderName ="OBSE", ScriptExtenderExe="obse_loader.exe", ScriptExtenderDLL="obse_loader.dll", GraphicsExtenderPath=@"obse\plugins\obge.dll" },
+            new Game { Name="Skyrim", NickName="skyrim", DataFolderName = "Data", SaveFolder="", IniBaseName="skyrim",
+                NexusID =1101, TMMNexusID=5010, NexusName="skyrim", ExeName="TesV.exe", CreationKitExe="CreationKit.exe",
+                ScriptExtenderName ="SKSE", ScriptExtenderExe="skse_loader.exe", ScriptExtenderDLL="", GraphicsExtenderPath=@"skse\plugins\skge.dll" },
+            new Game { Name="Skyrim Special Edition", NickName="skyrimse", DataFolderName = "Data", SaveFolder="", IniBaseName="skyrim",
+                NexusID =17041, TMMNexusID=6491, NexusName="skyrim special edition", CreationKitExe="CreationKit.exe", ExeName="SkyrimSE.exe",
+                ScriptExtenderExe ="", ScriptExtenderDLL=""},
+            new Game { Name="Morrowind", NickName="morrowind", DataFolderName = "Data Files", SaveFolder="", IniBaseName="morrowind",
+                NexusID =1001, TMMNexusID=44664, NexusName="morrowind", ExeName="Morrowind.exe", CreationKitExe="TES Construction Set.exe",
+                ScriptExtenderName ="MWSE", ScriptExtenderExe="", ScriptExtenderDLL="mwse.dll", GraphicsExtenderPath=@"..\mge3\MGEfuncs.dll" }
+        };
+
+        public static Game currentGame = null;
 
         class serializerThread
         {
@@ -139,16 +165,16 @@ namespace OblivionModManager {
 
         }
 
-        public static string gameName = (Program.bSkyrimSEMode ? "skyrimSE" :(Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
-        public static string gamePath = "";
-        public static int gameID = 110;
-        public static string DataFolderPath = "Data";
-        public static string DataFolderName = "Data";
+        //public static string gameName = (Program.bSkyrimSEMode ? "skyrimSE" :(Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
+        //public static string gamePath = "";
+        //public static int gameID = 110;
+        //public static string DataFolderPath = "Data";
+        //public static string DataFolderName = "Data";
 
         public static string TempDir {
 			get {
 				if(Settings.tempDir.Length==0)
-                    Settings.tempDir=Path.GetTempPath()+gameName+@"MM\";
+                    Settings.tempDir=Path.GetTempPath()+ currentGame.Name + @"MM\";
                 return Settings.tempDir;
 			}
 		}
@@ -157,19 +183,19 @@ namespace OblivionModManager {
             get
             {
                 if (string.IsNullOrWhiteSpace(Settings.conflictsBackupDir))
-                    Settings.conflictsBackupDir = Program.DataFolderPath;
+                    Settings.conflictsBackupDir = Program.currentGame.DataFolderPath;
                 return Settings.conflictsBackupDir;
             }
         }
 
-		public static readonly string CurrentDir=(Path.GetDirectoryName(Application.ExecutablePath)+"\\").ToLower();
-        public static string INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\" + gameName + "\\");
-        public static string ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), gameName+"\\");
+		public static readonly string CurrentDir=Path.GetDirectoryName(Application.ExecutablePath);
+        public static string INIDir = ""; // Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\" + currentGame.Name + "\\");
+        public static string ESPDir = ""; //  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), currentGame.Name + "\\");
         public static readonly string VistaVirtualStore = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VirtualStore\\"), CurrentDir.Remove(0, 3));
 
-        public static bool bSkyrimMode = false;
-        public static bool bSkyrimSEMode = false;
-        public static bool bMorrowind = false;
+        //public static bool bSkyrimMode = false;
+        //public static bool bSkyrimSEMode = false;
+        //public static bool bMorrowind = false;
 		public static sData Data;
         public static sData Data2;
 		public static bool IsLimited=false;
@@ -219,19 +245,19 @@ namespace OblivionModManager {
 
             logger = new OblivionModManager.Logger(logFilePath);
 
-            string apppath = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
-            apppath = apppath.Replace("file:///", "");
-            apppath = Path.GetDirectoryName(apppath);
-            if (File.Exists(Path.Combine(apppath, "tesv.exe")))
-                bSkyrimMode = true;
-            else if (File.Exists(Path.Combine(apppath, "SkyrimSE.exe")))
-                bSkyrimSEMode = true;
-            else if (File.Exists(Path.Combine(apppath, "morrowind.exe")))
-                bMorrowind = true;
+            //string apppath = System.Reflection.Assembly.GetExecutingAssembly().GetName().CodeBase;
+            //apppath = apppath.Replace("file:///", "");
+            //apppath = Path.GetDirectoryName(apppath);
+            //if (File.Exists(Path.Combine(apppath, "tesv.exe")))
+            //    bSkyrimMode = true;
+            //else if (File.Exists(Path.Combine(apppath, "SkyrimSE.exe")))
+            //    bSkyrimSEMode = true;
+            //else if (File.Exists(Path.Combine(apppath, "morrowind.exe")))
+            //    bMorrowind = true;
             //else if (File.Exists(Path.Combine(apppath, "oblivion.exe")))
 
-            gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
-            DataFolderName = Program.bMorrowind ?"Data Files":"Data";
+            //gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
+            //DataFolderName = Program.bMorrowind ?"Data Files":"Data";
 
 			if(!PreInit(args)) return;
 			if(Launch!=LaunchType.None) {
@@ -351,7 +377,7 @@ namespace OblivionModManager {
             if (p_booIsGatekeeper) // "GatekeeperNexusREST" : (Program.bSkyrimMode ? "SKYRIMNexusREST" : "OBNexusREST")
                 remoteAddress = "http://nmm.nexusmods.com/"; //"http://gatekeeper.nexusmods.com/";
             else
-                remoteAddress = "http://nmm.nexusmods.com/"+Program.gameName+"/";// "http://oblivion.nexusmods.com/";
+                remoteAddress = "http://nmm.nexusmods.com/"+Program.currentGame.NexusName + "/";// "http://oblivion.nexusmods.com/";
 
             System.ServiceModel.WebHttpBinding binding = new WebHttpBinding();
             binding.MaxReceivedMessageSize = 2147483647;
@@ -376,7 +402,7 @@ namespace OblivionModManager {
                 {
                     try
                     {
-                        fileservers = nmrApi.GetModFileDownloadUrls(fileid, gameID);
+                        fileservers = nmrApi.GetModFileDownloadUrls(fileid, currentGame.NexusID);
                         break;
                     }
                     catch (Exception ex)
@@ -504,7 +530,7 @@ namespace OblivionModManager {
                     {
                         try
                         {
-                            fileinfolist = nmrApi.GetModFiles(modid, gameID);
+                            fileinfolist = nmrApi.GetModFiles(modid, currentGame.NexusID);
                             break;
                         }
                         catch (Exception ex)
@@ -542,7 +568,7 @@ namespace OblivionModManager {
                     {
                         try
                         {                            
-                            fileinfo = nmrApi.GetModFile(fileid, gameID);
+                            fileinfo = nmrApi.GetModFile(fileid, currentGame.NexusID);
                             //break;
                         }
                         catch (Exception ex)
@@ -587,7 +613,7 @@ namespace OblivionModManager {
                     {
                         try
                         {
-                            modinfo = nmrApi.GetModInfo(modid, gameID);
+                            modinfo = nmrApi.GetModInfo(modid, currentGame.NexusID);
                             break;
                         }
                         catch (Exception ex)
@@ -624,7 +650,7 @@ namespace OblivionModManager {
                 {
                     try
                     {
-                        fileinfo = nmrApi.GetModFile(fileid, gameID);
+                        fileinfo = nmrApi.GetModFile(fileid, currentGame.NexusID);
                         break;
                     }
                     catch (Exception ex)
@@ -1329,7 +1355,7 @@ namespace OblivionModManager {
                             bool bPickOptionsAtInstallationTime = false;
                             if (dirlist.Count == 0)
                             {
-                                string[] datadirlist = Directory.GetDirectories(strTmpDir, Path.GetFileName(DataFolderPath), SearchOption.AllDirectories);
+                                string[] datadirlist = Directory.GetDirectories(strTmpDir, Path.GetFileName(currentGame.DataFolderPath), SearchOption.AllDirectories);
                                 foreach (string dir in datadirlist)
                                 {
                                     dirlist.Add(dir);
@@ -1389,7 +1415,7 @@ namespace OblivionModManager {
                                     {
                                         dir2 = dir2.Substring(0, dir2.LastIndexOf('\\')); // go above one more level
                                         dir2 = dir2.Substring(0, dir2.LastIndexOf('\\'));
-                                        if (Path.GetFileName(dir2).ToLower().CompareTo(DataFolderPath) == 0)
+                                        if (Path.GetFileName(dir2).ToLower().CompareTo(currentGame.DataFolderPath) == 0)
                                         {
                                             dir2 = dir2.Substring(0, dir2.LastIndexOf('\\') + 1); // go above one more level
                                         }
@@ -1748,90 +1774,90 @@ namespace OblivionModManager {
 		}
 
 		private static bool PreInit(string[] args) {
-            string oblivionpath = "";
-            string skyrimpath = "";
-            string skyrimsepath = "";
-            string morrowindpath = "";
-            string path = "";
+            //string oblivionpath = "";
+            //string skyrimpath = "";
+            //string skyrimsepath = "";
+            //string morrowindpath = "";
+            //string path = "";
 
-            if ((oblivionpath = FindSoftware(@"Bethesda Softworks\Oblivion", "Installed Path")) != null)
-            {
-                if (oblivionpath.EndsWith(@"\"))
-                    oblivionpath = oblivionpath.Substring(0, oblivionpath.Length - 1);
-            }
-            else
-                oblivionpath = "";
-            logger.WriteToLog("Oblivion path: " + oblivionpath, Logger.LogLevel.High);
+            //if ((oblivionpath = FindSoftware(@"Bethesda Softworks\Oblivion", "Installed Path")) != null)
+            //{
+            //    if (oblivionpath.EndsWith(@"\"))
+            //        oblivionpath = oblivionpath.Substring(0, oblivionpath.Length - 1);
+            //}
+            //else
+            //    oblivionpath = "";
+            //logger.WriteToLog("Oblivion path: " + oblivionpath, Logger.LogLevel.High);
 
-            if ((path = FindSoftware(@"Valve\Steam", "InstallPath")) != null)
-            {
-                DirectoryInfo di = new DirectoryInfo(Path.Combine(path, @"steamapps\common\skyrim"));
+            //if ((path = FindSoftware(@"Valve\Steam", "InstallPath")) != null)
+            //{
+            //    DirectoryInfo di = new DirectoryInfo(Path.Combine(path, @"steamapps\common\skyrim"));
 
-                if (di.Exists)
-                {
-                    skyrimpath = di.FullName;
-                }
-                if (Directory.Exists(Path.Combine(path, @"steamapps\common\Skyrim Special Edition")))
-                {
-                    skyrimsepath = Path.Combine(path, @"steamapps\common\Skyrim Special Edition");
-                }
-                if (Directory.Exists(Path.Combine(path, @"steamapps\common\morrowind")))
-                {
-                    morrowindpath = Path.Combine(path, @"steamapps\common\morrowind");
-                }
-            }
-            logger.WriteToLog("Skyrim path: " + skyrimpath, Logger.LogLevel.High);
-            logger.WriteToLog("Morrowind path: " + morrowindpath, Logger.LogLevel.High);
+            //    if (di.Exists)
+            //    {
+            //        skyrimpath = di.FullName;
+            //    }
+            //    if (Directory.Exists(Path.Combine(path, @"steamapps\common\Skyrim Special Edition")))
+            //    {
+            //        skyrimsepath = Path.Combine(path, @"steamapps\common\Skyrim Special Edition");
+            //    }
+            //    if (Directory.Exists(Path.Combine(path, @"steamapps\common\morrowind")))
+            //    {
+            //        morrowindpath = Path.Combine(path, @"steamapps\common\morrowind");
+            //    }
+            //}
+            //logger.WriteToLog("Skyrim path: " + skyrimpath, Logger.LogLevel.High);
+            //logger.WriteToLog("Morrowind path: " + morrowindpath, Logger.LogLevel.High);
 
-            bool bSkyrimFound = !string.IsNullOrWhiteSpace(skyrimpath);
-            bool bSkyrimSEFound = !string.IsNullOrWhiteSpace(skyrimsepath);
-            bool bOblivionFound = !string.IsNullOrWhiteSpace(oblivionpath);
-            bool bMorrowindFound = !string.IsNullOrWhiteSpace(morrowindpath);
+            //bool bSkyrimFound = !string.IsNullOrWhiteSpace(skyrimpath);
+            //bool bSkyrimSEFound = !string.IsNullOrWhiteSpace(skyrimsepath);
+            //bool bOblivionFound = !string.IsNullOrWhiteSpace(oblivionpath);
+            //bool bMorrowindFound = !string.IsNullOrWhiteSpace(morrowindpath);
 
-            if ((bSkyrimFound || bSkyrimSEFound) && !bOblivionFound && !bMorrowindFound)
-            {
-                bSkyrimMode = bSkyrimFound;
-                bSkyrimSEMode = bSkyrimSEFound;
-                bMorrowind = false;
-            }
-            else if (!(bSkyrimFound || bSkyrimSEFound)  && bOblivionFound && !bMorrowindFound)
-            {
-                bSkyrimMode = bSkyrimFound;
-                bSkyrimSEMode = bSkyrimSEFound;
-                bMorrowind = false;
-            }
-            else if (!(bSkyrimFound || bSkyrimSEFound)  && !bOblivionFound && bMorrowindFound)
-            {
-                bSkyrimMode = bSkyrimFound;
-                bSkyrimSEMode = bSkyrimSEFound;
-                bMorrowind = true;
-            }
+            //if ((bSkyrimFound || bSkyrimSEFound) && !bOblivionFound && !bMorrowindFound)
+            //{
+            //    bSkyrimMode = bSkyrimFound;
+            //    bSkyrimSEMode = bSkyrimSEFound;
+            //    bMorrowind = false;
+            //}
+            //else if (!(bSkyrimFound || bSkyrimSEFound)  && bOblivionFound && !bMorrowindFound)
+            //{
+            //    bSkyrimMode = bSkyrimFound;
+            //    bSkyrimSEMode = bSkyrimSEFound;
+            //    bMorrowind = false;
+            //}
+            //else if (!(bSkyrimFound || bSkyrimSEFound)  && !bOblivionFound && bMorrowindFound)
+            //{
+            //    bSkyrimMode = bSkyrimFound;
+            //    bSkyrimSEMode = bSkyrimSEFound;
+            //    bMorrowind = true;
+            //}
 
-            // Mode is obvious if TMM is started directly from the game dir
-            if (Program.CurrentDir.ToLower() == skyrimpath.ToLower())
-            {
-                bSkyrimMode = true;
-                bSkyrimSEMode = false;
-                bMorrowind = false;
-            }
-            else if (Program.CurrentDir.ToLower() == skyrimsepath.ToLower())
-            {
-                bSkyrimMode = false;
-                bSkyrimSEMode = true;
-                bMorrowind = false;
-            }
-            else if (Program.CurrentDir.ToLower() == morrowindpath.ToLower())
-            {
-                bSkyrimMode = false;
-                bSkyrimSEMode = false;
-                bMorrowind = true;
-            }
-            else if (Program.CurrentDir.ToLower() == oblivionpath.ToLower())
-            {
-                bSkyrimMode = false;
-                bSkyrimSEMode = false;
-                bMorrowind = false;
-            }
+            //// Mode is obvious if TMM is started directly from the game dir
+            //if (Program.CurrentDir.ToLower() == skyrimpath.ToLower())
+            //{
+            //    bSkyrimMode = true;
+            //    bSkyrimSEMode = false;
+            //    bMorrowind = false;
+            //}
+            //else if (Program.CurrentDir.ToLower() == skyrimsepath.ToLower())
+            //{
+            //    bSkyrimMode = false;
+            //    bSkyrimSEMode = true;
+            //    bMorrowind = false;
+            //}
+            //else if (Program.CurrentDir.ToLower() == morrowindpath.ToLower())
+            //{
+            //    bSkyrimMode = false;
+            //    bSkyrimSEMode = false;
+            //    bMorrowind = true;
+            //}
+            //else if (Program.CurrentDir.ToLower() == oblivionpath.ToLower())
+            //{
+            //    bSkyrimMode = false;
+            //    bSkyrimSEMode = false;
+            //    bMorrowind = false;
+            //}
 
             string nxmlink = string.Empty;
 
@@ -1862,24 +1888,36 @@ namespace OblivionModManager {
                             logger.WriteToLog("Started in launch game Mode", Logger.LogLevel.High);
                             Launch = LaunchType.Game;
                             return true;
-                        case "skyrim":
-                            logger.WriteToLog("Skyrim Mode", Logger.LogLevel.High);
-                            bSkyrimMode = true;
-                            break;
-                        case "skyrimse":
-                            logger.WriteToLog("Skyrim Special Edition Mode", Logger.LogLevel.High);
-                            bSkyrimSEMode = true;
-                            break;
-                        case "morrowind":
-                            logger.WriteToLog("Morrowind Mode", Logger.LogLevel.High);
-                            bMorrowind = true;
-                            break;
-                        case "oblivion":
-                            logger.WriteToLog("Oblivion Mode", Logger.LogLevel.High);
-                            break;
+                        //case "skyrim":
+                        //    logger.WriteToLog("Skyrim Mode", Logger.LogLevel.High);
+                        //    bSkyrimMode = true;
+                        //    break;
+                        //case "skyrimse":
+                        //    logger.WriteToLog("Skyrim Special Edition Mode", Logger.LogLevel.High);
+                        //    bSkyrimSEMode = true;
+                        //    break;
+                        //case "morrowind":
+                        //    logger.WriteToLog("Morrowind Mode", Logger.LogLevel.High);
+                        //    bMorrowind = true;
+                        //    break;
+                        //case "oblivion":
+                        //    logger.WriteToLog("Oblivion Mode", Logger.LogLevel.High);
+                        //    break;
                         case "-d":
                             logger.setLogLevel("high");
                             break;
+                        default:
+                            // what game is this for?
+                            foreach (Game game in games)
+                            {
+                                if (arg.ToLower() == game.NickName)
+                                {
+                                    currentGame = game;
+                                    logger.WriteToLog(currentGame.Name + " Mode", Logger.LogLevel.High);
+                                    break;
+                                }
+                            }
+                            break;                    
                     }
 
                     if (arg.ToLower().StartsWith("nxm:"))
@@ -1892,220 +1930,72 @@ namespace OblivionModManager {
 
             if (nxmlink.Length > 0)
             {
-                if (bSkyrimSEMode)
+                if (!nxmlink.Contains(currentGame.NexusName+"/"))
                 {
-                    if (!nxmlink.Contains("skyrimse"))
+                    // Not this running session. Start another TMM with the proper parameter
+
+                    // what game is this for?
+                    foreach (Game game in games)
                     {
-                        if (nxmlink.Contains("oblivion"))
+                        if (nxmlink.Contains(game.NexusName+"/"))
                         {
-                            // start TesModManager for Oblivion
                             System.Diagnostics.Process tmm = new System.Diagnostics.Process();
                             tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
-                            tmm.StartInfo.Arguments = "Oblivion " + nxmlink;
-                            tmm.Start();
-                            return false; // not for us
-                        }
-                        else if (nxmlink.Contains("morrowind"))
-                        {
-                            // start TesModManager for Morrowind
-                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                            tmm.StartInfo.Arguments = "Morrowind " + nxmlink;
-                            tmm.Start();
-                            return false; // not for us
-                        }
-                        else if (nxmlink.Contains("skyrim"))
-                        {
-                            // start TesModManager for Morrowind
-                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                            tmm.StartInfo.Arguments = "Skyrim " + nxmlink;
+                            tmm.StartInfo.Arguments = game.NickName + " " + nxmlink;
                             tmm.Start();
                             return false; // not for us
                         }
                     }
-                }
-                else if (bSkyrimMode)
-                {
-                    if (!nxmlink.Contains("skyrim/"))
-                    {
-                        if (nxmlink.Contains("oblivion"))
-                        {
-                            // start TesModManager for Oblivion
-                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                            tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
-                            tmm.StartInfo.Arguments = "Oblivion " + nxmlink;
-                            tmm.Start();
-                            return false; // not for us
-                        }
-                        else if (nxmlink.Contains("morrowind"))
-                        {
-                            // start TesModManager for Morrowind
-                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                            tmm.StartInfo.Arguments = "Morrowind " + nxmlink;
-                            tmm.Start();
-                            return false; // not for us
-                        }
-                        else if (nxmlink.Contains("skyrimse"))
-                        {
-                            // start TesModManager for Morrowind
-                            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                            tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                            tmm.StartInfo.Arguments = "SkyrimSE " + nxmlink;
-                            tmm.Start();
-                            return false; // not for us
-                        }
-                    }
-                }
-                else if (bMorrowind)
-                {
-                    if (nxmlink.Contains("oblivion"))
-                    {
-                        // start TesModManager for Oblivion
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "Oblivion " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
-                    }
-                    else if (nxmlink.Contains("skyrimse"))
-                    {
-                        // start TesModManager for Morrowind
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "SkyrimSE " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
-                    }
-                    else if (nxmlink.Contains("skyrim"))
-                    {
-                        // start TesModManager for Skyrim
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // skyrimpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "Skyrim " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
-                    }
-                }
-                else // default mode. Just start in whatever is requested
-                {
-
-                    if (Path.GetDirectoryName(Application.ExecutablePath).ToLower() != oblivionpath.ToLower())
-                    {
-                        if (nxmlink.Contains("morrowind"))
-                        {
-                            bMorrowind = true;
-                        }
-                        else if (nxmlink.Contains("skyrimse"))
-                        {
-                            bSkyrimSEMode = true;
-                        }
-                        else if (nxmlink.Contains("skyrim"))
-                        {
-                            bSkyrimMode = true;
-                        }
-                    }
-                    else if (nxmlink.Contains("morrowind"))
-                    {
-                        // start TesModManager for Morrowind
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "Morrowind " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
-                    }
-                    else if (nxmlink.Contains("skyrimse"))
-                    {
-                        // start TesModManager for Morrowind
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // morrowindpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "SkyrimSE " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
-                    }
-                    else if (nxmlink.Contains("skyrim"))
-                    {
-                        // start TesModManager for Skyrim
-                        System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-                        tmm.StartInfo.FileName = Application.ExecutablePath; // skyrimpath + "\\tesmodmanager.exe";
-                        tmm.StartInfo.Arguments = "Skyrim " + nxmlink;
-                        tmm.Start();
-                        return false; // not for us
-                    }
+                    // should not arrive here!
+                    MessageBox.Show("TMM was not able to determine what game this link is for ("+nxmlink+")","Unsupported link", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return false;
                 }
             }
 
-            string gameEXEName = "";
+            // find where the game is
+            currentGame.GamePath = FindSoftware(@"Bethesda Softworks\" + currentGame.Name, "Installed Path");
 
+            INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\" + currentGame.Name);
+            ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), currentGame.Name);
 
-            if (bSkyrimSEMode)
+            if (currentGame.Name=="Morrowind")
             {
-                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim special edition\\");
-                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim special edition\\");
-
-                gameEXEName = "Skyrimse.exe";
+                currentGame.GamePath = Path.Combine(FindSoftware(@"Valve\Steam", "InstallPath"), @"steamapps\common\morrowind");
+                INIDir = Program.currentGame.GamePath;
+                ESPDir = Program.currentGame.GamePath;
             }
-            else if (bSkyrimMode)
-            {
-                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\skyrim\\");
-                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "skyrim\\");
-                gameEXEName = "tesv.exe";
-            }
-            else if (bMorrowind)
-            {
-                INIDir = Program.gamePath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "");
-                ESPDir = Program.gamePath;// Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "");
-                gameEXEName = "morrowind.exe";
-            }
-            else
-            {
-                INIDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\oblivion\\");
-                ESPDir = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "oblivion\\");
-                gameEXEName = "oblivion.exe";
-            }
-
-
-            gameName = (Program.bSkyrimSEMode ? "skyrimSE" : (Program.bSkyrimMode ? "skyrim" : (Program.bMorrowind ? "morrowind" : "oblivion")));
-
-
-            //if (args.Length>0 && args[0] == "-d")
-            //    logger.setLogLevel("high");
-
-
-            gamePath = (Program.bSkyrimMode ? skyrimpath : (Program.bSkyrimSEMode ? skyrimsepath : (Program.bMorrowind ? morrowindpath : oblivionpath)));
 
             // check valid path
-            if (!File.Exists(Path.Combine(Program.gamePath, gameEXEName)))
+            if (!File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
             {
-                MessageBox.Show(gameEXEName + " was not found! \r\n Make sure you have Skyrim, SkyrimSE, Oblivion or Morrowind properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could nto find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Program.currentGame.ExeName + " was not found! \r\n Make sure your game is properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could not find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
-            if (string.IsNullOrWhiteSpace(gamePath) || !File.Exists(Path.Combine(Program.gamePath, gameEXEName)))
+            if (string.IsNullOrWhiteSpace(currentGame.GamePath) || !File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
             {
                 try
                 {
                     Microsoft.Win32.RegistryKey lm = null;
                     lm = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\TesModManager", false);
-                    if (lm!=null) gamePath = lm.GetValue(gameName).ToString();
+                    if (lm!=null) currentGame.GamePath = lm.GetValue(currentGame.Name).ToString();
                 }
                 catch (Exception ex)
                 {
                     logger.WriteToLog("Could not get folder from registry: " + ex.Message, Logger.LogLevel.Low);
                 }
             }
-            while (string.IsNullOrWhiteSpace(gamePath) || !File.Exists(Path.Combine(Program.gamePath, gameEXEName)))
+            while (string.IsNullOrWhiteSpace(currentGame.GamePath) || !File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
             {
                 FolderBrowserDialog dlg = new FolderBrowserDialog();
-                if (string.IsNullOrWhiteSpace(gamePath))
-                    dlg.Description = "Path to " + gameName + " was not found. Please browse to game location";
+                if (string.IsNullOrWhiteSpace(currentGame.GamePath))
+                    dlg.Description = "Path to " + currentGame.Name + " was not found. Please browse to game location";
                 else
-                    dlg.Description = Path.Combine(Program.gamePath, gameEXEName) + " was not found. Please browse to game location";
+                    dlg.Description = Path.Combine(Program.currentGame.GamePath, currentGame.ExeName) + " was not found. Please browse to game location";
 
                 if (DialogResult.OK == dlg.ShowDialog())
                 {
-                    gamePath = dlg.SelectedPath;
+                    currentGame.GamePath = dlg.SelectedPath;
                     try
                     {
                         Microsoft.Win32.RegistryKey lm = null;
@@ -2114,7 +2004,7 @@ namespace OblivionModManager {
                         {
                             lm = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\TesModManager");
                         }
-                        lm.SetValue(gameName, gamePath);
+                        lm.SetValue(currentGame.Name, currentGame.GamePath);
                     }
                     catch (Exception ex)
                     {
@@ -2125,14 +2015,9 @@ namespace OblivionModManager {
                     Application.Exit();
             }
 
-            //if (Program.bSkyrimSEMode)
-            //    Program.bSkyrimMode = true;
+            logger.WriteToLog("Game path: " + Program.currentGame.GamePath, Logger.LogLevel.Low);
 
-            gameID = (Program.bSkyrimSEMode ? 1704 : (Program.bSkyrimMode ? 110 : Program.bMorrowind ? 100 : 101));
-
-            DataFolderName = Program.bMorrowind ? "Data Files" : "Data";
-            DataFolderPath = Path.Combine(gamePath, DataFolderName);
-            BaseDir = Path.Combine(gamePath, "obmm");
+            BaseDir = Path.Combine(currentGame.GamePath, "obmm");
             CorruptDir = Path.Combine(BaseDir, "Corrupt");
             BackupDir = Path.Combine(BaseDir, "Backup");
             DataFile = Path.Combine(BaseDir, "Data");
@@ -2148,24 +2033,24 @@ namespace OblivionModManager {
             crashFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "tmm_crashdump.txt");
 
             // switch log file
-            logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), gameName + "_tmm.log");
+            logFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), currentGame.Name + "_tmm.log");
             logger = new OblivionModManager.Logger(logFilePath);
-            Settings.conflictsBackupDir = Program.DataFolderPath;
+            Settings.conflictsBackupDir = Program.currentGame.DataFolderPath;
 
-            if (!Directory.Exists(Program.DataFolderPath))
+            if (!Directory.Exists(Program.currentGame.DataFolderPath))
             {
-                MessageBox.Show(Program.DataFolderPath + " was not found! \r\n Make sure you have Skyrim, SkyrimSE, Oblivion or Morrowind properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could not find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(Program.currentGame.DataFolderPath + " was not found! \r\n Make sure you have Skyrim, SkyrimSE, Oblivion or Morrowind properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could not find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Application.Exit();
             }
 
             BOSSpath = FindSoftware(@"BOSS", "Installed Path");
-            logger.WriteToLog("BOSS path: " + BOSSpath, Logger.LogLevel.High);
+            if (!string.IsNullOrWhiteSpace(BOSSpath)) logger.WriteToLog("BOSS path: " + BOSSpath, Logger.LogLevel.Low);
 
             LOOTpath = FindSoftware(@"LOOT", "Installed Path");
-            logger.WriteToLog("Loot path: " + LOOTpath, Logger.LogLevel.High);
+            if (!string.IsNullOrWhiteSpace(LOOTpath)) logger.WriteToLog("Loot path: " + LOOTpath, Logger.LogLevel.Low);
 
-            logger.WriteToLog("Ini path: " + INIDir, Logger.LogLevel.High);
-            logger.WriteToLog("ESP path: " + ESPDir, Logger.LogLevel.High);
+            logger.WriteToLog("Ini path: " + INIDir, Logger.LogLevel.Low);
+            logger.WriteToLog("ESP path: " + ESPDir, Logger.LogLevel.Low);
 
             Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
 			Application.EnableVisualStyles();
@@ -2173,7 +2058,7 @@ namespace OblivionModManager {
 			Application.ThreadException+=new System.Threading.ThreadExceptionEventHandler(Application_ThreadException);
 			//Check for mutex
 			bool creatednew;
-			mutex=new Mutex(false, Program.gameName+"MM_mutex", out creatednew);
+			mutex=new Mutex(false, Program.currentGame.Name + "MM_mutex", out creatednew);
 			if(!creatednew) {
 				if(args.Length>0) {
                     File.WriteAllLines(Program.PipeFilename, args);
@@ -2206,7 +2091,7 @@ namespace OblivionModManager {
 			//Load settings
 			Settings.LoadSettings();
             logger.WriteToLog("*************************************************************", Logger.LogLevel.Low);
-            logger.WriteToLog("TesModManager version "+ Program.version+ " started in " + Program.gameName + " mode",Logger.LogLevel.Low);
+            logger.WriteToLog("TesModManager version "+ Program.version+ " started in " + Program.currentGame.Name + " mode",Logger.LogLevel.Low);
 			////Run arguments
 			//if(args.Length>0)
    //         {
@@ -2356,7 +2241,7 @@ namespace OblivionModManager {
         }
         public static void loadLoadOrderTxtFile()
         {
-            if (bSkyrimMode || bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
             {
                 if (File.Exists(OblivionESP.loadorder))
                 {
@@ -2377,7 +2262,7 @@ namespace OblivionModManager {
                     }
                 }
             }
-            else if (bMorrowind)
+            else if (Program.currentGame.Name=="Morrowind")
             {
                 string valuename = "GameFile";
                 int curini = 0;
@@ -2425,8 +2310,8 @@ namespace OblivionModManager {
 			//Clear out any tempory files obmm may have created
 			ClearTempFiles();
 			//Check shader packages are not read only
-			if(Directory.Exists(Path.Combine(DataFolderPath,"shaders"))) {
-                foreach (FileInfo fi in new DirectoryInfo(Path.Combine(DataFolderPath, "shaders")).GetFiles("*.sdp"))
+			if(Directory.Exists(Path.Combine(currentGame.DataFolderPath,"shaders"))) {
+                foreach (FileInfo fi in new DirectoryInfo(Path.Combine(currentGame.DataFolderPath, "shaders")).GetFiles("*.sdp"))
                 {
 					if((fi.Attributes&FileAttributes.ReadOnly)>0) fi.Attributes^=FileAttributes.ReadOnly;
 				}
@@ -2476,7 +2361,7 @@ namespace OblivionModManager {
 			}
 			
 			try {
-                string testLimitedPath = Path.Combine(Program.gamePath, "obmm\\limited");
+                string testLimitedPath = Path.Combine(Program.currentGame.GamePath, "obmm\\limited");
                 string vistaLimitedPath = Path.Combine(VistaVirtualStore, "obmm\\limited");
 
                 if (File.Exists(testLimitedPath)) File.Delete(testLimitedPath);
@@ -2504,7 +2389,7 @@ namespace OblivionModManager {
 					                   "Do you wish to move them back?\n"+
 					                   "If you don't know what the virtual store is, please read entry 16 in the FAQ.",
 					                   "Warning", System.Windows.Forms.MessageBoxButtons.YesNo)==System.Windows.Forms.DialogResult.Yes) {
-						RecersiveDirectoryMove(VistaVirtualStore, CurrentDir, true);
+						RecursiveDirectoryMove(VistaVirtualStore, CurrentDir, true);
 						Directory.Delete(VistaVirtualStore, true);
 					}
 				} else {
@@ -2710,7 +2595,7 @@ namespace OblivionModManager {
 			if(Settings.UpdateEsps) { foreach(EspInfo ei in Data.Esps) { if(ei.Parent==null) { ei.GetHeader(); } } }
 			//Search for any esps the have appeared since the last time this was run
 			List<string> Plugins=new List<string>();
-			foreach(string s in Directory.GetFiles(DataFolderPath+"")) {
+			foreach(string s in Directory.GetFiles(currentGame.DataFolderPath +"")) {
 				if(Path.GetExtension(s)!=".esp"&&Path.GetExtension(s)!=".esm") continue;
 				if(!Data.DoesEspExist(Path.GetFileName(s))) {
 					Plugins.Add(Path.GetFileName(s));
@@ -2740,7 +2625,7 @@ namespace OblivionModManager {
 			if(!IsLimited) {
 				//Remove any plugins which have been deleted since the last time obmm was run
 				for(int i=0;i<Data.Esps.Count;i++) {
-					if(!File.Exists(Path.Combine(DataFolderPath,Data.Esps[i].FileName))) {
+					if(!File.Exists(Path.Combine(currentGame.DataFolderPath,Data.Esps[i].FileName))) {
 						Data.Esps.RemoveAt(i--);
 					}
 				}
@@ -2851,42 +2736,20 @@ namespace OblivionModManager {
 					{
 
                         ProcessStartInfo pinfo = new ProcessStartInfo();
-                        pinfo.WorkingDirectory = Program.gamePath;
+                        pinfo.WorkingDirectory = Program.currentGame.GamePath;
 
                         if (!string.IsNullOrWhiteSpace(Settings.OblivionCommandLine))
 						{
                             pinfo.FileName = Path.Combine(System.Environment.SystemDirectory, "cmd.exe");
                             pinfo.Arguments = "/c " + Settings.OblivionCommandLine;
 						}
-//						else if (File.Exists(@"..\..\..\Steam.exe"))
-//						{
-//                            if (Program.bSkyrimMode)
-//                                System.Diagnostics.Process.Start("steam://rungameid/72850");
-//                            else
-//                                System.Diagnostics.Process.Start("steam://rungameid/22330");
-//                        }
-						else if(File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")))
+						else if(File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)))
 						{
-                            pinfo.FileName = Path.Combine(Program.gamePath, "obse_loader.exe");
+                            pinfo.FileName = Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe);
 						}
-                        else if (File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")))
-                        {
-                            pinfo.FileName = Path.Combine(Program.gamePath, "skse_loader.exe");
-                        }
-                        else if (File.Exists(Path.Combine(Program.gamePath, "mwse.exe")))
-                        {
-                            pinfo.FileName = Path.Combine(Program.gamePath, "mwse.exe");
-                        }
                         else
 						{
-                            if (Program.bSkyrimSEMode)
-                                pinfo.FileName = Path.Combine(Program.gamePath, "skyrimSE.exe");
-                            else if (Program.bSkyrimMode)
-                                pinfo.FileName = Path.Combine(Program.gamePath, "tesv.exe");
-                            else if (Program.bMorrowind)
-                                pinfo.FileName = Path.Combine(Program.gamePath, "morrowind.exe");
-                            else
-							    pinfo.FileName = Path.Combine(Program.gamePath, "oblivion.exe");
+                            pinfo.FileName = Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName);
 						}
                         if (!string.IsNullOrWhiteSpace(pinfo.FileName))
                         {
@@ -3221,7 +3084,7 @@ namespace OblivionModManager {
 			}
 		}
 
-		public static void RecersiveDirectoryMove(string from, string to, bool overwrite) {
+		public static void RecursiveDirectoryMove(string from, string to, bool overwrite) {
 			from=Path.GetFullPath(from);
 			to=Path.GetFullPath(to);
 			foreach(string s in Directory.GetFiles(from, "*", SearchOption.AllDirectories)) {
@@ -3351,7 +3214,7 @@ namespace OblivionModManager {
                 if (fileid != null && fileid.Length > 0)
                 {
                     TextReader tr;
-                    tr = DownloadFile("http://www.nexusmods.com/"+Program.gameName+"/ajax/modactionlog/?id=" + fileid, bSilent);
+                    tr = DownloadFile("http://www.nexusmods.com/"+Program.currentGame.NexusName + "/ajax/modactionlog/?id=" + fileid, bSilent);
                     bool bVersion = false;
                     string lastline = "";
                     string line = "";
@@ -3447,7 +3310,7 @@ namespace OblivionModManager {
                     pos2 = line.IndexOf("</strong>");
                     modVersion = line.Substring(pos + "<strong>".Length, pos2 - pos - "<strong>".Length);
                 }
-                else if (line.Contains(".nexusmods.com/"+Program.gameName+"/mods/images/") && modImage == null)
+                else if (line.Contains(".nexusmods.com/"+Program.currentGame.NexusName + "/mods/images/") && modImage == null)
                 {
                     line = line.Replace("<a href=\"", "").Replace("\" onclick=\"return hs.expand(this)\">", "");
                     modImage = line;
@@ -3488,8 +3351,8 @@ namespace OblivionModManager {
             }
             if (modName != null && modName.Contains("Adult-only") || modVersion == null || modVersion == "")
             {
-                modAuthor = Program.gameName+"Nexus";
-                tr = DownloadFile("http://www.nexusmods.com/" + Program.gameName+"/ajax/modactionlog/?id=" + fileid, bSilent);
+                modAuthor = Program.currentGame.NexusName + "Nexus";
+                tr = DownloadFile("http://www.nexusmods.com/" + Program.currentGame.NexusName + "/ajax/modactionlog/?id=" + fileid, bSilent);
                 bool bVersion = false;
                 string lastline = "";
                 while (tr!=null && (line = tr.ReadLine()) != null)
@@ -3499,7 +3362,7 @@ namespace OblivionModManager {
                     if (line.EndsWith("</title>") && line.Contains("Action log for"))
                     {
                         string actionlog = "<title>Action log for";
-                        string onnexus = (!Program.bSkyrimMode ? "on TESNexus</title>" : "on SkyrimNexus</title>");
+                        string onnexus = ""; // (!Program.bSkyrimMode ? "on TESNexus</title>" : "on SkyrimNexus</title>");
                         modName = line.Replace("\t", "").Replace(actionlog, "").Replace(onnexus, "").Trim();
                     }
                     else if (!bVersion && line.EndsWith("</li>"))
@@ -3598,7 +3461,7 @@ namespace OblivionModManager {
             string line;
             List<object> modImages = new List<object>();
 
-            string imagespage = "http://www.nexusmods.com/"+Program.gameName + "/ajax/modimages/?user=0&id=" + modid;
+            string imagespage = "http://www.nexusmods.com/"+Program.currentGame.NexusName + "/ajax/modimages/?user=0&id=" + modid;
             System.Net.WebClient wc = new System.Net.WebClient();
             byte[] bytepage = wc.DownloadData(imagespage);
             MemoryStream ms = new MemoryStream(bytepage);
@@ -3653,7 +3516,7 @@ namespace OblivionModManager {
 
                 // check for relative URL
                 if (omodImage[0] == '/')
-                    omodImage = "http://www.nexusmods.com/" + Program.gameName  + omodImage;
+                    omodImage = "http://www.nexusmods.com/" + Program.currentGame.NexusName + omodImage;
                 string path = Program.CreateTempDirectory();
                 //System.Net.WebClient wc = new System.Net.WebClient();
                 bytepage = wc.DownloadData(omodImage);
@@ -3730,7 +3593,7 @@ namespace OblivionModManager {
                         modAuthor = strAuthor;
                         modVersion = (strVersion.Length > 0 ? strVersion : strModVersion);
                         modDescription = strModDescription; // (strDescription.Length > 0 ? strDescription : strModDescription); // Mod file description may not be very descriptive
-                        modWebsite = "http://www.nexusmods.com/" + Program.gameName + "/mods/" + modid;
+                        modWebsite = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + modid;
                     }
 
                     if (modName == null || modName.Length == 0)
@@ -3738,8 +3601,8 @@ namespace OblivionModManager {
 
                         List<MemoryStream> mses = DownloadForm.DownloadFiles
                         ((new string[] {
-						 	"http://www.nexusmods.com/"+Program.gameName+"/mods/" + modid,
-						 	"http://www.nexusmods.com/"+Program.gameName+"/ajax/moddescription/?id=" + modid
+						 	"http://www.nexusmods.com/"+Program.currentGame.NexusName+"/mods/" + modid,
+						 	"http://www.nexusmods.com/"+Program.currentGame.NexusName+"/ajax/moddescription/?id=" + modid
 						 }), bSilent);
 
                         if (mses.Count==0 || (mses.Count==1 && mses[0]==null) || (mses.Count==2 && mses[0]==null && mses[1]==null))
@@ -3766,7 +3629,7 @@ namespace OblivionModManager {
                             modVersion = Program.GetTESVersion(modid, bSilent);
                         }
 
-                        modWebsite = "http://www.nexusmods.com/"+Program.gameName+"/mods/" + modid;
+                        modWebsite = "http://www.nexusmods.com/"+Program.currentGame.NexusName + "/mods/" + modid;
                     }
 
                     // was image requested?

@@ -64,9 +64,9 @@ namespace ConflictDetector {
 
         public static void SetGMST(string file, string edid, string value)
         {
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
                 SkyrimSetGMST(file,edid,value);
-            else if (Program.bMorrowind)
+            else if (Program.currentGame.Name=="Morrowind")
             {
             }
             else
@@ -332,12 +332,9 @@ namespace ConflictDetector {
         }
         public static void SetGLOB(string file, string edid, string value)
         {
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
                 SkyrimSetGLOB(file,edid,value);
-            else if (Program.bMorrowind)
-            {
-            }
-            else
+            else if (Program.currentGame.Name == "Oblivion")
                 OblivionSetGLOB(file,edid,value);
         }
         public static void SkyrimSetGLOB(string file, string edid, string value) {
@@ -558,9 +555,9 @@ namespace ConflictDetector {
             }
         }
         public static HeaderInfo GetHeader(string FilePath) {
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
                 return SkyrimGetHeader(FilePath);
-            else if (Program.bMorrowind)
+            else if (Program.currentGame.Name == "Morrowind")
             {
                 return MorrowindGetHeader(FilePath);
             }
@@ -672,7 +669,7 @@ namespace ConflictDetector {
         }
         public static EDID[] GetIDList(string FilePath, plugin p)
         {
-            return (Program.bSkyrimMode || Program.bSkyrimSEMode ? SkyrimGetIDList(FilePath, p) : Program.bMorrowind? null: OblivionGetIDList(FilePath, p));
+            return (Program.currentGame.NickName.Contains("skyrim") ? SkyrimGetIDList(FilePath, p) : Program.currentGame.Name == "Oblivion" ? OblivionGetIDList(FilePath, p):null);
         }
         public static EDID[] OblivionGetIDList(string FilePath, plugin p) {
             List<EDID> ids=new List<EDID>();
@@ -885,7 +882,7 @@ namespace ConflictDetector {
                         line=line.Replace("\r","").Trim().ToLower();
                         if(line.StartsWith("streammusic")) {
                             string[] file=line.Split('"');
-                            if(file.Length>1&&file[1].ToLower().StartsWith(Program.DataFolderPath+"\\")) ids.Add(file[1].ToLower().Substring(5));
+                            if(file.Length>1&&file[1].ToLower().StartsWith(Program.currentGame.DataFolderPath+"\\")) ids.Add(file[1].ToLower().Substring(5));
                             //TODO: get glowmaps/normal maps
                         } else if(line.StartsWith("playbink")) {
                             string[] file=line.Split('"');
@@ -1029,7 +1026,7 @@ namespace ConflictDetector {
                             if (line.StartsWith("streammusic"))
                             {
                                 string[] file = line.Split('"');
-                                if (file.Length > 1 && file[1].ToLower().StartsWith(Program.DataFolderPath+"\\")) ids.Add(file[1].ToLower().Substring(5));
+                                if (file.Length > 1 && file[1].ToLower().StartsWith(Program.currentGame.DataFolderPath+"\\")) ids.Add(file[1].ToLower().Substring(5));
                                 //TODO: get glowmaps/normal maps
                             }
                             else if (line.StartsWith("playbink"))
@@ -1078,7 +1075,7 @@ namespace ConflictDetector {
         }
         public static string[] GetDataFileList(string FilePath)
         {
-            return (Program.bSkyrimMode || Program.bSkyrimSEMode ? SkyrimGetDataFileList(FilePath) : Program.bMorrowind?null:OblivionGetDataFileList(FilePath));
+            return (Program.currentGame.NickName.Contains("skyrim") ? SkyrimGetDataFileList(FilePath) : Program.currentGame.Name == "Oblivion" ? OblivionGetDataFileList(FilePath):null);
         }
 
         public static string[] OblivionGetDataFileList(string FilePath)

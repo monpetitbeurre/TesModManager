@@ -198,7 +198,7 @@ namespace OblivionModManager.Forms {
                 if(directory.EndsWith("\\")) directory=directory.Remove(directory.Length-1);
                 string s=directory.ToLower();
                 string relative;
-                if(s.StartsWith(Program.DataFolderPath+"\\")) relative=s.Substring((Program.DataFolderPath+"\\").Length)+"\\";
+                if(s.StartsWith(Program.currentGame.DataFolderPath+"\\")) relative=s.Substring((Program.currentGame.DataFolderPath+"\\").Length)+"\\";
                 else if(prefix!=null) relative=prefix;
                 else relative="";
                 foreach(string file in Directory.GetFiles(s, "*", SearchOption.AllDirectories)) {
@@ -243,8 +243,8 @@ namespace OblivionModManager.Forms {
             if(openFileDialog1.FileNames.Length>1) lvFiles.Sorting=SortOrder.None;
             foreach(string s in openFileDialog1.FileNames) {
                 string path=s.ToLower();
-                if(path.StartsWith(Program.DataFolderPath+"\\")) {
-                    path=path.Substring((Program.DataFolderPath+"\\").Length);
+                if(path.StartsWith(Program.currentGame.DataFolderPath+"\\")) {
+                    path=path.Substring((Program.currentGame.DataFolderPath+"\\").Length);
                 } else {
                     path=Path.GetFileName(path);
                 }
@@ -266,8 +266,8 @@ namespace OblivionModManager.Forms {
             foreach(string file in openFileDialog1.FileNames) {
                 string[] files=ConflictDetector.TesFile.GetDataFileList(file);
                 foreach(string s in files) {
-                    if(!File.Exists(Path.Combine(Program.DataFolderPath,s))) continue;
-                    ListViewItem lvi=new ListViewItem(new string[] { s.ToLower(), Path.GetFullPath(Path.Combine(Program.DataFolderPath,s)) });
+                    if(!File.Exists(Path.Combine(Program.currentGame.DataFolderPath,s))) continue;
+                    ListViewItem lvi=new ListViewItem(new string[] { s.ToLower(), Path.GetFullPath(Path.Combine(Program.currentGame.DataFolderPath,s)) });
                     lvFiles.Items.Add(lvi);
                 }
             }
@@ -306,7 +306,7 @@ namespace OblivionModManager.Forms {
             Settings.BSACreatorFolderBrowserDir=folderBrowserDialog1.SelectedPath;
             string s=folderBrowserDialog1.SelectedPath.ToLower();
             string relative;
-            if(s.StartsWith(Program.DataFolderPath+"\\")) relative=s.Substring((Program.DataFolderPath+"\\").Length)+"\\";
+            if(s.StartsWith(Program.currentGame.DataFolderPath+"\\")) relative=s.Substring((Program.currentGame.DataFolderPath+"\\").Length)+"\\";
             else relative="";
             lvFiles.Sorting=SortOrder.None;
             foreach(string file in Directory.GetFiles(s, "*", SearchOption.AllDirectories)) {
@@ -402,9 +402,9 @@ namespace OblivionModManager.Forms {
             bw.Write((byte)'S');
             bw.Write((byte)'A');
             bw.Write((byte)0);
-            if (Program.bSkyrimMode || Program.bSkyrimSEMode)
+            if (Program.currentGame.NickName.Contains("skyrim"))
                 bw.Write((uint)104);
-            else if (Program.bMorrowind)
+            else if (Program.currentGame.Name == "Morrowind")
             {
             }
             else

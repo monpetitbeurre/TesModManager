@@ -298,7 +298,7 @@ namespace OblivionModManager.Scripting {
         {
 			CheckPathSafty(path);
 			permissions.Assert();
-			return File.Exists(Path.Combine(Program.DataFolderPath,path));
+			return File.Exists(Path.Combine(Program.currentGame.DataFolderPath,path));
 		}
         public bool PerformBasicInstall() { return _PerformBasicInstall(); }
         public static bool _PerformBasicInstall()
@@ -323,56 +323,58 @@ namespace OblivionModManager.Scripting {
         public static Version _GetSKSEVersion()
         {
             permissions.Assert();
-            if (!File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) && !File.Exists(Path.Combine(Program.gamePath, "skse_steam_loader.dll"))) return null;
+            if (!File.Exists(Path.Combine(Program.currentGame.GamePath, "skse_loader.exe")) && !File.Exists(Path.Combine(Program.currentGame.GamePath, "skse_steam_loader.dll"))) return null;
             else return
                     new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(
-                    File.Exists(Path.Combine(Program.gamePath, "skse_loader.exe")) ? Path.Combine(Program.gamePath, "skse_loader.exe") : Path.Combine(Program.gamePath, "skse_steam_loader.dll")).FileVersion.Replace(", ", "."));
+                    File.Exists(Path.Combine(Program.currentGame.GamePath, "skse_loader.exe")) ? Path.Combine(Program.currentGame.GamePath, "skse_loader.exe") : Path.Combine(Program.currentGame.GamePath, "skse_steam_loader.dll")).FileVersion.Replace(", ", "."));
         }
         public Version GetMWSEVersion() { return _GetMWSEVersion(); }
         public static Version _GetMWSEVersion()
         {
             permissions.Assert();
-            if (!File.Exists(Path.Combine(Program.gamePath, "mwse.dll"))) return null;
+            if (!File.Exists(Path.Combine(Program.currentGame.GamePath, "mwse.dll"))) return null;
             else return
-                    new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "mwse.dll")).FileVersion.Replace(", ", "."));
+                    new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, "mwse.dll")).FileVersion.Replace(", ", "."));
         }
         public Version GetOBSEVersion() { return _GetOBSEVersion(); }
         public static Version _GetOBSEVersion()
         {
 			permissions.Assert();
-			if(!File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) && !File.Exists(Path.Combine(Program.gamePath, "obse_steam_loader.dll"))) return null;
+			if(!File.Exists(Path.Combine(Program.currentGame.GamePath, "obse_loader.exe")) && !File.Exists(Path.Combine(Program.currentGame.GamePath, "obse_steam_loader.dll"))) return null;
 			else return 
 					new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(
-					File.Exists(Path.Combine(Program.gamePath, "obse_loader.exe")) ? Path.Combine(Program.gamePath, "obse_loader.exe") : Path.Combine(Program.gamePath, "obse_steam_loader.dll")).FileVersion.Replace(", ", "."));
+					File.Exists(Path.Combine(Program.currentGame.GamePath, "obse_loader.exe")) ? Path.Combine(Program.currentGame.GamePath, "obse_loader.exe") : Path.Combine(Program.currentGame.GamePath, "obse_steam_loader.dll")).FileVersion.Replace(", ", "."));
 		}
         public Version GetScriptExtenderVersion() { return _GetScriptExtenderVersion(); }
         public static Version _GetScriptExtenderVersion()
         {
 			permissions.Assert();
-            if (Program.bSkyrimMode)
-                return _GetSKSEVersion();
-            else if (Program.bMorrowind)
-                return _GetMWSEVersion();
+            if (!File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) &&
+                !File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL)))
+                return null;
             else
-                return _GetOBSEVersion();
-		}
+            {
+                string extender = File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) ? Program.currentGame.ScriptExtenderExe : Program.currentGame.ScriptExtenderDLL;
+                return new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, extender)).FileVersion.Replace(", ", "."));
+            }
+        }
         public Version GetOBGEVersion() { return _GetOBGEVersion(); }
         public static Version _GetOBGEVersion()
         {
 			permissions.Assert();
-            if (!File.Exists(Path.Combine(Program.DataFolderPath, "\\obse\\plugins\\obge.dll"))) return null;
-            else return new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.DataFolderPath, "\\obse\\plugins\\obge.dll")).FileVersion.Replace(", ", "."));
+            if (!File.Exists(Path.Combine(Program.currentGame.DataFolderPath, "\\obse\\plugins\\obge.dll"))) return null;
+            else return new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.DataFolderPath, "\\obse\\plugins\\obge.dll")).FileVersion.Replace(", ", "."));
 		}
         public Version GetOblivionVersion() { return _GetOblivionVersion(); }
         public static Version _GetOblivionVersion()
         {
 			permissions.Assert();
-			return new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.gamePath, "oblivion.exe")).FileVersion.Replace(", ", "."));
+			return new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, "oblivion.exe")).FileVersion.Replace(", ", "."));
 		}
         public Version GetOBSEPluginVersion(string plugin) { return _GetOBSEPluginVersion(plugin); }
         public static Version _GetOBSEPluginVersion(string plugin)
         {
-            plugin = Path.ChangeExtension(Path.Combine(Path.Combine(Program.DataFolderPath, "\\obse\\plugins"), plugin), ".dll");
+            plugin = Path.ChangeExtension(Path.Combine(Path.Combine(Program.currentGame.DataFolderPath, "\\obse\\plugins"), plugin), ".dll");
 			CheckPathSafty(plugin);
 			permissions.Assert();
 			if(!File.Exists(plugin)) return null;
@@ -381,7 +383,7 @@ namespace OblivionModManager.Scripting {
         public Version GetScriptExtenderPluginVersion(string plugin) { return _GetScriptExtenderPluginVersion(plugin); }
         public static Version _GetScriptExtenderPluginVersion(string plugin)
         {
-			plugin=Path.ChangeExtension(Path.Combine((Program.bSkyrimMode?Path.Combine(Program.DataFolderPath,"\\skse\\plugins"):Path.Combine(Program.DataFolderPath,"\\obse\\plugins")), plugin), ".dll");
+			plugin=Path.ChangeExtension(Path.Combine(Path.Combine(Program.currentGame.DataFolderPath, Program.currentGame.ScriptExtenderName + "\\plugins"), plugin), ".dll");
 			CheckPathSafty(plugin);
 			permissions.Assert();
 			if(!File.Exists(plugin)) return null;
@@ -390,7 +392,7 @@ namespace OblivionModManager.Scripting {
         public Version GetSKSEPluginVersion(string plugin) { return _GetSKSEPluginVersion(plugin); }
         public static Version _GetSKSEPluginVersion(string plugin)
         {
-            plugin = Path.ChangeExtension(Path.Combine(Path.Combine(Program.DataFolderPath, "\\skse\\plugins"), plugin), ".dll");
+            plugin = Path.ChangeExtension(Path.Combine(Path.Combine(Program.currentGame.DataFolderPath, "\\skse\\plugins"), plugin), ".dll");
             CheckPathSafty(plugin);
             permissions.Assert();
             if (!File.Exists(plugin)) return null;
@@ -552,7 +554,7 @@ namespace OblivionModManager.Scripting {
 			permissions.Assert();
 			for(int i=0;i<plugins.Length;i++) {
 				CheckPathSafty(plugins[i]);
-				plugins[i]=Path.Combine(Program.DataFolderPath, plugins[i]);
+				plugins[i]=Path.Combine(Program.currentGame.DataFolderPath, plugins[i]);
 				if(!File.Exists(plugins[i])) throw new ScriptingException("Plugin '"+plugins[i]+"' does not exist");
 			}
 			for(int i=1;i<=plugins.Length;i++) {
@@ -859,7 +861,7 @@ namespace OblivionModManager.Scripting {
 			string lto=to.ToLower();
 			if(!lto.EndsWith(".esp")&&!lto.EndsWith(".esm")) throw new ScriptingException("Copied plugins must have a .esp or .esm file extension");
 			if(to.Contains("\\")||to.Contains("/")) throw new ScriptingException("Cannot copy a plugin to a subdirectory of the data folder");
-			to=Path.Combine(Program.DataFolderPath,to);
+			to=Path.Combine(Program.currentGame.DataFolderPath,to);
 
 			permissions.Assert();
 
@@ -887,7 +889,7 @@ namespace OblivionModManager.Scripting {
 			CheckPathSafty(to);
 			string lto=to.ToLower();
 			if(lto.EndsWith(".esp")||lto.EndsWith(".esm")) throw new ScriptingException("Copied data files must not have a .esp or .esm file extension");
-			to=Path.Combine(Program.DataFolderPath,to);
+			to=Path.Combine(Program.currentGame.DataFolderPath,to);
 
 			permissions.Assert();
 
@@ -1086,8 +1088,8 @@ namespace OblivionModManager.Scripting {
         {
 			CheckPathSafty(file);
 			permissions.Assert();
-            if (File.Exists(Path.Combine(Program.DataFolderPath,file)))
-			    return File.ReadAllBytes(Path.Combine(Program.DataFolderPath,file));
+            if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,file)))
+			    return File.ReadAllBytes(Path.Combine(Program.currentGame.DataFolderPath,file));
             else
                 return null;
 		}

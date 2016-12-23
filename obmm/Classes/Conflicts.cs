@@ -63,7 +63,7 @@ namespace OblivionModManager {
             if(!Settings.TrackConflicts) return;
             //Check that no esps already exist
             foreach(string s in o.AllPlugins) {
-                if (File.Exists(System.IO.Path.Combine(Program.DataFolderPath, s)))
+                if (File.Exists(System.IO.Path.Combine(Program.currentGame.DataFolderPath, s)))
                 {
                     o.Conflict=ConflictLevel.Unusable;
                     return;
@@ -89,7 +89,7 @@ namespace OblivionModManager {
                 if (df.LowerFileName.StartsWith("fomod\\")) continue; // ignore some fomod specific files
                 DataFileInfo dfi = Program.Data.GetDataFile(df);
                 if(dfi==null) {
-                    if(!File.Exists(System.IO.Path.Combine(Program.DataFolderPath,df.FileName))) continue;
+                    if(!File.Exists(System.IO.Path.Combine(Program.currentGame.DataFolderPath,df.FileName))) continue;
                     o.Conflict = ConflictLevel.MajorConflict;
                     return;
                 } else if(df.CRC==dfi.CRC) {
@@ -110,7 +110,7 @@ namespace OblivionModManager {
             //Check that no esps already exist
             foreach(string s in o.AllPlugins) {
                 EspInfo ei=Program.Data.GetEsp(s);
-                if(ei!=null||File.Exists(System.IO.Path.Combine(Program.DataFolderPath,s))) {
+                if(ei!=null||File.Exists(System.IO.Path.Combine(Program.currentGame.DataFolderPath,s))) {
                     Conflict=ConflictLevel.Unusable;
                     ModReport+="Plugin file "+s+" already exists."+Environment.NewLine;
                     if(ei!=null) {
@@ -142,7 +142,7 @@ namespace OblivionModManager {
             //Check that no data files already exist
             foreach(DataFileInfo df in o.AllDataFiles) {
                 DataFileInfo dfi=Program.Data.GetDataFile(df);
-                string basepath = o.bSystemMod ? Path.Combine(Program.DataFolderPath, "..") : Program.DataFolderPath;
+                string basepath = o.bSystemMod ? Path.Combine(Program.currentGame.DataFolderPath, "..") : Program.currentGame.DataFolderPath;
                 if (dfi==null) {
                     if (!File.Exists(System.IO.Path.Combine(basepath, df.FileName))) continue;
                     if((int)ConflictLevel.MajorConflict>(int)Conflict) Conflict=ConflictLevel.MajorConflict;

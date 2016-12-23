@@ -29,7 +29,7 @@ namespace OblivionModManager.Classes {
 
     public static class OblivionSDP {
         private static readonly string EditedShaderFile = System.IO.Path.Combine(Program.BaseDir, @"EditedShaders");
-        private static string Path=Program.DataFolderPath+"\\shaders\\shaderpackage";
+        private static string Path=System.IO.Path.Combine(Program.currentGame.DataFolderPath,"shaders\\shaderpackage");
         private const string Ext=".sdp";
 
         [Serializable]

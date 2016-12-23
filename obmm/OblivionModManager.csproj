@@ -158,6 +158,7 @@
     <Compile Include="7zip\ICoder.cs" />
     <Compile Include="AdvList.cs" />
     <Compile Include="altpanel.cs" />
+    <Compile Include="Classes\Game.cs" />
     <Compile Include="MonoFScalls.cs" />
     <Compile Include="Classes\BSAUncorrupter.cs" />
     <Compile Include="Classes\com7zrWrapper.cs" />
