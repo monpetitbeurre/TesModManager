@@ -90,6 +90,14 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+version 1.6.4
+-------------
+* Addressed case where game would be mis-identified and you would get the "game not fuond" message
+
+version 1.6.3
+-------------
+* Addressed case where not specifying game would create a crash
+
 version 1.6.2
 -------------
 * Changed the way games are detected

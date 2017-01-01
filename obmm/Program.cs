@@ -39,7 +39,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.2"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.4"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -142,7 +142,7 @@ namespace OblivionModManager {
                 ScriptExtenderName ="MWSE", ScriptExtenderExe="", ScriptExtenderDLL="mwse.dll", GraphicsExtenderPath=@"..\mge3\MGEfuncs.dll" }
         };
 
-        public static Game currentGame = null;
+        public static Game currentGame = new Game();
 
         class serializerThread
         {
@@ -1774,38 +1774,6 @@ namespace OblivionModManager {
 		}
 
 		private static bool PreInit(string[] args) {
-            //string oblivionpath = "";
-            //string skyrimpath = "";
-            //string skyrimsepath = "";
-            //string morrowindpath = "";
-            //string path = "";
-
-            //if ((oblivionpath = FindSoftware(@"Bethesda Softworks\Oblivion", "Installed Path")) != null)
-            //{
-            //    if (oblivionpath.EndsWith(@"\"))
-            //        oblivionpath = oblivionpath.Substring(0, oblivionpath.Length - 1);
-            //}
-            //else
-            //    oblivionpath = "";
-            //logger.WriteToLog("Oblivion path: " + oblivionpath, Logger.LogLevel.High);
-
-            //if ((path = FindSoftware(@"Valve\Steam", "InstallPath")) != null)
-            //{
-            //    DirectoryInfo di = new DirectoryInfo(Path.Combine(path, @"steamapps\common\skyrim"));
-
-            //    if (di.Exists)
-            //    {
-            //        skyrimpath = di.FullName;
-            //    }
-            //    if (Directory.Exists(Path.Combine(path, @"steamapps\common\Skyrim Special Edition")))
-            //    {
-            //        skyrimsepath = Path.Combine(path, @"steamapps\common\Skyrim Special Edition");
-            //    }
-            //    if (Directory.Exists(Path.Combine(path, @"steamapps\common\morrowind")))
-            //    {
-            //        morrowindpath = Path.Combine(path, @"steamapps\common\morrowind");
-            //    }
-            //}
             //logger.WriteToLog("Skyrim path: " + skyrimpath, Logger.LogLevel.High);
             //logger.WriteToLog("Morrowind path: " + morrowindpath, Logger.LogLevel.High);
 
@@ -1927,6 +1895,68 @@ namespace OblivionModManager {
                 }
             }
 
+            if (string.IsNullOrWhiteSpace(currentGame.Name))
+            {
+                // no game specified??? Pick first one found
+                string oblivionpath = "";
+                string skyrimpath = "";
+                string skyrimsepath = "";
+                string morrowindpath = "";
+                string path = "";
+                string gamename = "";
+
+                if ((oblivionpath = FindSoftware(@"Bethesda Softworks\Oblivion", "Installed Path")) != null)
+                {
+                    if (oblivionpath.EndsWith(@"\"))
+                        oblivionpath = oblivionpath.Substring(0, oblivionpath.Length - 1);
+                }
+                else
+                    oblivionpath = "";
+
+                if ((path = FindSoftware(@"Valve\Steam", "InstallPath")) != null)
+                {
+                    DirectoryInfo di = new DirectoryInfo(Path.Combine(path, @"steamapps\common\skyrim"));
+
+                    if (di.Exists)
+                    {
+                        skyrimpath = di.FullName;
+                    }
+                    if (Directory.Exists(Path.Combine(path, @"steamapps\common\Skyrim Special Edition")))
+                    {
+                        skyrimsepath = Path.Combine(path, @"steamapps\common\Skyrim Special Edition");
+                    }
+                    if (Directory.Exists(Path.Combine(path, @"steamapps\common\morrowind")))
+                    {
+                        morrowindpath = Path.Combine(path, @"steamapps\common\morrowind");
+                    }
+                }
+                if (!string.IsNullOrWhiteSpace(skyrimsepath))
+                {
+                    gamename = "skyrimse";
+                }
+                else if (!string.IsNullOrWhiteSpace(skyrimpath))
+                {
+                    gamename = "skyrim";
+                }
+                else if (!string.IsNullOrWhiteSpace(oblivionpath))
+                {
+                    gamename = "oblivion";
+                }
+                else if (!string.IsNullOrWhiteSpace(morrowindpath))
+                {
+                    gamename = "morrowind";
+                }
+
+                foreach (Game game in games)
+                {
+                    if (gamename == game.NickName)
+                    {
+                        currentGame = game;
+                        logger.WriteToLog(currentGame.Name + " Mode", Logger.LogLevel.High);
+                        break;
+                    }
+                }
+            }
 
             if (nxmlink.Length > 0)
             {
@@ -1965,13 +1995,6 @@ namespace OblivionModManager {
                 ESPDir = Program.currentGame.GamePath;
             }
 
-            // check valid path
-            if (!File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
-            {
-                MessageBox.Show(Program.currentGame.ExeName + " was not found! \r\n Make sure your game is properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could not find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Application.Exit();
-            }
-
             if (string.IsNullOrWhiteSpace(currentGame.GamePath) || !File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
             {
                 try
@@ -1985,6 +2008,14 @@ namespace OblivionModManager {
                     logger.WriteToLog("Could not get folder from registry: " + ex.Message, Logger.LogLevel.Low);
                 }
             }
+
+            //// check valid path
+            //if (!File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
+            //{
+            //    MessageBox.Show(Program.currentGame.ExeName + " was not found! \r\n Make sure your game is properly installed \r\n Make sure that you use the shortcut adding the proper parameter (skyrimeSE, skyrim, oblivion or morrowind) to start the application.", "Could not find gamedir", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //    Application.Exit();
+            //}
+
             while (string.IsNullOrWhiteSpace(currentGame.GamePath) || !File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName)))
             {
                 FolderBrowserDialog dlg = new FolderBrowserDialog();
@@ -1995,6 +2026,17 @@ namespace OblivionModManager {
 
                 if (DialogResult.OK == dlg.ShowDialog())
                 {
+                    // identify the game
+                    foreach (Game game in games)
+                    {
+                        if (File.Exists(Path.Combine(dlg.SelectedPath, game.ExeName)))
+                        {
+                            currentGame = game;
+                            logger.WriteToLog(currentGame.Name + " Mode", Logger.LogLevel.High);
+                            break;
+                        }
+                    }
+
                     currentGame.GamePath = dlg.SelectedPath;
                     try
                     {
