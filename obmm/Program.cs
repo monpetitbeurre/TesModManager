@@ -39,7 +39,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.4"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.5"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -132,13 +132,13 @@ namespace OblivionModManager {
                 NexusID =101, TMMNexusID=41346, NexusName="oblivion", ExeName="Oblivion.exe", CreationKitExe="TESConstructionSet.exe",
                 ScriptExtenderName ="OBSE", ScriptExtenderExe="obse_loader.exe", ScriptExtenderDLL="obse_loader.dll", GraphicsExtenderPath=@"obse\plugins\obge.dll" },
             new Game { Name="Skyrim", NickName="skyrim", DataFolderName = "Data", SaveFolder="", IniBaseName="skyrim",
-                NexusID =1101, TMMNexusID=5010, NexusName="skyrim", ExeName="TesV.exe", CreationKitExe="CreationKit.exe",
+                NexusID =110, TMMNexusID=5010, NexusName="skyrim", ExeName="TesV.exe", CreationKitExe="CreationKit.exe",
                 ScriptExtenderName ="SKSE", ScriptExtenderExe="skse_loader.exe", ScriptExtenderDLL="", GraphicsExtenderPath=@"skse\plugins\skge.dll" },
             new Game { Name="Skyrim Special Edition", NickName="skyrimse", DataFolderName = "Data", SaveFolder="", IniBaseName="skyrim",
-                NexusID =17041, TMMNexusID=6491, NexusName="skyrim special edition", CreationKitExe="CreationKit.exe", ExeName="SkyrimSE.exe",
+                NexusID =1704, TMMNexusID=6491, NexusName="skyrim special edition", CreationKitExe="CreationKit.exe", ExeName="SkyrimSE.exe",
                 ScriptExtenderExe ="", ScriptExtenderDLL=""},
             new Game { Name="Morrowind", NickName="morrowind", DataFolderName = "Data Files", SaveFolder="", IniBaseName="morrowind",
-                NexusID =1001, TMMNexusID=44664, NexusName="morrowind", ExeName="Morrowind.exe", CreationKitExe="TES Construction Set.exe",
+                NexusID =100, TMMNexusID=44664, NexusName="morrowind", ExeName="Morrowind.exe", CreationKitExe="TES Construction Set.exe",
                 ScriptExtenderName ="MWSE", ScriptExtenderExe="", ScriptExtenderDLL="mwse.dll", GraphicsExtenderPath=@"..\mge3\MGEfuncs.dll" }
         };
 
@@ -377,7 +377,7 @@ namespace OblivionModManager {
             if (p_booIsGatekeeper) // "GatekeeperNexusREST" : (Program.bSkyrimMode ? "SKYRIMNexusREST" : "OBNexusREST")
                 remoteAddress = "http://nmm.nexusmods.com/"; //"http://gatekeeper.nexusmods.com/";
             else
-                remoteAddress = "http://nmm.nexusmods.com/"+Program.currentGame.NexusName + "/";// "http://oblivion.nexusmods.com/";
+                remoteAddress = "http://nmm.nexusmods.com/"+Program.currentGame.NexusName.Replace(" ", "") + "/";// "http://oblivion.nexusmods.com/";
 
             System.ServiceModel.WebHttpBinding binding = new WebHttpBinding();
             binding.MaxReceivedMessageSize = 2147483647;
@@ -978,7 +978,6 @@ namespace OblivionModManager {
         //    }
         //    return;
         //}
-
 
         public static string getFile(FileDownload download, Dictionary<string, string> cookies, string UserAgent, string dir, System.ComponentModel.BackgroundWorker downloadBackGroundWorker, int threadnumber) //ProgressForm pf)
         {
@@ -1960,14 +1959,14 @@ namespace OblivionModManager {
 
             if (nxmlink.Length > 0)
             {
-                if (!nxmlink.Contains(currentGame.NexusName+"/"))
+                if (!nxmlink.Contains(currentGame.NickName+"/"))
                 {
                     // Not this running session. Start another TMM with the proper parameter
 
                     // what game is this for?
                     foreach (Game game in games)
                     {
-                        if (nxmlink.Contains(game.NexusName+"/"))
+                        if (nxmlink.Contains(game.NickName + "/"))
                         {
                             System.Diagnostics.Process tmm = new System.Diagnostics.Process();
                             tmm.StartInfo.FileName = Application.ExecutablePath; // oblivionpath + "\\tesmodmanager.exe";
