@@ -90,6 +90,14 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+version 1.6.7
+-------------
+* Fixed a case where mods would not be activated in Skyrim SE
+
+version 1.6.6
+-------------
+* Fixed a crash when saving a mod
+
 version 1.6.5
 -------------
 * Fixed Oblivion and Morrowind "download with Mod Manager" issues. Skyrim (+SE) still have issues with nexusmods.com

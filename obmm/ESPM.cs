@@ -102,38 +102,45 @@ namespace OblivionModManager
 			
 			foreach(FileInfo espm in allESPM)
 			{
-				if (!activeESPM.Contains(espm.Name) && espm.Name.ToLower()!="skyrim.esm" && espm.Name.ToLower()!="update.esm" && Settings.bGhostInactiveMods)
-				{
-					string espmname = Path.Combine(Program.currentGame.DataFolderPath,espm.Name + ".ghost");
-					if (File.Exists(espmname))
-					{
-						int num = 0;
-						while(File.Exists(espmname + "-" + num.ToString()))
-							num++;
-						
-						espmname += "-" + num.ToString();
-					}
-                    string oldname = espm.Name;
-					espm.MoveTo(espmname);
+                if (!activeESPM.Contains(espm.Name) && Settings.bGhostInactiveMods)
+                {
+                    if (espm.Name.ToLower() != "skyrim.esm" &&
+                        espm.Name.ToLower() != "update.esm" &&
+                        espm.Name.ToLower() != "dawnguard.esm" &&
+                        espm.Name.ToLower() != "hearthfire.esm" &&
+                        espm.Name.ToLower() != "dragonborn.esm")
+                    {
+                        string espmname = Path.Combine(Program.currentGame.DataFolderPath, espm.Name + ".ghost");
+                        if (File.Exists(espmname))
+                        {
+                            int num = 0;
+                            while (File.Exists(espmname + "-" + num.ToString()))
+                                num++;
 
-                    FileInfo[] bsas = dataDir.GetFiles(Path.GetFileNameWithoutExtension(oldname) + "*.bsa");
-					
-					foreach(FileInfo bsa in bsas)
-					{
-						string destfn = Path.Combine(Program.currentGame.DataFolderPath,bsa.Name + ".ghost");
-						
-						if (File.Exists(destfn))
-						{
-							int num = 0;
-							while(File.Exists(destfn + "-" + num.ToString()))
-								num++;
-							
-							destfn += "-" + num.ToString();
-						}
-						
-						bsa.MoveTo(destfn);
-					}
-				}
+                            espmname += "-" + num.ToString();
+                        }
+                        string oldname = espm.Name;
+                        espm.MoveTo(espmname);
+
+                        FileInfo[] bsas = dataDir.GetFiles(Path.GetFileNameWithoutExtension(oldname) + "*.bsa");
+
+                        foreach (FileInfo bsa in bsas)
+                        {
+                            string destfn = Path.Combine(Program.currentGame.DataFolderPath, bsa.Name + ".ghost");
+
+                            if (File.Exists(destfn))
+                            {
+                                int num = 0;
+                                while (File.Exists(destfn + "-" + num.ToString()))
+                                    num++;
+
+                                destfn += "-" + num.ToString();
+                            }
+
+                            bsa.MoveTo(destfn);
+                        }
+                    }
+                }
 			}
 		}
 	}

@@ -321,7 +321,8 @@ namespace OblivionModManager {
                     lvFiles.Items.RemoveAt(i--);
 				else if(!Program.IsSafeFileName(lvFiles.Items[i].Text))
                     lvFiles.Items.RemoveAt(i--);
-				lvFiles.Items[i].Text=lvFiles.Items[i].Text.Replace('/', '\\');
+                else
+				    lvFiles.Items[i].Text=lvFiles.Items[i].Text.Replace('/', '\\');
 			}
 			//Update the file lists
 			string[] Files=new string[lvFiles.Items.Count];

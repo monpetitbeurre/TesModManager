@@ -184,7 +184,10 @@ namespace OblivionModManager {
 
 
             foreach(EspInfo ei in Program.Data.Esps) {
-                if(ei.Active || ei.LowerFileName=="skyrim.esm") {
+                if(ei.Active || ei.LowerFileName=="skyrim.esm")
+                {
+                    if (Program.currentGame.NickName == "skyrimse")
+                        sw.Write("*");
                     sw.WriteLine(ei.FileName);
                 }
             }
@@ -253,7 +256,11 @@ namespace OblivionModManager {
             List<string> ActiveEsps=new List<string>(File.ReadAllLines(espfile, System.Text.Encoding.Default));
             for(int i=0;i<ActiveEsps.Count;i++) {
                 try {
-                    if(ActiveEsps[i].Length==0||ActiveEsps[i][0]=='#'||!File.Exists(Path.Combine(Program.currentGame.DataFolderPath,ActiveEsps[i]))) ActiveEsps.RemoveAt(i--);
+                    if (ActiveEsps[i].Length==0||
+                        ActiveEsps[i][0]=='#'||
+                        (Program.currentGame.NickName == "skyrimse" && ActiveEsps[i][0] != '*') ||
+                        !File.Exists(Path.Combine(Program.currentGame.DataFolderPath,ActiveEsps[i])))
+                            ActiveEsps.RemoveAt(i--);
                 } catch { ActiveEsps.RemoveAt(i--); }
             }
             ActiveEsps.Sort(new PluginSorter());

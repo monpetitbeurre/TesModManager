@@ -852,11 +852,19 @@ namespace OblivionModManager {
 			int omodnum = 0;
 			for(int i=0;i<lvEspList.Items.Count;i++)
 			{
-                if ((Program.currentGame.NickName.Contains("skyrim")) && lvEspList.Items[i].SubItems[0].Text == "Skyrim.esm")
+                string espname = lvEspList.Items[i].SubItems[0].Text.ToLower();
+
+                // check default plugins
+                if (Program.currentGame.NickName.Contains("skyrim") &&
+                    (espname == "skyrim.esm" ||
+                    espname == "update.esm" ||
+                    espname == "hearthfire.esm" ||
+                    espname == "dragonborn.esm" ||
+                    espname == "dawnguard.esm"))
                     lvEspList.Items[i].Checked = true;
-                else if (Program.currentGame.Name=="Morrowind" && lvEspList.Items[i].SubItems[0].Text == "Morrowind.esm")
+                else if (Program.currentGame.Name=="Morrowind" && espname == "morrowind.esm")
                     lvEspList.Items[i].Checked = true;
-                else if (lvEspList.Items[i].SubItems[0].Text == "Oblivion.esm")
+                else if (espname == "oblivion.esm")
                     lvEspList.Items[i].Checked = true;
 
 				if (lvEspList.Items[i].Checked)
