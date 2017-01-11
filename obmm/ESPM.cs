@@ -86,8 +86,11 @@ namespace OblivionModManager
 				string line;
 				while((line = sr.ReadLine()) != null)
 				{
-					if (line.Length > 0 && line[0] != '#')
-						activeESPM.Add(line);
+                    if (line.Length > 0 && line[0] != '#')
+                    {
+                        if (line.StartsWith("*")) line = line.Substring(1);
+                        activeESPM.Add(line);
+                    }
 				}
 				
 				sr.Close();
@@ -107,7 +110,7 @@ namespace OblivionModManager
                     if (espm.Name.ToLower() != "skyrim.esm" &&
                         espm.Name.ToLower() != "update.esm" &&
                         espm.Name.ToLower() != "dawnguard.esm" &&
-                        espm.Name.ToLower() != "hearthfire.esm" &&
+                        espm.Name.ToLower() != "hearthfires.esm" &&
                         espm.Name.ToLower() != "dragonborn.esm")
                     {
                         string espmname = Path.Combine(Program.currentGame.DataFolderPath, espm.Name + ".ghost");

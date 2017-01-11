@@ -3,11 +3,11 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyTitle("TesModManager")]
-[assembly: AssemblyDescription("Manages mods")]
+[assembly: AssemblyDescription("Manages mods for The Elder Scrolls games from Bethesda")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Monpetitbeurre")]
 [assembly: AssemblyProduct("TesModManager")]
-[assembly: AssemblyCopyright("Copyright © 2006 TimeSlip, Copyright © 2010 Scentree, Copyright © 2012 Monpetitbeurre")]
+[assembly: AssemblyCopyright("Copyright © 2012 Monpetitbeurre, Copyright © 2010 Scentree, Copyright © 2006 TimeSlip")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

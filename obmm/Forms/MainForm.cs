@@ -406,7 +406,7 @@ namespace OblivionModManager {
                 }
             }
 
-            return missingDependencies;
+            return missingDependencies.TrimEnd(); ;
         }
 
 		private void UpdateEspList() {
@@ -813,7 +813,7 @@ namespace OblivionModManager {
                 string missingDependencies = GetMissingDependencies(ei);
                 if (missingDependencies.Length > 0)
                 {
-                    MessageBox.Show("This plugin is missing the following plugins(s): "+missingDependencies, "Error");
+                    MessageBox.Show("This plugin requires activation of the following plugins(s): "+missingDependencies, "Error");
                     e.NewValue = e.CurrentValue;
                     return;
                 }
@@ -855,14 +855,22 @@ namespace OblivionModManager {
                 string espname = lvEspList.Items[i].SubItems[0].Text.ToLower();
 
                 // check default plugins
-                if (Program.currentGame.NickName.Contains("skyrim") &&
+                if (Program.currentGame.NickName == "skyrimse" &&
                     (espname == "skyrim.esm" ||
                     espname == "update.esm" ||
-                    espname == "hearthfire.esm" ||
+                    espname == "hearthfires.esm" ||
                     espname == "dragonborn.esm" ||
                     espname == "dawnguard.esm"))
+                {
                     lvEspList.Items[i].Checked = true;
-                else if (Program.currentGame.Name=="Morrowind" && espname == "morrowind.esm")
+                    ((EspInfo)lvEspList.Items[i].Tag).Active = true;
+                }
+                else if (Program.currentGame.NickName=="skyrim" && espname == "skyrim.esm")
+                {
+                    lvEspList.Items[i].Checked = true;
+                    ((EspInfo)lvEspList.Items[i].Tag).Active = true;
+                }
+                else if (Program.currentGame.Name == "Morrowind" && espname == "morrowind.esm")
                     lvEspList.Items[i].Checked = true;
                 else if (espname == "oblivion.esm")
                     lvEspList.Items[i].Checked = true;

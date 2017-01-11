@@ -145,7 +145,10 @@ namespace OblivionModManager {
             foreach (string s in ActiveEsps)
             {
                 if (s == "" || s.StartsWith("#")) continue;
-                if ((found = Array.IndexOf(FileNames, s.ToLower())) != -1) result[found] = true;
+                string espfile = s.ToLower();
+                if (Program.currentGame.NickName == "skyrimse" && s.StartsWith("*"))
+                    espfile = espfile.Substring(1); 
+                if ((found = Array.IndexOf(FileNames, espfile)) != -1) result[found] = true;
             }
             
             return result;

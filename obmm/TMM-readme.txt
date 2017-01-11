@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+version 1.6.8
+-------------
+* Fixed another case where mods would not be activated in Skyrim SE
+
 version 1.6.7
 -------------
 * Fixed a case where mods would not be activated in Skyrim SE
