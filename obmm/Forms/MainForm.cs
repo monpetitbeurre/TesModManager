@@ -357,6 +357,7 @@ namespace OblivionModManager {
                         page = page.Substring(0, extensionindex);
                         page = page.Replace(".silverlock.org/download/", "");
                         page = page.Replace(Program.currentGame.ScriptExtenderName+"_", "");
+                        page = page.Replace(Program.currentGame.ScriptExtenderName.ToLower() + "_", "");
                         char[] separator = { '_' };
                         string[] version = page.Split(separator);
 

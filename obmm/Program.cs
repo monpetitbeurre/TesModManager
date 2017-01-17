@@ -39,7 +39,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.8"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.9"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -2070,7 +2070,7 @@ namespace OblivionModManager {
             DataFile7 = DataFile + "7";
             SettingsFile = Path.Combine(BaseDir, "Settings2");
             BSAEditFile = Path.Combine(BaseDir, "BSAEdits");
-            HelpPath = Path.Combine(Application.ExecutablePath, "obmm.chm");
+            HelpPath = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "obmm.chm");
             crashFilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "tmm_crashdump.txt");
 
             // switch log file
@@ -2934,9 +2934,10 @@ namespace OblivionModManager {
 //				                "files", "Error");
 //				return null;
 //			}
-			if(Path.GetDirectoryName(s).ToLower()== Path.GetDirectoryName(Settings.omodDir).ToLower()) {
-				return null;
-			}
+			//if(Path.GetDirectoryName(s).ToLower()== Path.GetDirectoryName(Settings.omodDir).ToLower()) {
+   //             logger.WriteToLog("The mod '" + Path.GetFileName(s) + "' appears to be in the mods directory.", Logger.LogLevel.High);
+   //             return null;
+			//}
 			if(Data.DoesModExist(Path.GetFileName(s))) {
                 logger.WriteToLog("The mod '" + Path.GetFileName(s) + "' appears to already be installed.", Logger.LogLevel.High);
                 MessageBox.Show("The mod '" + Path.GetFileName(s) + "' appears to already be installed.",
