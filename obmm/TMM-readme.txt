@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+version 1.6.10
+--------------
+* Fixed an incompatibility with BSA archive bits
+
 version 1.6.9
 -------------
 * Fixed a case where mod load would be skipped

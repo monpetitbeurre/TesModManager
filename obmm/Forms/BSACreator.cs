@@ -397,27 +397,39 @@ namespace OblivionModManager.Forms {
             return (uint)i;
         }
 
-        private void GenerateBSA(BinaryWriter bw, bool IsRedirection) {
+        private void GenerateBSA(BinaryWriter bw, bool IsRedirection)
+        {
             bw.Write((byte)'B');
             bw.Write((byte)'S');
             bw.Write((byte)'A');
             bw.Write((byte)0);
+            uint BSAVersion = 103; // oblivionse
             if (Program.currentGame.NickName.Contains("skyrim"))
-                bw.Write((uint)104);
+                BSAVersion = 105;
+            else if (Program.currentGame.NickName.Contains("skyrim"))
+                BSAVersion = 104;
             else if (Program.currentGame.Name == "Morrowind")
             {
             }
             else
-                bw.Write((uint)103);
-            bw.Write((uint)36);
+                BSAVersion = 103; // oblivion
+            bw.Write(BSAVersion);
+            bw.Write((uint)36); // offset to data
             uint flags;
             bool Compressed;
+            uint uArchiveHasNamesForDirectories = 0x1;
+            uint uArchiveHasNamesForFiles = 0x2;
+            uint uFilesAreByDefaultCompressed = 0x3;
             if(cmbCompression.SelectedIndex==4||cmbCompression.SelectedIndex==5) {
-                flags=7+1792;
+                flags = uArchiveHasNamesForDirectories + uArchiveHasNamesForFiles + uFilesAreByDefaultCompressed; // 7 + 1792;
                 Compressed=true;
             } else {
-                flags=3+1792;
+                flags = uArchiveHasNamesForDirectories + uArchiveHasNamesForFiles; // 3 + 1792;
                 Compressed=false;
+            }
+            if (Program.currentGame.NickName.Contains("oblivion"))
+            {
+                flags += 1792;
             }
             bw.Write((uint)flags);
             bw.Write((uint)folders.Count);
