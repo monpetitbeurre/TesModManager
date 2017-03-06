@@ -89,9 +89,10 @@ namespace OblivionModManager.Classes {
 
         private static bool ReplaceShader(string file, string shader, byte[] newdata, uint CRC, out byte[] OldData) {
             DateTime timeStamp=File.GetLastWriteTime(file);
-            File.Delete(Program.TempDir+"tempshader");
-            File.Move(file, Program.TempDir+"tempshader");
-            BinaryReader br=new BinaryReader(File.OpenRead(Program.TempDir+"tempshader"), System.Text.Encoding.Default);
+            string tempShaderFileName = System.IO.Path.Combine(Program.TempDir, "tempshader");
+            File.Delete(tempShaderFileName);
+            File.Move(file, tempShaderFileName);
+            BinaryReader br=new BinaryReader(File.OpenRead(tempShaderFileName), System.Text.Encoding.Default);
             BinaryWriter bw=new BinaryWriter(File.Create(file), System.Text.Encoding.Default);
             bw.Write(br.ReadInt32());
             int num=br.ReadInt32();
@@ -122,7 +123,7 @@ namespace OblivionModManager.Classes {
             bw.Write(bw.BaseStream.Length-12);
             br.Close();
             bw.Close();
-            File.Delete(Program.TempDir+"tempshader");
+            File.Delete(tempShaderFileName);
             File.SetLastWriteTime(file, timeStamp);
             return found;
         }

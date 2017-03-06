@@ -90,9 +90,10 @@ namespace ConflictDetector {
                 default:
                     throw new OblivionModManager.obmmException("Unknown gmst type");
             }
-            File.Delete(OblivionModManager.Program.TempDir + "tempesp");
-            File.Move(file, OblivionModManager.Program.TempDir + "tempesp");
-            BinaryReader br = new BinaryReader(File.OpenRead(OblivionModManager.Program.TempDir + "tempesp"), System.Text.Encoding.GetEncoding("ISO-8859-1"));
+            string tempESPFileName = System.IO.Path.Combine(OblivionModManager.Program.TempDir, "tempesp");
+            File.Delete(tempESPFileName);
+            File.Move(file, tempESPFileName);
+            BinaryReader br = new BinaryReader(File.OpenRead(tempESPFileName), System.Text.Encoding.GetEncoding("ISO-8859-1"));
             BinaryWriter bw = null;
             try
             {
@@ -105,7 +106,7 @@ namespace ConflictDetector {
                 if (s != "TES4")
                 {
                     br.Close();
-                    File.Move(OblivionModManager.Program.TempDir + "tempesp", file);
+                    File.Move(tempESPFileName, file);
                     throw new OblivionModManager.obmmException("file was not a valid tes4 plugin");
                 }
                 bw = new BinaryWriter(File.Create(file));
@@ -227,9 +228,10 @@ namespace ConflictDetector {
             default:
                 throw new OblivionModManager.obmmException("Unknown gmst type");
             }
-            File.Delete(OblivionModManager.Program.TempDir+"tempesp");
-            File.Move(file, OblivionModManager.Program.TempDir+"tempesp");
-            BinaryReader br = new BinaryReader(File.OpenRead(OblivionModManager.Program.TempDir + "tempesp"), System.Text.Encoding.GetEncoding("ISO-8859-1"));
+            string tempESPFileName = Path.Combine(OblivionModManager.Program.TempDir, "tempesp");
+            File.Delete(tempESPFileName);
+            File.Move(file, tempESPFileName);
+            BinaryReader br = new BinaryReader(File.OpenRead(tempESPFileName), System.Text.Encoding.GetEncoding("ISO-8859-1"));
             BinaryWriter bw=null;
             try {
                 string s;
@@ -240,7 +242,7 @@ namespace ConflictDetector {
                 s=OblivionModManager.Program.ReadBString(br,4);
                 if(s!="TES4") {
                     br.Close();
-                    File.Move(OblivionModManager.Program.TempDir+"tempesp",file);
+                    File.Move(tempESPFileName, file);
                     throw new OblivionModManager.obmmException("file was not a valid tes4 plugin");
                 }
                 bw=new BinaryWriter(File.Create(file));

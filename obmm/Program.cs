@@ -39,7 +39,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.10"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.12"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -173,8 +173,11 @@ namespace OblivionModManager {
 
         public static string TempDir {
 			get {
-				if(Settings.tempDir.Length==0)
-                    Settings.tempDir=Path.GetTempPath()+ currentGame.Name + @"MM\";
+                if (Settings.tempDir.Length == 0)
+                {
+                    Settings.tempDir = Path.Combine(Path.GetTempPath(), currentGame.Name + @"MM\");
+                }
+
                 return Settings.tempDir;
 			}
 		}
@@ -1260,6 +1263,8 @@ namespace OblivionModManager {
                         fswatch.EnableRaisingEvents = true;
                         bEnableFileSystemWatcher = true;
 
+                        string currentDirectory = Directory.GetCurrentDirectory();
+
                         //zextract.FileExtractionFinished += new EventHandler<SevenZip.FileInfoEventArgs>(sevenZipExtract_FileExtractionFinished);
                         zextract.Extracting += zextract_Extracting;
                         try
@@ -1276,7 +1281,7 @@ namespace OblivionModManager {
                         //fswatch.Dispose();
 
                         // make sure that the current dir did not change
-                        Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                        Directory.SetCurrentDirectory(currentDirectory);
 
                         if (pf != null)
                         {
@@ -2580,10 +2585,10 @@ namespace OblivionModManager {
 			if(!IsLimited) {
                 bool bMissingMods = false;
 				for(int i=0;i<Data.omods.Count;i++) {
-                    if (!(File.Exists(Path.Combine(Settings.omodDir,((omod)Data.omods[i]).FileName)) ||
-                        File.Exists(Path.Combine(Settings.omodDir, ((omod)Data.omods[i]).FileName + ".ghost"))))
+                    if (!File.Exists(Path.Combine(Settings.omodDir,((omod)Data.omods[i]).FileName)) &&
+                        !File.Exists(Path.Combine(Settings.omodDir, ((omod)Data.omods[i]).FileName + ".ghost")))
                     {
-                        logger.WriteToLog(Path.Combine(Settings.omodDir, ((omod)Data.omods[i]).FileName) + " is missing from the mods folder", Logger.LogLevel.Low);
+                        logger.WriteToLog(Path.Combine(Settings.omodDir, ((omod)Data.omods[i]).FileName) + " is missing from the mods folder (" + Settings.omodDir + ")", Logger.LogLevel.Low);
                         if (Settings.bDeactivateMissingOMODs)
                         {
                             if (Data.omods[i].Conflict == ConflictLevel.Active)
@@ -2963,7 +2968,7 @@ namespace OblivionModManager {
 					if(newmod!=null) newmod.Close();
                     logger.WriteToLog("Error loading '" + s + "'" + ex.Message,Logger.LogLevel.Low);
 					MessageBox.Show("Error loading '"+s+"'\n"+ex.Message, "Error");
-                    try { File.Delete(CorruptDir + Path.GetFileName(s)); File.Move(s, CorruptDir + Path.GetFileName(s)); }
+                    try { File.Delete(Path.Combine(CorruptDir, Path.GetFileName(s))); File.Move(s, Path.Combine(CorruptDir, Path.GetFileName(s))); }
                     catch { }
 					return null;
 				}
@@ -3062,8 +3067,8 @@ namespace OblivionModManager {
 		public static FileStream CreateTempFile(out string path) {
 			int i=0;
 			for(i=0;i<32000;i++) {
-				if(!File.Exists(TempDir+"tmp"+i.ToString())) {
-					path=TempDir+"tmp"+i.ToString();
+				if(!File.Exists(Path.Combine(TempDir, "tmp"+i.ToString()))) {
+					path=Path.Combine(TempDir, "tmp"+i.ToString());
 					return File.Create(path);
 				}
 			}
@@ -3074,9 +3079,9 @@ namespace OblivionModManager {
             string dir = "";
 			for(int i=0;i<32000;i++) {
 //                System.Threading.Monitor.Enter(TempDir);
-				if(!Directory.Exists(TempDir+i.ToString())) {
-					Directory.CreateDirectory(TempDir+i.ToString()+"\\");
-                    dir=TempDir + i.ToString() + "\\";
+				if(!Directory.Exists(Path.Combine(TempDir, i.ToString()))) {
+					Directory.CreateDirectory(Path.Combine(TempDir, i.ToString()));
+                    dir=Path.Combine(TempDir, i.ToString()) + "\\";
 //                    System.Threading.Monitor.Exit(TempDir);
                     break;
 				}
@@ -3091,10 +3096,10 @@ namespace OblivionModManager {
 		public static void ClearTempFiles() { ClearTempFiles(""); }
 		public static void ClearTempFiles(string subfolder) {
 			if(!Directory.Exists(TempDir) && TempDir.Length>0) Directory.CreateDirectory(TempDir);
-			if(!Directory.Exists(TempDir+subfolder)) return;
+			if(!Directory.Exists(Path.Combine(TempDir, subfolder))) return;
             try
             {
-                foreach (string file in Directory.GetFiles(TempDir + subfolder))
+                foreach (string file in Directory.GetFiles(Path.Combine(TempDir, subfolder)))
                 {
                     try { File.Delete(file); }
                     catch { }
@@ -3102,7 +3107,7 @@ namespace OblivionModManager {
             }
             catch
             { }
-			try { if (Directory.Exists(TempDir+subfolder)) Directory.Delete(TempDir+subfolder, true); } catch { }
+			try { if (Directory.Exists(Path.Combine(TempDir, subfolder))) Directory.Delete(Path.Combine(TempDir, subfolder), true); } catch { }
 			if(!Directory.Exists(TempDir)) Directory.CreateDirectory(TempDir);
 		}
 		

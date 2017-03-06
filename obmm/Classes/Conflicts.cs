@@ -143,17 +143,32 @@ namespace OblivionModManager {
             foreach(DataFileInfo df in o.AllDataFiles) {
                 DataFileInfo dfi=Program.Data.GetDataFile(df);
                 string basepath = o.bSystemMod ? Path.Combine(Program.currentGame.DataFolderPath, "..") : Program.currentGame.DataFolderPath;
-                if (dfi==null) {
+                if (dfi==null)
+                {
                     if (!File.Exists(System.IO.Path.Combine(basepath, df.FileName))) continue;
                     if((int)ConflictLevel.MajorConflict>(int)Conflict) Conflict=ConflictLevel.MajorConflict;
                     ModReport+="Data file "+df.FileName+" already exists"+Environment.NewLine;
                     ModReport+="- No data found on file."+Environment.NewLine;
-                } else if(df.CRC==dfi.CRC) {
-                    if((int)ConflictLevel.MinorConflict>(int)Conflict) Conflict=ConflictLevel.MinorConflict;
-                    ModReport+="Data file "+df.FileName+" already exists"+Environment.NewLine;
-                    ModReport+="- CRC's match, so probably nothing to worry about."+Environment.NewLine;
-                    ModReport+="- Data file owned by "+dfi.Owners+Environment.NewLine;
-                } else {
+                }
+                else if(df.CRC==dfi.CRC)
+                {
+                    if (df.CRC == 0)
+                    {
+                        if ((int)ConflictLevel.MajorConflict > (int)Conflict) Conflict = ConflictLevel.MajorConflict;
+                        ModReport += "Data file " + df.FileName + " already exists" + Environment.NewLine;
+                        ModReport += "- CRC have not been calculated so exact is not possible." + Environment.NewLine;
+                        ModReport += "- Data file owned by " + dfi.Owners + Environment.NewLine;
+                    }
+                    else
+                    {
+                        if ((int)ConflictLevel.MinorConflict > (int)Conflict) Conflict = ConflictLevel.MinorConflict;
+                        ModReport += "Data file " + df.FileName + " already exists" + Environment.NewLine;
+                        ModReport += "- CRC's match, so probably nothing to worry about." + Environment.NewLine;
+                        ModReport += "- Data file owned by " + dfi.Owners + Environment.NewLine;
+                    }
+                }
+                else
+                {
                     if((int)ConflictLevel.MajorConflict>(int)Conflict) Conflict=ConflictLevel.MajorConflict;
                     ModReport+="Data file "+df.FileName+" already exists"+Environment.NewLine;
                     ModReport+="- CRC mismatch. The new file is different from the old."+Environment.NewLine;

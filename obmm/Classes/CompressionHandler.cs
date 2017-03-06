@@ -70,9 +70,9 @@ namespace OblivionModManager {
             //Messy hack, but obmm wont let you have a .. in a relative path anyway
             //Triggering this would require someone to maliciously hex-edit the omod. Not really something that needs worrying about.
             if(!Program.IsSafeFileName(CurrentFile)) {
-                CurrentOutputStream=File.Create(Program.TempDir+"IllegalFile");
+                CurrentOutputStream=File.Create(Path.Combine(Program.TempDir,"IllegalFile"));
             } else {
-                CurrentOutputStream=File.Create(BaseDirectory+CurrentFile);
+                CurrentOutputStream=File.Create(Path.Combine(BaseDirectory,CurrentFile));
             }
             Written=0;
         }
@@ -123,7 +123,7 @@ namespace OblivionModManager {
                 if(FileLength>0) throw new obmmException("Compressed data file stream didn't contain enough information to fill all files");
                 if(CurrentOutputStream!=null) CurrentOutputStream.Close();
                 if(!Program.IsSafeFileName(CurrentFile)) {
-                    CurrentOutputStream=File.Create(Program.TempDir+"IllegalFile");
+                    CurrentOutputStream=File.Create(Path.Combine(Program.TempDir, "IllegalFile"));
                 } else {
                     CurrentOutputStream=File.Create(BaseDirectory+CurrentFile);
                 }

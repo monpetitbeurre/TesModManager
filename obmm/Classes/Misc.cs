@@ -496,11 +496,21 @@ namespace OblivionModManager {
             FileName=s;
             LowerFileName=FileName.ToLower();
             CRC=crc;
+
+            if (CRC == 0)
+            {
+                if (File.Exists(s))
+                {
+                    CRC = Crc32.ComputeCRC(s);
+                }
+                else
+                {
+                    Program.logger.WriteToLog("Cannot compute CRC for '" + s + "': file cannot be found", Logger.LogLevel.High);
+                }
+            }
         }
-        public DataFileInfo(DataFileInfo orig) {
-            FileName=orig.FileName;
-            LowerFileName=orig.LowerFileName;
-            CRC=orig.CRC;
+        public DataFileInfo(DataFileInfo orig): this(orig.FileName, orig.CRC)
+        {
         }
 
         public void AddOwner(omod o) { if(!UsedBy.Contains(o.LowerFileName)) UsedBy.Add(o.LowerFileName); }

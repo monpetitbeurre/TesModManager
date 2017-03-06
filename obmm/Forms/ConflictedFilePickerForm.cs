@@ -302,8 +302,9 @@ namespace OblivionModManager
                     }
                     else
                     {
-                        File.Copy(filename, Path.Combine(Program.TempDir, filename + extension));
-                        Process.Start(Path.Combine(Program.TempDir,filename + extension));
+                        string tempFileName = Path.Combine(Program.TempDir, filename + extension);
+                        File.Copy(filename, tempFileName);
+                        Process.Start(tempFileName);
                     }
                 }
                 else if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, dfi.FileName)))

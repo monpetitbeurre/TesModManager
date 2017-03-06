@@ -29,7 +29,7 @@ namespace OblivionModManager.Scripting {
         private static readonly CompilerParameters cParams;
         private static readonly Evidence evidence;
 
-        private static readonly string ScriptOutputPath=Program.TempDir+"dotnetscript.dll";
+        private static readonly string ScriptOutputPath=Path.Combine(Program.TempDir, "dotnetscript.dll");
 
         static DotNetScriptHandler() {
             cParams=new CompilerParameters();

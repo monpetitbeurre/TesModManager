@@ -1169,12 +1169,14 @@ namespace OblivionModManager {
                         }
                         List<DataFileInfo> datafileslist = new List<DataFileInfo>();
                         List<string> pluginlist = new List<string>();
+                        int fileindex = 0;
                         foreach (string file in sevenZipExtract.ArchiveFileNames)
                         {
                             if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
                                 pluginlist.Add(file);
-                            else
-                                datafileslist.Add(new DataFileInfo(file, 0));
+                            else if (!sevenZipExtract.ArchiveFileData[fileindex].IsDirectory)
+                                datafileslist.Add(new DataFileInfo(file, sevenZipExtract.ArchiveFileData[fileindex].Crc));
+                            fileindex++;
                         }
                         AllDataFiles = datafileslist.ToArray();
                         AllPlugins = pluginlist.ToArray();
@@ -2429,13 +2431,16 @@ namespace OblivionModManager {
             else
             {
                 SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
+                int fileindex = 0;
                 foreach (string file in zextract.ArchiveFileNames)
                 {
                     if (!file.ToLower().EndsWith(".esp") && !file.ToLower().EndsWith(".esm") &&
-                        file.ToLower() != "script.txt" && file.ToLower() != "config.ini" && file.ToLower() != "image.jpg" && file.ToLower() != "readme.txt" && !file.EndsWith("\\") && !file.EndsWith("/"))
+                        file.ToLower() != "script.txt" && file.ToLower() != "config.ini" && file.ToLower() != "image.jpg" && file.ToLower() != "readme.txt" && !file.EndsWith("\\") && !file.EndsWith("/") &&
+                        !zextract.ArchiveFileData[fileindex].IsDirectory)
                     {
-                        ar.Add(new DataFileInfo(file, (uint)0));
+                        ar.Add(new DataFileInfo(file, zextract.ArchiveFileData[fileindex].Crc));
                     }
+                    fileindex++;
                 }
                 zextract.Dispose();
             }
@@ -2565,6 +2570,8 @@ namespace OblivionModManager {
                 Program.pf = new ProgressForm("Extracting plugins", false);
                 try
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+
                     path = Program.CreateTempDirectory();
                     SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
                     Program.pf.SetProgressRange(zextract.ArchiveFileNames.Count);
@@ -2603,7 +2610,7 @@ namespace OblivionModManager {
                     fswatch.EnableRaisingEvents = false;
 
                     // make sure that the current dir did not change
-                    Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                    Directory.SetCurrentDirectory(currentDirectory);
                 }
                 finally
                 {
@@ -2740,6 +2747,8 @@ namespace OblivionModManager {
                 Program.pf = new ProgressForm("Extracting data files", false);
                 try
                 {
+                    string currentDirectory = Directory.GetCurrentDirectory();
+
                     if (path == null) path = Program.CreateTempDirectory();
                     SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
                     Program.pf.SetProgressRange(zextract.ArchiveFileNames.Count);
@@ -2771,7 +2780,7 @@ namespace OblivionModManager {
                     fswatch.EnableRaisingEvents = false;
 
                     // make sure that the current dir did not change
-                    Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                    Directory.SetCurrentDirectory(currentDirectory);
                 }
                 finally
                 {
@@ -3482,13 +3491,15 @@ namespace OblivionModManager {
             Close();
             //if (ModFile == null)
             {
+                string currentDirectory = Directory.GetCurrentDirectory();
+
                 SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
                 //                comp7zrWrapper zextract = new comp7zrWrapper(Settings.omodDir + FileName);
                 string dir = Program.CreateTempDirectory();
                 zextract.ExtractFiles(dir, new List<string>(zextract.ArchiveFileNames).ToArray()); //  (new SevenZip.ExtractFileCallback(extractFileCallback));
                 zextract.Dispose();
                 // make sure that the current dir did not change
-                Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                Directory.SetCurrentDirectory(currentDirectory);
 
                 if (contents == null || contents == "")
                 {

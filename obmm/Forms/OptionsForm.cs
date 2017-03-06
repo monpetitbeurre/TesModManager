@@ -290,7 +290,6 @@ namespace OblivionModManager {
                     System.IO.File.Move(file, omodDirDialog.SelectedPath + "\\" + System.IO.Path.GetFileName(file));
                 }
                 Settings.omodDir=Path.GetFullPath(omodDirDialog.SelectedPath).ToLower();
-                if(!Settings.omodDir.EndsWith("\\")) Settings.omodDir+="\\";
                 toolTip.SetToolTip(bMoveModFolder, "Current mod folder: " + Settings.omodDir);
             }
         }
@@ -328,12 +327,13 @@ namespace OblivionModManager {
             omodDirDialog.Description="Select the folder used for temporary storage of extracted omod files.";
             omodDirDialog.SelectedPath = Path.GetFullPath(Settings.tempDir);
             if(omodDirDialog.ShowDialog()==DialogResult.OK) {
-                if(!System.IO.Directory.Exists(omodDirDialog.SelectedPath+"\\obmm")||
-                    MessageBox.Show("The contents of '"+omodDirDialog.SelectedPath+"\\obmm' will be overwritten.\n"+
-                        "Continue?", "Warning", MessageBoxButtons.YesNo)==DialogResult.Yes) {
-                            Program.ClearTempFiles();
+                if(!System.IO.Directory.Exists(Path.Combine(omodDirDialog.SelectedPath, "obmm"))||
+                    MessageBox.Show("The contents of '"+Path.Combine(omodDirDialog.SelectedPath,"obmm") +"' will be overwritten.\n"+
+                        "Continue?", "Warning", MessageBoxButtons.YesNo)==DialogResult.Yes)
+                {
+                    Program.ClearTempFiles();
                     try { System.IO.Directory.Delete(Program.TempDir); } catch { }
-                    Settings.tempDir=omodDirDialog.SelectedPath.ToLower()+"\\obmm\\";
+                    Settings.tempDir=Path.Combine(omodDirDialog.SelectedPath.ToLower(), "obmm\\");
                     Program.ClearTempFiles();
                 }
             }

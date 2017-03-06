@@ -90,6 +90,15 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.12
+--------------
+* Added protection against bad temp folder
+* Fixed bug where adding an archive my import game's data folder
+
+Version 1.6.11
+--------------
+* Fixed CRC support for omodv2 for better conflict handling
+
 version 1.6.10
 --------------
 * Fixed an incompatibility with BSA archive bits

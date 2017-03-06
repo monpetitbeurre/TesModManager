@@ -574,11 +574,11 @@ namespace OblivionModManager {
                 lvModList.Items.Clear();
                 lvModList.BeginUpdate();
                 string modFilter = (cmbGroupFilter.SelectedItem != null ? cmbGroupFilter.SelectedItem.ToString() : "");
-                Program.logger.WriteToLog("Refreshing omod list with " + Program.Data.omods.Count + " mods and filter=" + modFilter, Logger.LogLevel.High);
+                Program.logger.WriteToLog("Refreshing omod list with " + Program.Data.omods.Count + " mods and filter='" + modFilter + "' from + " + Settings.omodDir, Logger.LogLevel.High);
                 for (int j = 0; j < Program.Data.omods.Count; j++)
                 {
                     omod o = Program.Data.omods[j];
-                    Program.logger.WriteToLog("Checking " + o.FileName, Logger.LogLevel.High);
+                    Program.logger.WriteToLog("Checking '" + o.FileName + "'", Logger.LogLevel.High);
                     if (!File.Exists(Path.Combine(Settings.omodDir,o.LowerFileName)))
                     {
                         Program.Data.omods.Remove(o);
@@ -3658,7 +3658,8 @@ namespace OblivionModManager {
                     byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
                     string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
-                    File.Delete(Program.TempDir + "\\scriptextender.7z");
+                    string tempScriptExtenderFile = System.IO.Path.Combine(Program.TempDir, "scriptextender.7z");
+                    File.Delete(tempScriptExtenderFile);
                     if (Program.currentGame.ScriptExtenderName=="SKSE")
                     {
                         string filelink = "";
@@ -3682,7 +3683,7 @@ namespace OblivionModManager {
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
-                            File.WriteAllBytes(Program.TempDir + "\\scriptextender.7z", bytepage);
+                            File.WriteAllBytes(tempScriptExtenderFile, bytepage);
                         }
                     }
                     else
@@ -3700,13 +3701,13 @@ namespace OblivionModManager {
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
-                            File.WriteAllBytes(Program.TempDir + "\\scriptextender.7z", bytepage);
+                            File.WriteAllBytes(tempScriptExtenderFile, bytepage);
                         }
                     }
-                    if (File.Exists(Program.TempDir + "\\scriptextender.7z"))
+                    if (File.Exists(tempScriptExtenderFile))
                     {
                         string extenderTmpDir = Path.Combine(Program.TempDir, "scriptextender");
-                        SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Program.TempDir + "\\scriptextender.7z");
+                        SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(tempScriptExtenderFile);
                         List<string> files = new List<string>(zextract.ArchiveFileNames);
                         for (int i = 0; i < files.Count; i++)
                         {
@@ -3719,10 +3720,12 @@ namespace OblivionModManager {
                         }
                         toolStripProcessingStatusLabel.Text = "Extracting latest " + Program.currentGame.ScriptExtenderName;
                         Application.DoEvents();
+                        string currentDirectory = Directory.GetCurrentDirectory();
+
                         zextract.ExtractFiles(extenderTmpDir, files.ToArray());
                         zextract.Dispose();
                         // make sure that the current dir did not change
-                        Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+                        Directory.SetCurrentDirectory(currentDirectory);
 
                         toolStripProcessingStatusLabel.Text = "Installing latest " + Program.currentGame.ScriptExtenderName;
                         Application.DoEvents();
@@ -3771,7 +3774,7 @@ namespace OblivionModManager {
                             File.Delete(files[j]);
                         }
                         try { Directory.Delete(extenderTmpDir, true); }catch{};
-                        File.Delete(Program.TempDir + "\\scriptextender.7z");
+                        File.Delete(tempScriptExtenderFile);
                         refreshScriptExtenderVersion();
                     }
                 }

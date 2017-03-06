@@ -276,7 +276,11 @@ namespace OblivionModManager {
 				omodDir=Path.GetFullPath(br.ReadString());
 				if(version>=5) {
 					tempDir=br.ReadString();
-				}
+                    if (Settings.tempDir.Length == 0 || Settings.tempDir.ToLower().StartsWith(Program.currentGame.DataFolderPath.ToLower()))
+                    {
+                        Settings.tempDir = Path.Combine(Path.GetTempPath(), Program.currentGame.Name + @"MM\");
+                    }
+                }
 				DefaultEspWarn=(DeactiveStatus)br.ReadByte();
 				OblivionCommandLine=br.ReadString();
 				EspColWidth1=br.ReadInt32();
@@ -452,7 +456,7 @@ namespace OblivionModManager {
 			BSACreatorFolderBrowserDir="";
 			omodDir=Path.GetFullPath(Path.Combine(Program.BaseDir, "mods"));
 
-            tempDir ="";
+            tempDir = Path.Combine(Path.GetTempPath(), Program.currentGame.Name + @"MM\");
 
 			NewEspsLoadLast=true;
             bAskToBeNexusDownloadManager = true;

@@ -467,9 +467,9 @@ namespace OblivionModManager {
                 }
                 else
                 {
-                    if (File.Exists(Program.BackupDir + omodfname)) File.Delete(Program.BackupDir + omodfname);
+                    if (File.Exists(Path.Combine(Program.BackupDir, omodfname))) File.Delete(Path.Combine(Program.BackupDir, omodfname));
                     omod.Remove(omodfname);
-                    File.Move(Path.Combine(Settings.omodDir,omodfname), Program.BackupDir + omodfname);
+                    File.Move(Path.Combine(Settings.omodDir,omodfname), Path.Combine(Program.BackupDir, omodfname));
                 }
             }
             validateToolStripMenuItem_Click(null, null);
@@ -1126,11 +1126,13 @@ namespace OblivionModManager {
 			if(OpenDialog.ShowDialog()!=DialogResult.OK) return;
 			string Dir=Program.CreateTempDirectory();
 
+            string currentDirectory = Directory.GetCurrentDirectory();
+
             SevenZip.SevenZipExtractor sevenZipExtract = new SevenZip.SevenZipExtractor(OpenDialog.FileName);
             sevenZipExtract.ExtractFiles(Dir, new List<string>(sevenZipExtract.ArchiveFileNames).ToArray());
 
             // make sure that the current dir did not change
-            Directory.SetCurrentDirectory(Path.GetDirectoryName(Application.ExecutablePath));
+            Directory.SetCurrentDirectory(currentDirectory);
 
 			if(Directory.GetFileSystemEntries(Dir).Length==1) {
 				string[] folders=Directory.GetDirectories(Dir);
@@ -1155,13 +1157,14 @@ namespace OblivionModManager {
 
 				}
 			}
-            if (Directory.Exists(Path.Combine(Dir, Program.currentGame.DataFolderPath)))
+            // compensate for a Data subfolder
+            if (Directory.Exists(Path.Combine(Dir, "Data")))
             {
 				foreach(string s in Directory.GetFiles(Dir)) {
-                    try { File.Move(s, Path.Combine(Dir, Path.Combine(Program.currentGame.DataFolderPath, Path.GetFileName(s)))); }
+                    try { File.Move(s, Path.Combine(Dir, Path.Combine("Data", Path.GetFileName(s)))); }
                     catch { }
 				}
-				Dir=Path.Combine(Dir,Program.currentGame.DataFolderPath);
+				Dir=Path.Combine(Dir, "Data");
 			}
 			AddFilesFromFolder(Dir, new FileInfo(OpenDialog.FileName).Name,false);
 		}
