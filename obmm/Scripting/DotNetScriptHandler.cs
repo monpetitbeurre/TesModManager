@@ -692,8 +692,8 @@ namespace OblivionModManager.Scripting {
                         foreach (fomod.fileSystemItem fsitem in pattern.files.Items)
                         {
                             // copy all files from source to destination
-                            string source = fsitem.source;// ((fomod.fileSystemItem)(pattern.files.Items[0])).source;
-                            string dest = fsitem.destination; // ((fomod.fileSystemItem)(pattern.files.Items[0])).destination;
+                            string source = fsitem.source.Replace("/","\\");// ((fomod.fileSystemItem)(pattern.files.Items[0])).source;
+                            string dest = fsitem.destination.Replace("/", "\\"); // ((fomod.fileSystemItem)(pattern.files.Items[0])).destination;
 
                             if (source.EndsWith(".esp") || source.EndsWith(".esm"))
                                 functions.CopyPlugin(source, dest);

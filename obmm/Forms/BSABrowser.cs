@@ -39,7 +39,7 @@ namespace OblivionModManager {
                 set {
                     if(value==null) return;
                     fileName=value;
-                    lowername=Folder.ToLower()+"\\"+fileName.ToLower();
+                    lowername=Path.Combine(Folder.ToLower(), fileName.ToLower());
                 }
             }
             public string LowerName {
@@ -58,7 +58,7 @@ namespace OblivionModManager {
 
             public void Extract(string path, bool UseFolderName, BinaryReader br) {
                 if(UseFolderName) {
-                    path+="\\"+Folder+"\\"+FileName;
+                    path= Path.Combine(path, Path.Combine(Folder, FileName));
                 }
                 if(!Directory.Exists(Path.GetDirectoryName(path)))
                     Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -216,7 +216,7 @@ namespace OblivionModManager {
             lvFiles.SuspendLayout();
             lvFiles.Items.Clear();
             foreach(BSAFileEntry fe in Files) {
-                ListViewItem lvi=new ListViewItem(fe.Folder+"\\"+fe.FileName);
+                ListViewItem lvi=new ListViewItem(Path.Combine(fe.Folder, fe.FileName));
                 lvi.Tag=fe;
                 string text="File size: "+fe.Size+" bytes\nFile offset: "+fe.Offset+" bytes\n";
                 if(fe.Compressed) text+="Compressed"; else text+="Uncompressed";

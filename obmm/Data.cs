@@ -301,40 +301,6 @@ namespace OblivionModManager {
 //                MessageBox.Show("Unable to set timestamps on files: " + ex.Message, "Cannot set timestamps", System.Windows.Forms.MessageBoxButtons.OK, System.Windows.Forms.MessageBoxIcon.Error);
                 Program.logger.WriteToLog("Unable to set timestamps on files: " + ex.Message, Logger.LogLevel.Error);
             }
-/*
-            TimeSpan ts=TimeSpan.FromMinutes(1);
-            for(int i=0;i<Esps.Count-1;i++) {
-                if(Esps[i].DateModified==Esps[i+1].DateModified) {
-                    for(int j=i+1;j<Esps.Count;j++) {
-                        Esps[j].DateModified+=ts;
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName,Esps[j].FileName, Esps[j].DateModified);
-                        string bsa = Esps[j].LowerFileName; bsa = bsa.Replace("*.esm", "").Replace(".esp", "").Replace(".ghost",""); bsa += ".bsa";
-                        if (File.Exists(Program.DataFolderName+"\\" + bsa))
-                            File.SetLastWriteTime(Program.DataFolderName+"\\" + bsa, Esps[j].DateModified);
-                    }
-                }
-            }
-            bool switched=true;
-            while(switched) {
-                switched=false;
-                for(int i=0;i<Esps.Count-1;i++) {
-                    if(Esps[i].DateModified>Esps[i+1].DateModified) {
-                        DateTime dt=Esps[i].DateModified;
-                        Esps[i].DateModified=Esps[i+1].DateModified;
-                        Esps[i+1].DateModified=dt;
-                        switched=true;
-                        File.SetLastWriteTime(Path.Combine(Program.DataFolderName,Esps[i].FileName, Esps[i].DateModified);
-                        string bsa = Esps[i].LowerFileName; bsa = bsa.Replace("*.esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                        if (File.Exists(Program.DataFolderName+"\\" + bsa))
-                            File.SetLastWriteTime(Program.DataFolderName+"\\" + bsa, Esps[i].DateModified);
-                        File.SetLastWriteTime(Program.DataFolderName+"\\" + Esps[i + 1].FileName, Esps[i + 1].DateModified);
-                        bsa = Esps[i + 1].LowerFileName; bsa = bsa.Replace("*.esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
-                        if (File.Exists(Program.DataFolderName+"\\" + bsa))
-                            File.SetLastWriteTime(Program.DataFolderName+"\\" + bsa, Esps[i+1].DateModified);
-                    }
-                }
-            }
- */
             Program.logger.WriteToLog("Sorting ESPs ", Logger.LogLevel.High);
         }
 

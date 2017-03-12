@@ -713,10 +713,10 @@ namespace OblivionModManager {
 						}
 					}
 				}
-				else if (File.Exists(folder + "ocd.xbt"))
+				else if (File.Exists(Path.Combine(folder, "ocd.xbt")))
 				{
 					if (RequestImport())
-						LoadXBT(new GeneralConfig().LoadConfiguration(folder + "ocd.xbt"));
+						LoadXBT(new GeneralConfig().LoadConfiguration(Path.Combine(folder, "ocd.xbt")));
 				}
                 else if (Directory.Exists(Path.Combine(folder,"fomod")))
                 {

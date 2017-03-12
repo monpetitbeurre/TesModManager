@@ -39,7 +39,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.12"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.13"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -192,13 +192,10 @@ namespace OblivionModManager {
         }
 
 		public static readonly string CurrentDir=Path.GetDirectoryName(Application.ExecutablePath);
-        public static string INIDir = ""; // Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\" + currentGame.Name + "\\");
-        public static string ESPDir = ""; //  Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), currentGame.Name + "\\");
+        public static string INIDir = "";
+        public static string ESPDir = "";
         public static readonly string VistaVirtualStore = Path.Combine(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "VirtualStore\\"), CurrentDir.Remove(0, 3));
 
-        //public static bool bSkyrimMode = false;
-        //public static bool bSkyrimSEMode = false;
-        //public static bool bMorrowind = false;
 		public static sData Data;
         public static sData Data2;
 		public static bool IsLimited=false;
@@ -1295,7 +1292,7 @@ namespace OblivionModManager {
                         CreateModForm createModForm = new CreateModForm();
                         createModForm.Text = "Create mod from " + Path.GetFileName(filename);
                         // first check if there is an omod conversion folder or a fomod folder
-                        string omodCD = strTmpDir + Program.omodConversionData;
+                        string omodCD = Path.Combine(strTmpDir, Program.omodConversionData);
                         string fomodCD = Path.Combine(strTmpDir, "fomod");
                         if ((Directory.Exists(omodCD) || Directory.Exists(fomodCD)) && DialogResult.Yes == MessageBox.Show("Conversion data detected. Do you want to use the automatic import?", "Automatic or manual import", MessageBoxButtons.YesNo, MessageBoxIcon.Question))
                         {

@@ -246,8 +246,7 @@ namespace OblivionModManager
         public event ProgressEventHandler Progress;
         protected virtual void OnProgress(ProgressEventArgs e)
         {
-            if (Progress != null) // is there a handler attached?
-                Progress(this, e);
+            Progress?.Invoke(this, e);
         }
 
     }

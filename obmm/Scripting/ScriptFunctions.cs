@@ -383,7 +383,7 @@ namespace OblivionModManager.Scripting {
         public Version GetScriptExtenderPluginVersion(string plugin) { return _GetScriptExtenderPluginVersion(plugin); }
         public static Version _GetScriptExtenderPluginVersion(string plugin)
         {
-			plugin=Path.ChangeExtension(Path.Combine(Path.Combine(Program.currentGame.DataFolderPath, Program.currentGame.ScriptExtenderName + "\\plugins"), plugin), ".dll");
+			plugin=Path.ChangeExtension(Path.Combine(Path.Combine(Program.currentGame.DataFolderPath, Path.Combine(Program.currentGame.ScriptExtenderName, "plugins")), plugin), ".dll");
 			CheckPathSafty(plugin);
 			permissions.Assert();
 			if(!File.Exists(plugin)) return null;

@@ -380,18 +380,18 @@ namespace OblivionModManager {
                 // copy readme.txt, config.ini and image.jpg
                 if (ops.readme.Length > 0)
                 {
-                    txtwr = new StreamWriter(tempdir + "\\readme.txt");
+                    txtwr = new StreamWriter(Path.Combine(tempdir, "readme.txt"));
                     txtwr.Write(ops.readme);
                     txtwr.Close();
                 }
                 if (ops.script.Length > 0)
                 {
-                    txtwr = new StreamWriter(tempdir + "\\script.txt");
+                    txtwr = new StreamWriter(Path.Combine(tempdir, "script.txt"));
                     txtwr.Write(ops.script.ToCharArray());
                     txtwr.Close();
                 }
 
-                txtwr = new StreamWriter(tempdir + "\\config.ini");
+                txtwr = new StreamWriter(Path.Combine(tempdir, "config.ini"));
                 txtwr.Write(("OmodVersion=" + "10" +/* Program.CurrentOmodVersion +*/ "\r\n" +
                                 "Name=" + ops.Name + "\r\n" +
                                 "MajorVersion=" + ops.MajorVersion + "\r\n" +
@@ -408,7 +408,7 @@ namespace OblivionModManager {
                 txtwr.Close();
 
                 if (ops.Image != null && ops.Image.Length > 0)
-                    File.Copy(ops.Image, tempdir + "\\image.jpg", true);
+                    File.Copy(ops.Image, Path.Combine(tempdir, "image.jpg"), true);
 
                 theCompressor.FileCompressionFinished += theCompressor_FileCompressionFinished;
                 theCompressor.Compressing += theCompressor_Compressing;
@@ -418,7 +418,7 @@ namespace OblivionModManager {
                 {
                     try
                     {
-                        theCompressor.CompressDirectory(tempdir, Path.Combine(Settings.omodDir,omodFileName), true);
+                        theCompressor.CompressDirectory(tempdir, Path.Combine(Settings.omodDir, omodFileName), true);
                         bDone = true;
                     }
                     catch (Exception ex)
@@ -468,7 +468,7 @@ namespace OblivionModManager {
             ZipEntry ze;
 //            FileStream DataCompressed;
 //            Stream DataInfo;
-            omodFileName = Path.Combine(Settings.omodDir,omodFileName);
+            omodFileName = Path.Combine(Settings.omodDir, omodFileName);
 
             ProgressForm pf = new ProgressForm("Generating "+omodFileName, false);
             pf.ShowInTaskbar = true;
@@ -2454,76 +2454,6 @@ namespace OblivionModManager {
 
             string path = "";
 
-            /*
-            if (LowerFileName.EndsWith(".omod2") || LowerFileName.EndsWith(".omod2.ghost"))
-                bOmod2 = true;
-            else if (!LowerFileName.EndsWith(".omod") || LowerFileName.EndsWith(".omod.ghost"))
-                bFomod = true;
-
-            if (bOmod2)
-            {
-                Program.logger.WriteToLog(" bOmod2=true", Logger.LogLevel.High);
-                try
-                {
-                    path = Program.CreateTempDirectory();
-                    string filepath = path;
-                    foreach (ZipEntry e in ModFile)
-                    {
-                        if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm"))
-                        {
-                            Program.logger.WriteToLog(" Extracting "+e.Name, Logger.LogLevel.High);
-                            ExtractWholeFile(e.Name, ref filepath).Close();
-                            Program.logger.WriteToLog(" Moving " + filepath + " to "+ path + "\\" + e.Name, Logger.LogLevel.High);
-                            File.Move(filepath, path + "\\" + e.Name);
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("Could not get plugins: " + ex.Message, "Error extracting plugins", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Program.logger.WriteToLog("Could not get plugins: " + ex.Message, Logger.LogLevel.Error);
-                }
-            }
-            else if (bFomod)
-            {
-                Program.logger.WriteToLog(" bFomod=true", Logger.LogLevel.High);
-                ProgressForm pf = new ProgressForm("Extracting plugins", false);
-                path = Program.CreateTempDirectory();
-                SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Settings.omodDir + FileName);
-                pf.SetProgressRange(zextract.ArchiveFileNames.Count);
-                pf.UseWaitCursor = false;
-                Application.UseWaitCursor = false;
-                pf.Show();
-                int count = 0;
-                List<string> files = new List<string>(zextract.ArchiveFileNames);
-                foreach (string file in zextract.ArchiveFileNames)
-                {
-                    if (!file.ToLower().EndsWith(".esp") && !file.ToLower().EndsWith(".esm"))
-                    {
-                        files.Remove(file);
-                    }
-                    pf.UpdateProgress(count);
-//                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
-//                    {
-//                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(path, file)));
-//                        StreamWriter sw = new StreamWriter(Path.Combine(path, file));
-//                        zextract.ExtractFile(file,sw.BaseStream);
-//                        sw.Close();
-//                    }
-                    count++;
-                }
-                zextract.ExtractFiles(path, files.ToArray());
-                zextract.Dispose();
-
-                pf.Hide();
-                pf.Close();
-                pf.Dispose();
-
-            }
-            else
-			    path= ParseCompressedStream("plugins.crc", "plugins");
-            */
-
             if (FileName.ToLower().EndsWith(".omod") || (CompType == CompressionType.Zip && ModFile != null))
             {
                 Stream s = ExtractWholeFile("plugins.crc");
@@ -2550,9 +2480,9 @@ namespace OblivionModManager {
                             {
                                 Program.logger.WriteToLog(" Extracting " + e.Name, Logger.LogLevel.High);
                                 ExtractWholeFile(e.Name, ref filepath).Close();
-                                Program.logger.WriteToLog(" Moving " + filepath + " to " + path + "\\" + e.Name, Logger.LogLevel.High);
-                                Directory.CreateDirectory(path + "\\" + Path.GetDirectoryName(e.Name.Replace("/", "\\")));
-                                File.Move(filepath, path + "\\" + e.Name.Replace("/","\\"));
+                                Program.logger.WriteToLog(" Moving " + filepath + " to " + Path.Combine(path, e.Name), Logger.LogLevel.High);
+                                Directory.CreateDirectory(Path.Combine(path, Path.GetDirectoryName(e.Name.Replace("/", "\\"))));
+                                File.Move(filepath, Path.Combine(path, e.Name.Replace("/","\\")));
                             }
                         }
                     }
@@ -3052,28 +2982,6 @@ namespace OblivionModManager {
             string BitmapPath = null;
             Stream s=null;
 
-            /*
-            if (LowerFileName.EndsWith(".omod2") || LowerFileName.EndsWith(".omod2.ghost"))
-                bOmod2 = true;
-            else if (!LowerFileName.EndsWith(".omod") || LowerFileName.EndsWith(".omod.ghost"))
-                bFomod = true;
-
-            if (bFomod)
-            {
-                if (File.Exists("cache\\" + this.FileName))
-                {
-                    omod o = new omod("cache\\" + this.FileName, false);
-                    s = o.ExtractWholeFile("config.txt", ref BitmapPath);
-                }
-            }
-            else if (bOmod2)
-                s = ExtractWholeFile("image.jpg", ref BitmapPath);
-            else
-                s = ExtractWholeFile("image", ref BitmapPath);
-			if(s==null) BitmapPath=null;
-			else s.Close();
-            */
-
             if (FileName.ToLower().EndsWith(".omod") || (CompType == CompressionType.Zip && ModFile != null))
             {
                 s = ExtractWholeFile("image", ref BitmapPath);
@@ -3107,9 +3015,9 @@ namespace OblivionModManager {
                     }
                 }
 
-                if (File.Exists("cache\\" + this.FileName))
+                if (File.Exists(Path.Combine("cache", this.FileName)))
                 {
-                    omod o = new omod("cache\\" + this.FileName, false);
+                    omod o = new omod(Path.Combine("cache", this.FileName), false);
                     s = o.ExtractWholeFile("config.txt", ref BitmapPath);
                 }
             }
@@ -3358,26 +3266,6 @@ namespace OblivionModManager {
 		public string GetConfig() {
 			string s="";
             Stream st = null;
-            /*
-            if (LowerFileName.EndsWith(".omod2") || LowerFileName.EndsWith(".omod2.ghost"))
-                bOmod2 = true;
-            else if (!LowerFileName.EndsWith(".omod") || LowerFileName.EndsWith(".omod.ghost"))
-                bFomod = true;
-
-            if (bFomod)
-            {
-                if (File.Exists("cache\\" + this.FileName))
-                {
-                    omod o = new omod("cache\\" + this.FileName, false);
-                    st = o.ExtractWholeFile("config.txt", ref s);
-                }
-            }
-            else if (bOmod2)
-                st = ExtractWholeFile("config.txt", ref s);
-            else
-                st = ExtractWholeFile("config", ref s);
-            if (st!=null) st.Close();
-            */
 
             if (FileName.ToLower().EndsWith(".omod") || (CompType == CompressionType.Zip && ModFile != null))
             {
@@ -3415,9 +3303,9 @@ namespace OblivionModManager {
                 zextract.Dispose();
                 if (st == null)
                 {
-                    if (File.Exists("cache\\" + this.FileName))
+                    if (File.Exists(Path.Combine("cache", this.FileName)))
                     {
-                        omod o = new omod("cache\\" + this.FileName, false);
+                        omod o = new omod(Path.Combine("cache", this.FileName), false);
                         st = o.ExtractWholeFile("config.txt", ref s);
                     }
                 }
@@ -3494,7 +3382,7 @@ namespace OblivionModManager {
                 string currentDirectory = Directory.GetCurrentDirectory();
 
                 SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
-                //                comp7zrWrapper zextract = new comp7zrWrapper(Settings.omodDir + FileName);
+                //                comp7zrWrapper zextract = new comp7zrWrapper(Path.Combine(Settings.omodDir, FileName));
                 string dir = Program.CreateTempDirectory();
                 zextract.ExtractFiles(dir, new List<string>(zextract.ArchiveFileNames).ToArray()); //  (new SevenZip.ExtractFileCallback(extractFileCallback));
                 zextract.Dispose();
@@ -3506,20 +3394,20 @@ namespace OblivionModManager {
                     if (filelist != null && filelist.Length > 0)
                     {
                         foreach (string file in filelist)
-                            File.Delete(dir + file);
+                            File.Delete(Path.Combine(dir, file));
                     }
 
                     if (newfile != null && newfile != "")
                     {
                         foreach (string file in filelist)
-                            File.Copy(newfile, dir + file);
+                            File.Copy(newfile, Path.Combine(dir, file));
                     }
                 }
                 else
                 {
                     if (filelist.Length > 0)
                     {
-                        BinaryWriter bw = new BinaryWriter(File.Open(dir + filelist[0], FileMode.Create));
+                        BinaryWriter bw = new BinaryWriter(File.Open(Path.Combine(dir, filelist[0]), FileMode.Create));
                         bw.Write(contents.ToCharArray());
                         bw.Close();
                     }
@@ -3534,7 +3422,7 @@ namespace OblivionModManager {
                     while (!bDone)
                     try
                     {
-                        zcomp.CompressDirectory(dir, dir2 + FileName, "", "*", true);
+                        zcomp.CompressDirectory(dir, Path.Combine(dir2, FileName), "", "*", true);
                         bDone = true;
                     }
                     catch (Exception ex)
@@ -3567,7 +3455,7 @@ namespace OblivionModManager {
                 {
                     ModFile.Close();
                     FastZip fz = new FastZip();
-                    fz.CreateZip(dir2 + FileName, dir, false, null);
+                    fz.CreateZip(Path.Combine(dir2, FileName), dir, false, null);
                 }
                 File.Delete(Path.Combine(Settings.omodDir, FileName));
                 File.Move(dir2 + FileName, Path.Combine(Settings.omodDir, FileName));

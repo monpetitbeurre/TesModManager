@@ -278,7 +278,7 @@ namespace OblivionModManager {
                         case ".ghost":
                         case ".zip":
                         case ".rar":
-                            System.IO.File.Move(s, omodDirDialog.SelectedPath + "\\" + System.IO.Path.GetFileName(s));
+                            System.IO.File.Move(s, Path.Combine(omodDirDialog.SelectedPath, System.IO.Path.GetFileName(s)));
                             break;
                         default:
                             break;
@@ -287,7 +287,7 @@ namespace OblivionModManager {
                 // move the info cache
                 foreach (string file in Directory.GetFiles(Path.Combine(Settings.omodDir,"info")))
                 {
-                    System.IO.File.Move(file, omodDirDialog.SelectedPath + "\\" + System.IO.Path.GetFileName(file));
+                    System.IO.File.Move(file, Path.Combine(omodDirDialog.SelectedPath, System.IO.Path.GetFileName(file)));
                 }
                 Settings.omodDir=Path.GetFullPath(omodDirDialog.SelectedPath).ToLower();
                 toolTip.SetToolTip(bMoveModFolder, "Current mod folder: " + Settings.omodDir);

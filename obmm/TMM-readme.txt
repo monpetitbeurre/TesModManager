@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.13
+--------------
+* Fixed a case where a mod using FOMOD script would fail to install (an example being Maevan mature skin)
+
 Version 1.6.12
 --------------
 * Added protection against bad temp folder

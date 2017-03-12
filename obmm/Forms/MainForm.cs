@@ -1768,8 +1768,8 @@ namespace OblivionModManager {
 			omod o=(omod)lvModList.SelectedItems[0].Tag;
 			folderBrowserDialog1.Description="Select the path to extract "+o.FileName+" to";
 			if(folderBrowserDialog1.ShowDialog()!=DialogResult.OK) return;
-			if(Directory.Exists(folderBrowserDialog1.SelectedPath+"\\"+o.ModName)) {
-				MessageBox.Show("Unable to extract to that directory.\n"+"The path '"+folderBrowserDialog1.SelectedPath+"\\"+o.ModName+"' already exists", "Error");
+			if(Directory.Exists(Path.Combine(folderBrowserDialog1.SelectedPath, o.ModName))) {
+				MessageBox.Show("Unable to extract to that directory.\n"+"The path '"+ Path.Combine(folderBrowserDialog1.SelectedPath, o.ModName) + "' already exists", "Error");
 				return;
 			}
 			try {
@@ -3017,7 +3017,7 @@ namespace OblivionModManager {
             {
                 case SevenZip.ExtractFileCallbackReason.Start:
                     // starting new file
-                    args.ExtractToFile = strTmpDir+"\\"+args.ArchiveFileInfo.FileName;
+                    args.ExtractToFile = Path.Combine(strTmpDir, args.ArchiveFileInfo.FileName);
                     break;
             }
         }
@@ -3069,144 +3069,12 @@ namespace OblivionModManager {
             Application.UseWaitCursor = false;
             UpdateOmodList();
 
-
-/*
-            string extension = filename.Substring(filename.LastIndexOf('.')+1);
-            switch (extension)
-            {
-                case "zip":
-                case "7z":
-                case "rar":
-                    // first extract all files
-                    strTmpDir=Program.CreateTempDirectory();
-                    SevenZip.SevenZipExtractor sevenZipExtract = new SevenZip.SevenZipExtractor(filename);
-//                    sevenZipExtract.PreserveDirectoryStructure = true;
-                    int[] indexlist = new int[sevenZipExtract.FilesCount];
-                    for (int i = 0; i < sevenZipExtract.FilesCount; i++)
-                        indexlist[i] = i;
-                   
-                    sevenZipExtract.ExtractFiles(strTmpDir, indexlist); //  (new SevenZip.ExtractFileCallback(extractFileCallback));
-
-//                    CreateModForm createModForm = new CreateModForm(strTmpDir); // this expects the file to have textures and meshes at the root
-                    CreateModForm createModForm = new CreateModForm();
-                    string[] dir = Directory.GetDirectories(strTmpDir,"textures",SearchOption.AllDirectories);
-                    if (dir.Length > 0)
-                    {
-                        // import from the directory above
-                        dir[0] = dir[0].Substring(0, dir[0].LastIndexOf('\\') + 1);
-                        createModForm.AddFilesFromFolder(dir[0]);
-                    }
-                    //ToDo:  add ESMS and BSAs
-                    string[] bsalist = Directory.GetFiles(strTmpDir, "*.bsa", SearchOption.AllDirectories);
-                    string[] esmlist = Directory.GetFiles(strTmpDir, "*.esm", SearchOption.AllDirectories);
-                    string[] esplist = Directory.GetFiles(strTmpDir, "*.esp", SearchOption.AllDirectories);
-                    List<string> pluginslist = new List<string>();
-                    pluginslist.AddRange(esmlist);
-                    pluginslist.AddRange(esplist);
-                    createModForm.ops.esps = pluginslist.ToArray();
-                    for (int curplugin = 0; curplugin < pluginslist.Count; curplugin++)
-                    {
-                        pluginslist[curplugin] = Path.GetFileName(pluginslist[curplugin]);
-                    }
-                    createModForm.ops.espPaths=pluginslist.ToArray();
-                    for (int curplugin = 0; curplugin < pluginslist.Count; curplugin++)
-                    {
-                        pluginslist[curplugin] = Path.GetFileName(filename);
-                    }
-                    createModForm.ops.espSources = pluginslist.ToArray();
-
-                    List<string> datalist = new List<string>();
-                    datalist.AddRange(bsalist);
-                    createModForm.ops.DataFiles = datalist.ToArray();
-                    for (int curdata = 0; curdata < datalist.Count; curdata++)
-                    {
-                        datalist[curdata] = Path.GetFileName(datalist[curdata]);
-                    }
-                    createModForm.ops.DataFilePaths = datalist.ToArray();
-                    for (int curdata = 0; curdata < datalist.Count; curdata++)
-                    {
-                        datalist[curdata] = Path.GetFileName(filename);
-                    }
-                    createModForm.ops.DataSources = datalist.ToArray();
-
-                    int zni;
-                    if ((zni = filename.IndexOf('-')) != -1)
-                    {
-                        string[] chunks = filename.Substring(zni + 1).Split('-');
-
-                        string nexusFileid = "";
-                        // check the chunks to see if they are numeric only
-                        foreach (string chunk in chunks)
-                        {
-                            bool isnumeric = true;
-                            for (int i = 0; i < chunk.Length; i++)
-                            {
-                                if ("0123456789".IndexOf(chunk[i]) == -1)
-                                {
-                                    isnumeric = false;
-                                    break;
-                                }
-                            }
-                            if (isnumeric)
-                            {
-                                nexusFileid = chunk;
-                                break;
-                            }
-                        }
-                        if (nexusFileid.Length>0)
-                        {
-                            if ((GlobalSettings.AlwaysImportTES || MessageBox.Show("Import info from " + (Program.bSkyrimMode ? "Skyrim" : "TES") + "Nexus?", "Import", MessageBoxButtons.YesNo, MessageBoxIcon.Question)
-                                                == DialogResult.Yes))
-                            {
-                                if (Program.KeyPressed(16))
-                                    GlobalSettings.AlwaysImportTES = true;
-                                createModForm.ApplyTESNexus(GlobalSettings.LastTNID = nexusFileid);
-                            }
-                        }
-                    }
-                    // now check what we have here
-                    if (createModForm.ShowForm(false))
-                    {
-                        UpdateOmodList();
-                    }
-                    break;
-                case "omod":
-                case "omod2":
-                    if (null!=Program.LoadNewOmod(filename))
-				        UpdateOmodList();
-                    break;
-                default:
-                    break;
-            }
- */
         }
-
-        //typedef struct _boss_db_int * boss_db;
-        //uint32_t SortMods (boss_db db, const bool trialOnly, uint8_t *** sortedPlugins, size_t * sortedListLength, uint8_t *** unrecognisedPlugins, size_t * unrecListLength);
-//        [System.Runtime.InteropServices.DllImport("boss32.dll", CharSet = System.Runtime.InteropServices.CharSet.Ansi)]
-//        UInt32 SortMods(UIntPtr db, bool trialOnly, Byte*** sortedPlugins, ref UIntPtr sortedListLength, Byte*** unrecognisedPlugins, ref UIntPtr unrecListLength);
-
-        //uint32_t CreateBossDb (boss_db * db, const uint32_t clientGame, const uint8_t * dataPath);
-        //uint32_t UpdateMasterlist (boss_db db, const uint8_t * masterlistPath);
-        //uint32_t Load (boss_db db, const uint8_t * masterlistPath, const uint8_t * userlistPath);
-        //void DestroyBossDb (boss_db db);
         private void btnBOSSSortPlugins_Click(object sender, EventArgs e)
         {
-            
-            /*
-            int length = 0;
-            UIntPtr db;
-            const UInt32 BOSS_API_GAME_OBLIVION;
-            const UInt32 BOSS_API_GAME_SKYRIM;
-
-            ret = CreateBossDb(ref db, game, NULL);
-            ret = UpdateMasterlist(db, mPath);
-            ret = Load(db, mPath, NULL);
-            SortMods(db, false, null, ref length, null, ref length);
-            DestroyBossDb(db);*/
-
+          
             System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-            tmm.StartInfo.FileName = Program.BOSSpath + "\\BOSS.exe";
+            tmm.StartInfo.FileName = Path.Combine(Program.BOSSpath, "BOSS.exe");
             tmm.StartInfo.WorkingDirectory = Program.BOSSpath;
             tmm.StartInfo.Arguments = "-g "+ Program.currentGame.Name;
             tmm.Start();

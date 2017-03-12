@@ -116,7 +116,7 @@ namespace OblivionModManager.Scripting {
             {
                 string[] paths=new string[3];
                 paths[0]=Program.BaseDir;
-                paths[1]=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "My games\\" + Program.currentGame.Name);
+                paths[1]=Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), Path.Combine("My games", Program.currentGame.Name));
                 paths[2]=Program.TempDir;
                 ps.AddPermission(new FileIOPermission(FileIOPermissionAccess.AllAccess, paths));
                 ps.AddPermission(new UIPermission(UIPermissionWindow.AllWindows));

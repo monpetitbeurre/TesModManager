@@ -139,38 +139,6 @@ namespace OblivionModManager.Forms {
 
         private void bResetTimestamps_Click(object sender, EventArgs e) {
             OblivionBSA.ResetTimeStamps();
-/*
-            DateTime date=new DateTime(2006,1,1);
-            if (!Program.bSkyrimMode)
-            {
-                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderName+"", "*.bsa"))
-                {
-                    System.IO.FileInfo fi = new System.IO.FileInfo(s);
-                    fi.LastWriteTime = date;
-                    date.AddHours(1);
-                }
-            }
-            else
-            {
-                // first cover standard BSA
-                foreach (string s in System.IO.Directory.GetFiles(Program.DataFolderName+"", "Skyrim - *.bsa"))
-                {
-                    System.IO.FileInfo fi = new System.IO.FileInfo(s);
-                    fi.LastWriteTime = date;
-                }
-                // now cover BSAs according to esp/esm order
-                foreach (ListViewItem lvi in Program.lvEspList.Items)
-                {
-                    string s = lvi.Text; s = s.Replace(".esm", "").Replace(".esp", ""); s = s + ".bsa"; s = Program.DataFolderName+"\\" + s;
-                    if (System.IO.File.Exists(s))
-                    {
-                        date.AddHours(1);
-                        System.IO.FileInfo fi = new System.IO.FileInfo(s);
-                        fi.LastWriteTime = date;
-                    }
-                }
-            }
- */ 
         }
 
         private void bReset_Click(object sender, EventArgs e) {

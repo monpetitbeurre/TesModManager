@@ -841,9 +841,9 @@ namespace ConflictDetector {
                                 for(int i=0;i<textures.Length;i++) {
                                     string tex=textures[i].ToLower();
                                     ids.Add(tex);
-                                    string tex2=Path.GetDirectoryName(tex)+"\\"+Path.GetFileNameWithoutExtension(tex)+"_n"+Path.GetExtension(tex);
+                                    string tex2=Path.Combine(Path.GetDirectoryName(tex), Path.GetFileNameWithoutExtension(tex)+"_n"+Path.GetExtension(tex));
                                     if(OblivionModManager.Classes.BSAArchive.CheckForTexture(tex2)) ids.Add(tex2);
-                                    tex2=Path.GetDirectoryName(tex)+"\\"+Path.GetFileNameWithoutExtension(tex)+"_g"+Path.GetExtension(tex);
+                                    tex2=Path.Combine(Path.GetDirectoryName(tex), Path.GetFileNameWithoutExtension(tex)+"_g"+Path.GetExtension(tex));
                                     if(OblivionModManager.Classes.BSAArchive.CheckForTexture(tex2)) ids.Add(tex2);
                                 }
                             }
@@ -869,9 +869,9 @@ namespace ConflictDetector {
                             if(s2[index]=='"') end='"'; else end=' ';
                             int index2=s2.IndexOf(end);
                             if(index2==-1) break;
-                            ids.Add("textures\\menus\\"+s2.Substring(index, index2-index).ToLower());
-                            ids.Add("textures\\menus80\\"+s2.Substring(index, index2-index).ToLower());
-                            ids.Add("textures\\menus50\\"+s2.Substring(index, index2-index).ToLower());
+                            ids.Add(Path.Combine("textures\\menus", s2.Substring(index, index2-index).ToLower()));
+                            ids.Add(Path.Combine("textures\\menus80", s2.Substring(index, index2-index).ToLower()));
+                            ids.Add(Path.Combine("textures\\menus50", s2.Substring(index, index2-index).ToLower()));
                         }
                     } catch { }
                     break;
@@ -888,30 +888,30 @@ namespace ConflictDetector {
                             //TODO: get glowmaps/normal maps
                         } else if(line.StartsWith("playbink")) {
                             string[] file=line.Split('"');
-                            if(file.Length>1) ids.Add("video\\"+file[1].ToLower());
+                            if(file.Length>1) ids.Add(Path.Combine("video", file[1].ToLower()));
                         }
                     }
                     break;
                 case "FNAM":
                     switch(rtype) {
                     case "SOUN":
-                        ids.Add("sounds\\"+s2.ToLower());
+                        ids.Add(Path.Combine("sounds", s2.ToLower()));
                         break;
                     case "CLMT":
-                        ids.Add("textures\\"+s2.ToLower());
+                        ids.Add(Path.Combine("textures", s2.ToLower()));
                         break;
                     }
                     break;
                 case "CNAME":
                 case "DNAME":
-                    if(rtype=="WTHR") ids.Add("textures\\"+s2.ToLower());
+                    if(rtype=="WTHR") ids.Add(Path.Combine("textures",s2.ToLower()));
                     break;
                 case "INAME":
-                    if(rtype=="FACT") ids.Add("textures\\"+s2.ToLower());
-                    break;
+                    if(rtype=="FACT") ids.Add(Path.Combine("textures", s2.ToLower()));
+                        break;
                 case "GNAM":
-                    if(rtype=="CLMT") ids.Add("textures\\"+s2.ToLower());
-                    break;
+                    if(rtype=="CLMT") ids.Add(Path.Combine("textures", s2.ToLower()));
+                        break;
                 }
                 br.BaseStream.Position=newpos;
             }
@@ -958,11 +958,11 @@ namespace ConflictDetector {
                     case "MOD4":
                         s2 = Program.ReadBString(br, size2).Replace("\0", "");
                         Console.WriteLine("=>"+s2);
-                        //if(!File.Exists(Program.DataFolderName+"\\meshes\\"+s2)) break;
-                        ids.Add("meshes\\" + s2.ToLower());
+                        //if(!File.Exists(Path.Combine(Program.DataFolderName,"meshes\\"+s2))) break;
+                        ids.Add(Path.Combine("meshes", s2.ToLower()));
                         try
                         {
-                            string texlist = "meshes\\" + s2.Replace("\0", ""); ;
+                            string texlist = Path.Combine("meshes", s2.Replace("\0", "")); ;
                             byte[] data = OblivionModManager.Classes.BSAArchive.GetMesh(texlist);
                             if (data != null) texlist = GenList(data, data.Length);
                             else texlist = null;
@@ -973,9 +973,9 @@ namespace ConflictDetector {
                                 {
                                     string tex = textures[i].ToLower();
                                     ids.Add(tex);
-                                    string tex2 = Path.GetDirectoryName(tex) + "\\" + Path.GetFileNameWithoutExtension(tex) + "_n" + Path.GetExtension(tex);
+                                    string tex2 = Path.Combine(Path.GetDirectoryName(tex), Path.GetFileNameWithoutExtension(tex) + "_n" + Path.GetExtension(tex));
                                     if (OblivionModManager.Classes.BSAArchive.CheckForTexture(tex2)) ids.Add(tex2);
-                                    tex2 = Path.GetDirectoryName(tex) + "\\" + Path.GetFileNameWithoutExtension(tex) + "_g" + Path.GetExtension(tex);
+                                    tex2 = Path.Combine(Path.GetDirectoryName(tex), Path.GetFileNameWithoutExtension(tex) + "_g" + Path.GetExtension(tex));
                                     if (OblivionModManager.Classes.BSAArchive.CheckForTexture(tex2)) ids.Add(tex2);
                                 }
                             }
@@ -1008,9 +1008,9 @@ namespace ConflictDetector {
                                 if (s2[index] == '"') end = '"'; else end = ' ';
                                 int index2 = s2.IndexOf(end);
                                 if (index2 == -1) break;
-                                ids.Add("textures\\menus\\" + s2.Substring(index, index2 - index).ToLower());
-                                ids.Add("textures\\menus80\\" + s2.Substring(index, index2 - index).ToLower());
-                                ids.Add("textures\\menus50\\" + s2.Substring(index, index2 - index).ToLower());
+                                ids.Add(Path.Combine("textures\\menus", s2.Substring(index, index2 - index).ToLower()));
+                                ids.Add(Path.Combine("textures\\menus80", s2.Substring(index, index2 - index).ToLower()));
+                                ids.Add(Path.Combine("textures\\menus50", s2.Substring(index, index2 - index).ToLower()));
                             }
                         }
                         catch { }
@@ -1034,7 +1034,7 @@ namespace ConflictDetector {
                             else if (line.StartsWith("playbink"))
                             {
                                 string[] file = line.Split('"');
-                                if (file.Length > 1) ids.Add("video\\" + file[1].ToLower());
+                                if (file.Length > 1) ids.Add(Path.Combine("video", file[1].ToLower()));
                             }
                         }
                         break;
@@ -1044,10 +1044,10 @@ namespace ConflictDetector {
                         switch (rtype)
                         {
                             case "SOUN":
-                                ids.Add("sounds\\" + s2.ToLower());
+                                ids.Add(Path.Combine("sounds", s2.ToLower()));
                                 break;
                             case "CLMT":
-                                ids.Add("textures\\" + s2.ToLower());
+                                ids.Add(Path.Combine("textures", s2.ToLower()));
                                 break;
                         }
                         break;
@@ -1055,17 +1055,17 @@ namespace ConflictDetector {
                     case "DNAME":
                         s2 = Program.ReadBString(br, size2).Replace("\0", "");
                         Console.WriteLine("=>"+s2);
-                        if (rtype == "WTHR") ids.Add("textures\\" + s2.ToLower());
+                        if (rtype == "WTHR") ids.Add(Path.Combine("textures", s2.ToLower()));
                         break;
                     case "INAME":
                         s2 = Program.ReadBString(br, size2).Replace("\0", "");
                         Console.WriteLine("=>"+s2);
-                        if (rtype == "FACT") ids.Add("textures\\" + s2.ToLower());
+                        if (rtype == "FACT") ids.Add(Path.Combine("textures", s2.ToLower()));
                         break;
                     case "GNAM":
                         s2 = Program.ReadBString(br, size2).Replace("\0", "");
                         Console.WriteLine("=>"+s2);
-                        if (rtype == "CLMT") ids.Add("textures\\" + s2.ToLower());
+                        if (rtype == "CLMT") ids.Add(Path.Combine("textures", s2.ToLower()));
                         break;
                     default:
                         Program.ReadBString(br, size2);
