@@ -403,8 +403,8 @@ namespace OblivionModManager.Forms {
             bw.Write((byte)'S');
             bw.Write((byte)'A');
             bw.Write((byte)0);
-            uint BSAVersion = 103; // oblivionse
-            if (Program.currentGame.NickName.Contains("skyrim"))
+            uint BSAVersion = 103; // oblivion
+            if (Program.currentGame.NickName.Contains("skyrimse"))
                 BSAVersion = 105;
             else if (Program.currentGame.NickName.Contains("skyrim"))
                 BSAVersion = 104;
