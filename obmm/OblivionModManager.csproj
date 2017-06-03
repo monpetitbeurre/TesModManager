@@ -159,6 +159,18 @@
     <Compile Include="AdvList.cs" />
     <Compile Include="altpanel.cs" />
     <Compile Include="Classes\Game.cs" />
+    <Compile Include="Forms\ChoseGameForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ChoseGameForm.Designer.cs">
+      <DependentUpon>ChoseGameForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\SetGamePathForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\SetGamePathForm.Designer.cs">
+      <DependentUpon>SetGamePathForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MonoFScalls.cs" />
     <Compile Include="Classes\BSAUncorrupter.cs" />
     <Compile Include="Classes\com7zrWrapper.cs" />
@@ -386,6 +398,9 @@
       <SubType>Designer</SubType>
       <DependentUpon>SettingsForm.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ChoseGameForm.resx">
+      <DependentUpon>ChoseGameForm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\DownloadsForm.resx">
       <DependentUpon>DownloadsForm.cs</DependentUpon>
     </EmbeddedResource>
@@ -476,6 +491,9 @@
     <EmbeddedResource Include="Forms\SelectForm.resx">
       <SubType>Designer</SubType>
       <DependentUpon>SelectForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\SetGamePathForm.resx">
+      <DependentUpon>SetGamePathForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\SimResults.resx">
       <DependentUpon>SimResults.cs</DependentUpon>

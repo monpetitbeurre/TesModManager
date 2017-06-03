@@ -286,7 +286,7 @@ namespace OblivionModManager.Scripting {
 					}
 					if(line.Length>3) Warn("Unexpected arguments to 'If OblivionNewerThan'");
 					try {
-						System.Diagnostics.FileVersionInfo fvi=System.Diagnostics.FileVersionInfo.GetVersionInfo("oblivion.exe");
+                        System.Diagnostics.FileVersionInfo fvi = System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ExeName));// "oblivion.exe");
 						if(fvi.FileVersion==null) return false;
 						Version v=new Version(line[2]); ;
 						Version v2=new Version(fvi.FileVersion.Replace(", ", "."));

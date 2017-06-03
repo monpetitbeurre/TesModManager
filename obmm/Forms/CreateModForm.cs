@@ -218,9 +218,9 @@ namespace OblivionModManager {
 			tbEmail.Text=o.Email;
 			tbWebsite.Text=o.Website;
 			string s=o.GetPlugins();
-			if(s!=null) AddFilesFromFolder(s, o.ModName, true);
+			if(!string.IsNullOrEmpty(s)) AddFilesFromFolder(s, o.ModName, true);
 			s=o.GetDataFiles();
-			if(s!=null) AddFilesFromFolder(s, o.ModName, true);
+			if(!string.IsNullOrEmpty(s)) AddFilesFromFolder(s, o.ModName, true);
 			for(int i=0;i<cmsGroups.Items.Count;i++) {
 				if((o.group&(ulong)(1<<i)) > 0) ((ToolStripMenuItem)cmsGroups.Items[i]).Checked=true;
 			}

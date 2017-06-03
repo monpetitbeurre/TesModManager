@@ -90,6 +90,15 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.16
+--------------
+* improved handling of misdetected game path
+
+Version 1.6.15
+--------------
+* Fixed a crash when editing pHUD skyblivion OMOD
+* Fixed a case where oblivion version test failed
+
 Version 1.6.14
 --------------
 * Fixed a case where the BSA version number was incorrect
