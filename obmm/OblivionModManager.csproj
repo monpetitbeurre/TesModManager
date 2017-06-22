@@ -165,6 +165,12 @@
     <Compile Include="Forms\ChoseGameForm.Designer.cs">
       <DependentUpon>ChoseGameForm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\ImportOrLoadForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\ImportOrLoadForm.Designer.cs">
+      <DependentUpon>ImportOrLoadForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\SetGamePathForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -437,6 +443,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ESForm.resx">
       <DependentUpon>ESForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\ImportOrLoadForm.resx">
+      <DependentUpon>ImportOrLoadForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Forms\ModRename.resx">
       <DependentUpon>ModRename.cs</DependentUpon>

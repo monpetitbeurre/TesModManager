@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.17
+--------------
+* Add an option to load a mod downloaded from TesNexus directly without customization. The dialog can be hidden (defauklt is customization then) through the settings dialog
+
 Version 1.6.16
 --------------
 * improved handling of misdetected game path

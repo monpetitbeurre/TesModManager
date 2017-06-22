@@ -124,6 +124,7 @@ namespace OblivionModManager {
             cbShowModNameInsteadOfFilename.Checked=GlobalSettings.ShowOMODNames;
             cbPreventMovingAnESPBeforeAnESM.Checked=Settings.bPreventMovingESPBeforeESM;
             cbOmod2IsDefault.Checked = Settings.bOmod2IsDefault;
+            cbAskIfLoadAsIsOrImport.Checked = Settings.bAskIfLoadAsIsOrImport;
         }
 
         private int SelectedGroup=0;
@@ -740,5 +741,9 @@ namespace OblivionModManager {
             toolTip.SetToolTip(bAlternateBackupFolder, "Current conflicted files backup folder: " + Settings.conflictsBackupDir);
         }
 
+        private void cbAskIfLoadAsIsOrImport_CheckedChanged(object sender, EventArgs e)
+        {
+            Settings.bAskIfLoadAsIsOrImport = cbAskIfLoadAsIsOrImport.Checked;
+        }
     }
 }

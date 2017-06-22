@@ -3198,7 +3198,26 @@ namespace OblivionModManager {
                 //backgroundModImportWorker.ReportProgress(0, "Importing " + file + " (" + Program.importList.Count + " imports)");
                 try
                 {
-                    Program.importFile(file, pf);
+                    if (Settings.bAskIfLoadAsIsOrImport)
+                    {
+                        ImportOrLoadForm dlg = new ImportOrLoadForm(Path.GetFileName(file));
+
+                        dlg.ShowDialog();
+
+                        if (dlg.ImportAsIs)
+                        {
+                            Program.LoadNewOmod(file);
+                            Program.SaveData();
+                        }
+                        else
+                        {
+                            Program.importFile(file, pf);
+                        }
+                    }
+                    else
+                    {
+                        Program.importFile(file, pf);
+                    }
                 }
                 catch (Exception ex)
                 {

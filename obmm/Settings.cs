@@ -74,6 +74,7 @@ namespace OblivionModManager {
         public static bool bShowSimpleOverwriteForm;
         public static bool bPreventMovingESPBeforeESM;
         public static bool bOmod2IsDefault;
+        public static bool bAskIfLoadAsIsOrImport;
         public static bool CDShowMajor;
 		public static bool CDShowMinor;
 		public static bool CDShowVeryMinor;
@@ -189,6 +190,7 @@ namespace OblivionModManager {
                 bw.Write(bOmod2IsDefault);
                 bw.Write(conflictsBackupDir);
                 bw.Write(altPanelSplitterDistance);
+                bw.Write(bAskIfLoadAsIsOrImport);
             }
             finally
             {
@@ -381,6 +383,7 @@ namespace OblivionModManager {
                     try { conflictsBackupDir = br.ReadString(); }
                     catch { conflictsBackupDir = Program.currentGame.DataFolderPath; };
                     try { altPanelSplitterDistance = br.ReadInt32(); } catch { altPanelSplitterDistance = -9001; }
+                    try { bAskIfLoadAsIsOrImport = br.ReadBoolean(); } catch { bAskIfLoadAsIsOrImport = true; }
                 }
 
 				if(version<15&&(ArchiveInvalidationFlags.EditBSAs&InvalidationFlags)>0) {
