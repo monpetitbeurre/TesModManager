@@ -245,13 +245,13 @@ namespace OblivionModManager.Scripting {
 						return false;
 					}
 					if(line.Length>3) Warn("Unexpected arguments to 'If ScriptExtenderNewerThan'");
-					if(!(File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) && File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL)))) return false;
+					if(!(File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) || File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL)))) return false;
 					try {
 						System.Diagnostics.FileVersionInfo fvi;
                         fvi = File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) ? System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) :
                             System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderDLL));
 						if(fvi.FileVersion==null) return false;
-						Version v=new Version(line[2]); ;
+						Version v=new Version(line[2]);
 						Version v2=new Version(fvi.FileVersion.Replace(", ", "."));
 						return (v2>=v);
 					} catch {

@@ -227,24 +227,24 @@ namespace OblivionModManager.Scripting {
                 }
             }
 		}
-        private static void CheckDataSafty(string path)
+        private static void CheckDataSafety(string path)
         {
 			permissions.Assert();
 			if(!Program.IsSafeFileName(path)) throw new ScriptingException("Illegal file name: '"+path+"'");
 			if(!(testMode?ExistsIn(path, dataFileList):File.Exists(Path.Combine(DataFiles,path)))) throw new ScriptingException("File '"+path+"' not found");
 		}
-        private static void CheckFolderSafty(string path)
+        private static void CheckFolderSafety(string path)
         {
 			if(!Program.IsSafeFolderName(path)) throw new ScriptingException("Illegal folder name: '"+path+"'");
 		}
-        private static void CheckPluginFolderSafty(string path)
+        private static void CheckPluginFolderSafety(string path)
         {
 			permissions.Assert();
 			if(path.EndsWith("\\")||path.EndsWith("/")) path=path.Remove(path.Length-1);
 			if(!Program.IsSafeFolderName(path)) throw new ScriptingException("Illegal folder name: '"+path+"'");
 			if(!(testMode?ExistsIn(path, pluginFolderList):Directory.Exists(Path.Combine(Plugins,path)))) throw new ScriptingException("Folder '"+path+"' not found");
 		}
-        private static void CheckDataFolderSafty(string path)
+        private static void CheckDataFolderSafety(string path)
         {
 			permissions.Assert();
 			if(path.EndsWith("\\")||path.EndsWith("/")) path=path.Remove(path.Length-1);
@@ -355,7 +355,13 @@ namespace OblivionModManager.Scripting {
             else
             {
                 string extender = File.Exists(Path.Combine(Program.currentGame.GamePath, Program.currentGame.ScriptExtenderExe)) ? Program.currentGame.ScriptExtenderExe : Program.currentGame.ScriptExtenderDLL;
-                return new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, extender)).FileVersion.Replace(", ", "."));
+                Version version = null;
+                try
+                {
+                    version = new Version(System.Diagnostics.FileVersionInfo.GetVersionInfo(Path.Combine(Program.currentGame.GamePath, extender)).FileVersion.Replace(", ", "."));
+                }
+                catch { }
+                return version;
             }
         }
         public Version GetOBGEVersion() { return _GetOBGEVersion(); }
@@ -402,28 +408,28 @@ namespace OblivionModManager.Scripting {
         public string[] GetPlugins(string path, string pattern, bool recurse) { return _GetPlugins(path, pattern, recurse); }
         public static string[] _GetPlugins(string path, string pattern, bool recurse)
         {
-			CheckPluginFolderSafty(path);
+			CheckPluginFolderSafety(path);
 			return testMode ? SimulateFSOutput(pluginList, path, pattern, recurse)
 				: StripPathList(GetFilePaths(Plugins + path, pattern, recurse), Plugins.Length);
 		}
         public string[] GetDataFiles(string path, string pattern, bool recurse) { return _GetDataFiles(path, pattern, recurse); }
         public static string[] _GetDataFiles(string path, string pattern, bool recurse)
         {
-			CheckDataFolderSafty(path);
+			CheckDataFolderSafety(path);
 			return testMode ? SimulateFSOutput(dataFileList, path, pattern, recurse)
 				: StripPathList(GetFilePaths(DataFiles + path, pattern, recurse), DataFiles.Length);
 		}
         public string[] GetPluginFolders(string path, string pattern, bool recurse) { return _GetPluginFolders(path, pattern, recurse); }
         public static string[] _GetPluginFolders(string path, string pattern, bool recurse)
         {
-			CheckPluginFolderSafty(path);
+			CheckPluginFolderSafety(path);
 			return testMode ? SimulateFSOutput(pluginFolderList, path, pattern, recurse)
 				: StripPathList(GetDirectoryPaths(Plugins + path, pattern, recurse), Plugins.Length);
 		}
         public string[] GetDataFolders(string path, string pattern, bool recurse) { return _GetDataFolders(path, pattern, recurse); }
         public static string[] _GetDataFolders(string path, string pattern, bool recurse)
         {
-			CheckDataFolderSafty(path);
+			CheckDataFolderSafety(path);
 			return testMode ? SimulateFSOutput(dataFolderList, path, pattern, recurse)
 				: StripPathList(GetDirectoryPaths(DataFiles + path, pattern, recurse), DataFiles.Length);
 		}
@@ -463,12 +469,18 @@ namespace OblivionModManager.Scripting {
             string[] result = new string[0];
 			if(previews!=null) {
 				for(int i=0;i<previews.Length;i++) {
-					if(previews[i]!=null && previews[i]!="")
+                    if (previews[i] != null && previews[i] != "")
                     {
-						CheckDataSafty(previews[i]);
-						previews[i]=DataFiles+previews[i];
-					}
-				}
+                        try
+                        {
+                            CheckDataSafety(previews[i]);
+                        }
+                        catch
+                        { }
+
+                        previews[i] = Path.Combine(DataFiles, previews[i]);
+                    }
+                }
 			}
             if (items.Length > 0)
             {
@@ -498,7 +510,7 @@ namespace OblivionModManager.Scripting {
         public void DisplayImage(string path, string title) { _DisplayImage(path, title); }
         public static void _DisplayImage(string path, string title)
         {
-			CheckDataSafty(path);
+			CheckDataSafety(path);
 			permissions.Assert();
 			System.Drawing.Image image=System.Drawing.Image.FromFile(DataFiles+path);
 			new ImageForm(image, (title!=null)?title:path).ShowDialog();
@@ -508,7 +520,7 @@ namespace OblivionModManager.Scripting {
         public void DisplayText(string path, string title) { _DisplayText(path, title); }
         public static void _DisplayText(string path, string title)
         {
-			CheckDataSafty(path);
+			CheckDataSafety(path);
 			permissions.Assert();
 			string s=File.ReadAllText(DataFiles+path, System.Text.Encoding.Default);
 			new TextEditor((title!=null)?title:path, s, true, false).ShowDialog();
@@ -671,14 +683,14 @@ namespace OblivionModManager.Scripting {
         public void DontInstallDataFile(string name) { _DontInstallDataFile(name); }
         public static void _DontInstallDataFile(string name)
         {
-			CheckDataSafty(name);
+			CheckDataSafety(name);
 			Program.strArrayRemove(srd.InstallData, name);
 			if(!Program.strArrayContains(srd.IgnoreData, name)) srd.IgnoreData.Add(name);
 		}
         public void DontInstallDataFolder(string folder, bool recurse) { _DontInstallDataFolder(folder, recurse); }
         public static void _DontInstallDataFolder(string folder, bool recurse)
         {
-			CheckDataFolderSafty(folder);
+			CheckDataFolderSafety(folder);
 			if(testMode) {
 				folder=folder.ToLower();
 				if(folder.EndsWith("\\")||folder.EndsWith("/")) folder=folder.Remove(folder.Length-1);
@@ -727,14 +739,14 @@ namespace OblivionModManager.Scripting {
         public void InstallDataFile(string name) { _InstallDataFile(name); }
         public static void _InstallDataFile(string name)
         {
-			CheckDataSafty(name);
+			CheckDataSafety(name);
 			Program.strArrayRemove(srd.IgnoreData, name);
 			if(!Program.strArrayContains(srd.InstallData, name)) srd.InstallData.Add(name);
 		}
         public void InstallDataFolder(string folder, bool recurse) { _InstallDataFolder(folder, recurse); }
         public static void _InstallDataFolder(string folder, bool recurse)
         {
-			CheckDataFolderSafty(folder);
+			CheckDataFolderSafety(folder);
 			if(testMode) {
 				folder=folder.ToLower();
 				if(folder.EndsWith("\\")||folder.EndsWith("/")) folder=folder.Remove(folder.Length-1);
@@ -774,7 +786,7 @@ namespace OblivionModManager.Scripting {
         {
             try
             {
-                CheckDataSafty(from);
+                CheckDataSafety(from);
                 if (to == null || to.Length == 0)
                     to = Path.GetFileName(from);
                 CheckPathSafty(to);
@@ -803,8 +815,8 @@ namespace OblivionModManager.Scripting {
             try
             {
 
-			    CheckDataFolderSafty(from);
-			    CheckFolderSafty(to);
+			    CheckDataFolderSafety(from);
+			    CheckFolderSafety(to);
 
 			    if(testMode) {
 				    from=from.ToLower();
@@ -885,7 +897,7 @@ namespace OblivionModManager.Scripting {
         public void PatchDataFile(string from, string to, bool create) { _PatchDataFile(from, to, create); }
         public static void _PatchDataFile(string from, string to, bool create)
         {
-			CheckDataSafty(from);
+			CheckDataSafety(from);
 			CheckPathSafty(to);
 			string lto=to.ToLower();
 			if(lto.EndsWith(".esp")||lto.EndsWith(".esm")) throw new ScriptingException("Copied data files must not have a .esp or .esm file extension");
@@ -914,14 +926,14 @@ namespace OblivionModManager.Scripting {
         public void RegisterBSA(string path) { _RegisterBSA(path); }
         public static void _RegisterBSA(string path)
         {
-			CheckDataSafty(path);
+			CheckDataSafety(path);
 			if(path.Contains(";")||path.Contains(",")||path.Contains("=")) throw new ScriptingException("BSA path cannot contain the characters ',', '=' or ';'");
 			if(!srd.RegisterBSAList.Contains(path)) srd.RegisterBSAList.Add(path);
 		}
         public void UnregisterBSA(string path) { _UnregisterBSA(path); }
         public static void _UnregisterBSA(string path)
         {
-			CheckDataSafty(path);
+			CheckDataSafety(path);
 			if(path.Contains(";")||path.Contains(",")||path.Contains("=")) throw new ScriptingException("BSA path cannot contain the characters ',', '=' or ';'");
 			if(srd.RegisterBSAList.Contains(path)) srd.RegisterBSAList.Remove(path);
 		}
@@ -934,7 +946,7 @@ namespace OblivionModManager.Scripting {
         public void EditShader(byte package, string name, string path) { _EditShader(package, name, path); }
         public static void _EditShader(byte package, string name, string path)
         {
-			CheckDataSafty(path);
+			CheckDataSafety(path);
 			srd.SDPEdits.Add(new SDPEditInfo(package, name, DataFiles+path));
 		}
 
@@ -1042,7 +1054,7 @@ namespace OblivionModManager.Scripting {
         public void EditXMLLine(string file, int line, string value){ _EditXMLLine(file, line, value); }
         public static void _EditXMLLine(string file, int line, string value)
         {
-			CheckDataSafty(file);
+			CheckDataSafety(file);
 			string ext=Path.GetExtension(file).ToLower();
 			if(ext!=".txt"&&ext!=".xml"&&ext!=".bat"&&ext!=".ini") throw new ScriptingException("Can only edit files with a .xml, .ini, .bat or .txt extension");
 			permissions.Assert();
@@ -1054,7 +1066,7 @@ namespace OblivionModManager.Scripting {
         public void EditXMLReplace(string file, string find, string replace) { _EditXMLReplace(file, find, replace); }
         public static void _EditXMLReplace(string file, string find, string replace)
         {
-			CheckDataSafty(file);
+			CheckDataSafety(file);
 			string ext=Path.GetExtension(file).ToLower();
 			if(ext!=".txt"&&ext!=".xml"&&ext!=".bat"&&ext!=".ini") throw new ScriptingException("Can only edit files with a .xml, .ini, .bat or .txt extension");
 			permissions.Assert();
@@ -1074,7 +1086,7 @@ namespace OblivionModManager.Scripting {
         public static byte[] _ReadDataFile(string file)
         {
 			if(testMode) throw new ScriptingException("ReadDataFile cannot be used in a script simulation");
-			CheckDataSafty(file);
+			CheckDataSafety(file);
 			permissions.Assert();
 			return File.ReadAllBytes(Path.Combine(DataFiles, file));
 		}
@@ -1159,7 +1171,7 @@ namespace OblivionModManager.Scripting {
         {
 			if(testMode) throw new ScriptingException("GenerateBSA cannot be used in a script simulation");
 			CheckPathSafty(file);
-			CheckDataFolderSafty(path);
+			CheckDataFolderSafety(path);
 			permissions.Assert();
 			path=Path.Combine(DataFiles, path);
 			string file2=Path.Combine(DataFiles, file);

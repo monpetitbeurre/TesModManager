@@ -127,7 +127,28 @@ namespace OblivionModManager.Forms {
                 for (int i = 0; i < previews.Length; i++)
                 {
                     if (previews[i] == null || previews[i] == "") Previews[i] = null;
-                    else Previews[i] = System.Drawing.Image.FromFile(previews[i]);
+                    else
+                    {
+                        System.Drawing.Image image = null;
+                        if (System.IO.File.Exists(previews[i]))
+                        {
+                            image = System.Drawing.Image.FromFile(previews[i]);
+                        }
+                        else if (System.IO.File.Exists(previews[i] + ".jpg"))
+                        {
+                            image = System.Drawing.Image.FromFile(previews[i] + ".jpg");
+                        }
+                        else if (System.IO.File.Exists(previews[i] + ".png"))
+                        {
+                            image = System.Drawing.Image.FromFile(previews[i] + ".png");
+                        }
+                        try
+                        {
+                            Previews[i] = image;
+                        }
+                        catch
+                        { }
+                    }
                 }
                 if (lbSelect.SelectedIndex != -1 && lbSelect.SelectedIndices.Count == 1)
                     bPreview.Enabled = true;

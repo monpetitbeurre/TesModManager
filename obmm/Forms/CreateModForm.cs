@@ -645,7 +645,7 @@ namespace OblivionModManager {
 					}
 				}
 				
-				string omodCD = folder + Program.omodConversionData;
+				string omodCD = Path.Combine(folder, Program.omodConversionData);
 				
                 //if (!Directory.Exists(omodCD) && zipname != null)
                 //{
@@ -660,7 +660,7 @@ namespace OblivionModManager {
 				else if (Directory.Exists(omodCD))
 				{
 					//script
-					Files=Directory.GetFiles(folder+Program.omodConversionData, "script.txt");
+					Files=Directory.GetFiles(omodCD, "script.txt");
 					if(Files.Length>0) {
                         if (ops.script == "" || bAutomatic||MessageBox.Show("Overwrite current script with contents of 'script.txt'?",
 						                                   "Question", MessageBoxButtons.YesNo)==DialogResult.Yes) {
@@ -668,7 +668,7 @@ namespace OblivionModManager {
 						}
 					}
 					//screenshot
-					Files=Directory.GetFiles(folder+Program.omodConversionData, "screenshot");
+					Files=Directory.GetFiles(omodCD, "screenshot");
 					if(Files.Length>0) {
                         if (ops.Image == null || bAutomatic||MessageBox.Show("Overwrite current screenshot with contents of " + Files[0] + "?",
 						                                    "Question", MessageBoxButtons.YesNo)==DialogResult.Yes) {
@@ -681,10 +681,10 @@ namespace OblivionModManager {
 						}
 					}
 					//data
-					Files=Directory.GetFiles(folder+Program.omodConversionData, "config");
+					Files=Directory.GetFiles(omodCD, "config");
 					if(Files.Length>0) {
 						if(bAutomatic || RequestImport()) {
-							BinaryReader br=new BinaryReader(File.OpenRead(folder+Program.omodConversionData+"config"));
+							BinaryReader br=new BinaryReader(File.OpenRead(omodCD + "config"));
 							byte version=br.ReadByte();
 							if(version>Program.CurrentOmodVersion) {
 								MessageBox.Show("This version of tmm is too old to read the omod conversion data\n"+

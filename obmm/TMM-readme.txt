@@ -90,13 +90,25 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.21
+--------------
+* Added a protection against incorrect script (like embers HD for Skyrim) pointing to non existing images
+
+Version 1.6.20
+--------------
+* Added a protection against null filename when saving a mod
+
+Version 1.6.19
+--------------
+* Fixed an issue where OBSE version was not detected on steam installs
+
 Version 1.6.18
 --------------
-* Fixed a fatal error on startup due to debug envrionment data staying in release version
+* Fixed a fatal error on startup due to debug environment data staying in release version
 
 Version 1.6.17
 --------------
-* Add an option to load a mod downloaded from TesNexus directly without customization. The dialog can be hidden (defauklt is customization then) through the settings dialog
+* Add an option to load a mod downloaded from TesNexus directly without customization. The dialog can be hidden (default is customization then) through the settings dialog
 
 Version 1.6.16
 --------------

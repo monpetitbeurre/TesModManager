@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.18"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.21"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -131,7 +131,7 @@ namespace OblivionModManager {
             // game name, game Nexus name, game Data folder, game Saves folder, game Nexus ID, game nickname
             new Game { Name="Oblivion", NickName="oblivion", DataFolderName = "Data", SaveFolder="", IniBaseName="oblivion",
                 NexusID =101, TMMNexusID=41346, NexusName="oblivion", ExeName="Oblivion.exe", CreationKitExe="TESConstructionSet.exe",
-                ScriptExtenderName ="OBSE", ScriptExtenderExe="obse_loader.exe", ScriptExtenderDLL="obse_loader.dll", GraphicsExtenderPath=@"obse\plugins\obge.dll" },
+                ScriptExtenderName ="OBSE", ScriptExtenderExe="obse_loader.exe", ScriptExtenderDLL="obse_steam_loader.dll", GraphicsExtenderPath=@"obse\plugins\obge.dll" },
             new Game { Name="Skyrim", NickName="skyrim", DataFolderName = "Data", SaveFolder="", IniBaseName="skyrim",
                 NexusID =110, TMMNexusID=5010, NexusName="skyrim", ExeName="TesV.exe", CreationKitExe="CreationKit.exe",
                 ScriptExtenderName ="SKSE", ScriptExtenderExe="skse_loader.exe", ScriptExtenderDLL="", GraphicsExtenderPath=@"skse\plugins\skge.dll" },

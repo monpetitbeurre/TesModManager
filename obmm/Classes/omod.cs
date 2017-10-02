@@ -90,7 +90,7 @@ namespace OblivionModManager {
                 {
                     _Writer.Write((Version != null ? Version : ""));
                 }
-                _Writer.Write((ModName != null ? ModName : FileName));
+                _Writer.Write((ModName != null ? ModName : (FileName != null ? FileName : "")));
                 _Writer.Write((Plugins != null) ? (Int32)Plugins.Length : (Int32)0);
                 if (Plugins != null) foreach (string plugin in Plugins)
                     {
