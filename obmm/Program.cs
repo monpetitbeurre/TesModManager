@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.21"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.23"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -378,7 +378,7 @@ namespace OblivionModManager {
             if (p_booIsGatekeeper) // "GatekeeperNexusREST" : (Program.bSkyrimMode ? "SKYRIMNexusREST" : "OBNexusREST")
                 remoteAddress = "http://nmm.nexusmods.com/"; //"http://gatekeeper.nexusmods.com/";
             else
-                remoteAddress = "http://nmm.nexusmods.com/"+Program.currentGame.NexusName.Replace(" ", "") + "/";// "http://oblivion.nexusmods.com/";
+                remoteAddress = "http://nmm.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/";// "http://oblivion.nexusmods.com/";
 
             System.ServiceModel.WebHttpBinding binding = new WebHttpBinding();
             binding.MaxReceivedMessageSize = 2147483647;
@@ -3305,7 +3305,7 @@ namespace OblivionModManager {
                 if (fileid != null && fileid.Length > 0)
                 {
                     TextReader tr;
-                    tr = DownloadFile("http://www.nexusmods.com/"+Program.currentGame.NexusName + "/ajax/modactionlog/?id=" + fileid, bSilent);
+                    tr = DownloadFile("http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modactionlog/?id=" + fileid, bSilent);
                     bool bVersion = false;
                     string lastline = "";
                     string line = "";
@@ -3401,7 +3401,7 @@ namespace OblivionModManager {
                     pos2 = line.IndexOf("</strong>");
                     modVersion = line.Substring(pos + "<strong>".Length, pos2 - pos - "<strong>".Length);
                 }
-                else if (line.Contains(".nexusmods.com/"+Program.currentGame.NexusName + "/mods/images/") && modImage == null)
+                else if (line.Contains(".nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/mods/images/") && modImage == null)
                 {
                     line = line.Replace("<a href=\"", "").Replace("\" onclick=\"return hs.expand(this)\">", "");
                     modImage = line;
@@ -3443,7 +3443,7 @@ namespace OblivionModManager {
             if (modName != null && modName.Contains("Adult-only") || modVersion == null || modVersion == "")
             {
                 modAuthor = Program.currentGame.NexusName + "Nexus";
-                tr = DownloadFile("http://www.nexusmods.com/" + Program.currentGame.NexusName + "/ajax/modactionlog/?id=" + fileid, bSilent);
+                tr = DownloadFile("http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/ajax/modactionlog/?id=" + fileid, bSilent);
                 bool bVersion = false;
                 string lastline = "";
                 while (tr!=null && (line = tr.ReadLine()) != null)
@@ -3552,7 +3552,7 @@ namespace OblivionModManager {
             string line;
             List<object> modImages = new List<object>();
 
-            string imagespage = "http://www.nexusmods.com/"+Program.currentGame.NexusName + "/ajax/modimages/?user=0&id=" + modid;
+            string imagespage = "http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modimages/?user=0&id=" + modid;
             System.Net.WebClient wc = new System.Net.WebClient();
             byte[] bytepage = wc.DownloadData(imagespage);
             MemoryStream ms = new MemoryStream(bytepage);
@@ -3607,7 +3607,7 @@ namespace OblivionModManager {
 
                 // check for relative URL
                 if (omodImage[0] == '/')
-                    omodImage = "http://www.nexusmods.com/" + Program.currentGame.NexusName + omodImage;
+                    omodImage = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + omodImage;
                 string path = Program.CreateTempDirectory();
                 //System.Net.WebClient wc = new System.Net.WebClient();
                 bytepage = wc.DownloadData(omodImage);
@@ -3684,7 +3684,7 @@ namespace OblivionModManager {
                         modAuthor = strAuthor;
                         modVersion = (strVersion.Length > 0 ? strVersion : strModVersion);
                         modDescription = strModDescription; // (strDescription.Length > 0 ? strDescription : strModDescription); // Mod file description may not be very descriptive
-                        modWebsite = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + modid;
+                        modWebsite = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                     }
 
                     if (modName == null || modName.Length == 0)
@@ -3692,8 +3692,8 @@ namespace OblivionModManager {
 
                         List<MemoryStream> mses = DownloadForm.DownloadFiles
                         ((new string[] {
-						 	"http://www.nexusmods.com/"+Program.currentGame.NexusName+"/mods/" + modid,
-						 	"http://www.nexusmods.com/"+Program.currentGame.NexusName+"/ajax/moddescription/?id=" + modid
+						 	"http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/mods/" + modid,
+						 	"http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/ajax/moddescription/?id=" + modid
 						 }), bSilent);
 
                         if (mses.Count==0 || (mses.Count==1 && mses[0]==null) || (mses.Count==2 && mses[0]==null && mses[1]==null))
@@ -3720,7 +3720,7 @@ namespace OblivionModManager {
                             modVersion = Program.GetTESVersion(modid, bSilent);
                         }
 
-                        modWebsite = "http://www.nexusmods.com/"+Program.currentGame.NexusName + "/mods/" + modid;
+                        modWebsite = "http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                     }
 
                     // was image requested?

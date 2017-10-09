@@ -10,6 +10,10 @@ namespace OblivionModManager.Classes
     {
         public string Name { get; set; } = "";
         public string NexusName { get; set; } = "";
+        public string NexusNameNoSpaces
+        {
+            get { return NexusName.Replace(" ", string.Empty); }
+        }
         public int NexusID { get; set; } = -1;
         public string DataFolderName { get; set; } = "";
         public string DataFolderPath {

@@ -90,6 +90,14 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.23
+--------------
+* Fixed a case where URL to mod become bad when querying Nexusmods for info (extra spaces added)
+
+Version 1.6.22
+--------------
+* Fixed handling of unicode FOMOD script (like RS children overhaul)
+
 Version 1.6.21
 --------------
 * Added a protection against incorrect script (like embers HD for Skyrim) pointing to non existing images

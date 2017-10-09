@@ -367,6 +367,14 @@ namespace OblivionModManager.Scripting {
 
         public static void ExecuteXML(string script, IScriptFunctions functions)
         {
+            if ((byte)script[0]=='\xfd' && (byte)script[1] == '\xfd')
+            {
+                script = script.Substring(2);
+                System.Text.UTF8Encoding utf8Encoding = new System.Text.UTF8Encoding();
+                System.Text.UnicodeEncoding unicodeEncoding = new System.Text.UnicodeEncoding();
+                script = unicodeEncoding.GetString(utf8Encoding.GetBytes(script));
+            }
+
             if (script.Contains("?<?xml version=\"1.0\" encoding=\"UTF-16\" ?>"))
             {
                 script=script.Replace("?<?xml version=\"1.0\" encoding=\"UTF-16\" ?>","");

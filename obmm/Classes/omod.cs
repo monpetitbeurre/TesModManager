@@ -1155,7 +1155,7 @@ namespace OblivionModManager {
                             string s = Program.GetModID(path);
                             if (s.Length != 0)
                             {
-                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + s;
+                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
                             }
                             try
                             {
@@ -1319,7 +1319,7 @@ namespace OblivionModManager {
                             string modid = Program.GetModID(LowerFileName);
                             if (modid.Length > 0 && (Website == null || Website.Length == 0))
                             {
-                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + modid;
+                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                             }
 
                             Config.Close();
@@ -2962,13 +2962,22 @@ namespace OblivionModManager {
                         // could be omod (\0) or XML or CS
                         else if (scripttext.Contains("DontInstall"))
                             script = "" + (char)(ScriptType.obmmScript);
-                        else if (scripttext.Contains("using  System;"))
+                        else if (scripttext.Contains("using  System;") || scripttext.Contains("using System;"))
                         {
                             script = "" + (char)(ScriptType.cSharp);
                         }
                         else
                             script = "" + (char)(ScriptType.obmmScript);
                     }
+
+                    if ((byte)scripttext[0] == '\xfd' && (byte)scripttext[1] == '\xfd')
+                    {
+                        scripttext = scripttext.Substring(2);
+                        System.Text.UTF8Encoding utf8Encoding = new System.Text.UTF8Encoding();
+                        System.Text.UnicodeEncoding unicodeEncoding = new System.Text.UnicodeEncoding();
+                        scripttext = unicodeEncoding.GetString(utf8Encoding.GetBytes(scripttext));
+                    }
+
                     script += scripttext;
                     br2.Close();
                     ms.Close();

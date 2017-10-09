@@ -2487,7 +2487,7 @@ namespace OblivionModManager {
                     //					MessageBox.Show(o.FileName+" does not have a website", "Error");
                     return false;
                 }
-                s = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + s;
+                s = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
 			}
             s=s.Replace("http://tesnexus.com", "http://www.tesnexus.com");
 
@@ -2497,9 +2497,9 @@ namespace OblivionModManager {
 
             s = s.Replace("http://www.tesnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/oblivion/mods/");
             s = s.Replace("http://www.skyrimnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/skyrim/mods/");
-            s = s.Replace("http://www." + Program.currentGame.NexusName + ".nexusmods.com/mods/", "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/");
+            s = s.Replace("http://www." + Program.currentGame.NexusNameNoSpaces + ".nexusmods.com/mods/", "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/");
 
-            if (s.StartsWith("http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/", StringComparison.CurrentCultureIgnoreCase))
+            if (s.StartsWith("http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/", StringComparison.CurrentCultureIgnoreCase))
 			{
                 string modid=s.Substring(s.LastIndexOf('/')+1);
                 string name = "", version = "", description = "", author = "", website = "", imagefile = null;

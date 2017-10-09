@@ -762,7 +762,7 @@ namespace OblivionModManager {
                                 string modid = Program.GetModID(zipname);
                                 if (modid.Length > 0 && (modWebsite == null || modWebsite.Length == 0))
                                 {
-                                    ops.website = tbWebsite.Text = "http://www.nexusmods.com/" + Program.currentGame.NexusName + "/mods/" + modid;
+                                    ops.website = tbWebsite.Text = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                                 }
                             }
                             catch { };
@@ -1583,7 +1583,10 @@ namespace OblivionModManager {
                     id = id.Substring(id.LastIndexOf("/mods/"));
                     id = id.Replace("/mods/", "");
                 }
+
+                id = id.Replace("/?", "");
             }
+
 			id = InputBox.Show("Mod ID", "Mod ID:", id);
 			
 			if (id != null)
