@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.24
+--------------
+* Fixed a case where NXM links would confuse TMM so it asks what game to start for
+
 Version 1.6.23
 --------------
 * Fixed a case where URL to mod become bad when querying Nexusmods for info (extra spaces added)

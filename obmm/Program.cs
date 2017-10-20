@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.23"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.24"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -1880,10 +1880,11 @@ namespace OblivionModManager {
                             // what game is this for?
                             foreach (Game game in games)
                             {
-                                if (arg.ToLower() == game.NickName)
+                                if (arg.ToLower() == game.NickName.ToLower() || arg.ToLower().StartsWith("nxm://" + game.NickName.ToLower()))
                                 {
                                     currentGame = game;
                                     logger.WriteToLog(currentGame.Name + " Mode", Logger.LogLevel.High);
+
                                     break;
                                 }
                             }
