@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.24"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.25"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -82,6 +82,7 @@ namespace OblivionModManager {
         //public static bool bCancelDownload = false;
         //public static string strDownloadToCancel = "";
         public static bool bEnableFileSystemWatcher = false;
+        private static bool firstStart = false;
 
 //        public const int ExtMaj = MajorVersion, ExtMin = MinorVersion, ExtRev = BuildNumber;
 
@@ -2017,7 +2018,17 @@ namespace OblivionModManager {
                 }
             }
 
-            // find where the game is
+            if (currentGame?.NickName.Length == 0)
+            {
+                List<Game> foundGames = new List<Game>(Program.games).FindAll(g => g.GamePath.Length > 0);
+
+                // how many games found?
+                if (foundGames.Count == 1)
+                {
+                    currentGame = foundGames[0];
+                }
+            }
+
             if (currentGame?.NickName.Length == 0)
             {
                 ChoseGameForm frm = new ChoseGameForm(games);
@@ -2612,7 +2623,11 @@ namespace OblivionModManager {
                 }
                 s.Close();
             }
-            if (Data==null) Data = new sData();
+            if (Data == null)
+            {
+                firstStart = true;
+                Data = new sData();
+            }
 
  			//recreate the unserialized data in omods
 			foreach(omod o in Data.omods) o.RecreatePrivateData();
@@ -2626,6 +2641,13 @@ namespace OblivionModManager {
 		}
 
 		private static void PostInit() {
+
+            if (firstStart)
+            {
+                OptionsForm frm = new OptionsForm();
+                frm.ShowDialog();
+            }
+
 			//Remove any omods that have gone missing from the omod directory
 			if(!IsLimited) {
                 bool bMissingMods = false;

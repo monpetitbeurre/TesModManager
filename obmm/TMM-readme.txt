@@ -90,6 +90,11 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.25
+--------------
+* Allows users to set defaults on first start
+* defaults to a game if only one is found on system
+
 Version 1.6.24
 --------------
 * Fixed a case where NXM links would confuse TMM so it asks what game to start for

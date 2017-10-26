@@ -19,6 +19,8 @@ using System.Windows.Forms;
 using System.IO;
 using System.Text;
 using System.Security.Cryptography;
+using OblivionModManager.Forms;
+using OblivionModManager.Classes;
 
 namespace OblivionModManager {
     public partial class OptionsForm : Form {
@@ -744,6 +746,36 @@ namespace OblivionModManager {
         private void cbAskIfLoadAsIsOrImport_CheckedChanged(object sender, EventArgs e)
         {
             Settings.bAskIfLoadAsIsOrImport = cbAskIfLoadAsIsOrImport.Checked;
+        }
+
+        private void btnSetGamePath_Click(object sender, EventArgs e)
+        {
+            ChoseGameForm frm = new ChoseGameForm(Program.games);
+            if (frm.ShowDialog() == DialogResult.OK)
+            {
+                // identify the game
+                foreach (Game game in Program.games)
+                {
+                    if (game.GamePath.Length > 0)
+                    {
+                        try
+                        {
+                            Microsoft.Win32.RegistryKey lm = null;
+                            lm = Microsoft.Win32.Registry.CurrentUser.OpenSubKey("SOFTWARE\\TesModManager", true);
+                            if (lm == null)
+                            {
+                                lm = Microsoft.Win32.Registry.CurrentUser.CreateSubKey("SOFTWARE\\TesModManager");
+                            }
+                            lm.SetValue(game.Name, game.GamePath);
+                        }
+                        catch (Exception ex)
+                        {
+                            MessageBox.Show("Could not save folder to registry: " + ex.Message + ". You will need to pick it next time too", "Failed to write to registry", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                            break;
+                        }
+                    }
+                }
+            }
         }
     }
 }

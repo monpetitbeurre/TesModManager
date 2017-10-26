@@ -76,16 +76,17 @@ namespace OblivionModManager {
             this.cbIncludeVersionInModName = new System.Windows.Forms.CheckBox();
             this.cbShowModNameInsteadOfFilename = new System.Windows.Forms.CheckBox();
             this.bAlternateBackupFolder = new System.Windows.Forms.Button();
+            this.cbAskIfLoadAsIsOrImport = new System.Windows.Forms.CheckBox();
             this.btnNexusLoginInfo = new System.Windows.Forms.Button();
             this.cbPreventMovingAnESPBeforeAnESM = new System.Windows.Forms.CheckBox();
             this.cbOmod2IsDefault = new System.Windows.Forms.CheckBox();
-            this.cbAskIfLoadAsIsOrImport = new System.Windows.Forms.CheckBox();
+            this.btnSetGamePath = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // cbWarnings
             // 
             this.cbWarnings.AutoSize = true;
-            this.cbWarnings.Location = new System.Drawing.Point(227, 75);
+            this.cbWarnings.Location = new System.Drawing.Point(238, 81);
             this.cbWarnings.Name = "cbWarnings";
             this.cbWarnings.Size = new System.Drawing.Size(205, 17);
             this.cbWarnings.TabIndex = 4;
@@ -142,7 +143,7 @@ namespace OblivionModManager {
             // cbIniWarn
             // 
             this.cbIniWarn.AutoSize = true;
-            this.cbIniWarn.Location = new System.Drawing.Point(11, 36);
+            this.cbIniWarn.Location = new System.Drawing.Point(11, 35);
             this.cbIniWarn.Name = "cbIniWarn";
             this.cbIniWarn.Size = new System.Drawing.Size(128, 17);
             this.cbIniWarn.TabIndex = 2;
@@ -155,7 +156,7 @@ namespace OblivionModManager {
             // cbDataWarnings
             // 
             this.cbDataWarnings.AutoSize = true;
-            this.cbDataWarnings.Location = new System.Drawing.Point(227, 33);
+            this.cbDataWarnings.Location = new System.Drawing.Point(238, 35);
             this.cbDataWarnings.Name = "cbDataWarnings";
             this.cbDataWarnings.Size = new System.Drawing.Size(122, 17);
             this.cbDataWarnings.TabIndex = 3;
@@ -168,7 +169,7 @@ namespace OblivionModManager {
             // cbOmodInfo
             // 
             this.cbOmodInfo.AutoSize = true;
-            this.cbOmodInfo.Location = new System.Drawing.Point(227, 12);
+            this.cbOmodInfo.Location = new System.Drawing.Point(238, 12);
             this.cbOmodInfo.Name = "cbOmodInfo";
             this.cbOmodInfo.Size = new System.Drawing.Size(194, 17);
             this.cbOmodInfo.TabIndex = 1;
@@ -209,7 +210,7 @@ namespace OblivionModManager {
             // cbShowEspWarnings
             // 
             this.cbShowEspWarnings.AutoSize = true;
-            this.cbShowEspWarnings.Location = new System.Drawing.Point(227, 54);
+            this.cbShowEspWarnings.Location = new System.Drawing.Point(238, 58);
             this.cbShowEspWarnings.Name = "cbShowEspWarnings";
             this.cbShowEspWarnings.Size = new System.Drawing.Size(179, 17);
             this.cbShowEspWarnings.TabIndex = 5;
@@ -276,7 +277,7 @@ namespace OblivionModManager {
             // cbCompressionBoost
             // 
             this.cbCompressionBoost.AutoSize = true;
-            this.cbCompressionBoost.Location = new System.Drawing.Point(11, 60);
+            this.cbCompressionBoost.Location = new System.Drawing.Point(11, 58);
             this.cbCompressionBoost.Name = "cbCompressionBoost";
             this.cbCompressionBoost.Size = new System.Drawing.Size(115, 17);
             this.cbCompressionBoost.TabIndex = 6;
@@ -288,7 +289,7 @@ namespace OblivionModManager {
             // cbAutoupdateConflicts
             // 
             this.cbAutoupdateConflicts.AutoSize = true;
-            this.cbAutoupdateConflicts.Location = new System.Drawing.Point(227, 117);
+            this.cbAutoupdateConflicts.Location = new System.Drawing.Point(238, 127);
             this.cbAutoupdateConflicts.Name = "cbAutoupdateConflicts";
             this.cbAutoupdateConflicts.Size = new System.Drawing.Size(123, 17);
             this.cbAutoupdateConflicts.TabIndex = 9;
@@ -302,7 +303,7 @@ namespace OblivionModManager {
             // cbUpdateEsps
             // 
             this.cbUpdateEsps.AutoSize = true;
-            this.cbUpdateEsps.Location = new System.Drawing.Point(11, 84);
+            this.cbUpdateEsps.Location = new System.Drawing.Point(11, 81);
             this.cbUpdateEsps.Name = "cbUpdateEsps";
             this.cbUpdateEsps.Size = new System.Drawing.Size(179, 17);
             this.cbUpdateEsps.TabIndex = 8;
@@ -352,7 +353,7 @@ namespace OblivionModManager {
             // cbUseKiller
             // 
             this.cbUseKiller.AutoSize = true;
-            this.cbUseKiller.Location = new System.Drawing.Point(11, 108);
+            this.cbUseKiller.Location = new System.Drawing.Point(11, 104);
             this.cbUseKiller.Name = "cbUseKiller";
             this.cbUseKiller.Size = new System.Drawing.Size(169, 17);
             this.cbUseKiller.TabIndex = 10;
@@ -364,7 +365,7 @@ namespace OblivionModManager {
             // cbSafeMode
             // 
             this.cbSafeMode.AutoSize = true;
-            this.cbSafeMode.Location = new System.Drawing.Point(227, 138);
+            this.cbSafeMode.Location = new System.Drawing.Point(11, 242);
             this.cbSafeMode.Name = "cbSafeMode";
             this.cbSafeMode.Size = new System.Drawing.Size(77, 17);
             this.cbSafeMode.TabIndex = 11;
@@ -386,7 +387,7 @@ namespace OblivionModManager {
             // cbNewEspsLoadLast
             // 
             this.cbNewEspsLoadLast.AutoSize = true;
-            this.cbNewEspsLoadLast.Location = new System.Drawing.Point(227, 159);
+            this.cbNewEspsLoadLast.Location = new System.Drawing.Point(238, 196);
             this.cbNewEspsLoadLast.Name = "cbNewEspsLoadLast";
             this.cbNewEspsLoadLast.Size = new System.Drawing.Size(150, 17);
             this.cbNewEspsLoadLast.TabIndex = 13;
@@ -398,7 +399,7 @@ namespace OblivionModManager {
             // cbAdvSelectMany
             // 
             this.cbAdvSelectMany.AutoSize = true;
-            this.cbAdvSelectMany.Location = new System.Drawing.Point(11, 132);
+            this.cbAdvSelectMany.Location = new System.Drawing.Point(11, 127);
             this.cbAdvSelectMany.Name = "cbAdvSelectMany";
             this.cbAdvSelectMany.Size = new System.Drawing.Size(195, 17);
             this.cbAdvSelectMany.TabIndex = 12;
@@ -411,7 +412,7 @@ namespace OblivionModManager {
             // cbTrackConflicts
             // 
             this.cbTrackConflicts.AutoSize = true;
-            this.cbTrackConflicts.Location = new System.Drawing.Point(227, 96);
+            this.cbTrackConflicts.Location = new System.Drawing.Point(238, 104);
             this.cbTrackConflicts.Name = "cbTrackConflicts";
             this.cbTrackConflicts.Size = new System.Drawing.Size(137, 17);
             this.cbTrackConflicts.TabIndex = 7;
@@ -425,7 +426,7 @@ namespace OblivionModManager {
             // cbAllowInsecureScripts
             // 
             this.cbAllowInsecureScripts.AutoSize = true;
-            this.cbAllowInsecureScripts.Location = new System.Drawing.Point(11, 156);
+            this.cbAllowInsecureScripts.Location = new System.Drawing.Point(11, 150);
             this.cbAllowInsecureScripts.Name = "cbAllowInsecureScripts";
             this.cbAllowInsecureScripts.Size = new System.Drawing.Size(155, 17);
             this.cbAllowInsecureScripts.TabIndex = 14;
@@ -437,7 +438,7 @@ namespace OblivionModManager {
             // cbNeverModifyLoadOrder
             // 
             this.cbNeverModifyLoadOrder.AutoSize = true;
-            this.cbNeverModifyLoadOrder.Location = new System.Drawing.Point(227, 180);
+            this.cbNeverModifyLoadOrder.Location = new System.Drawing.Point(238, 242);
             this.cbNeverModifyLoadOrder.Name = "cbNeverModifyLoadOrder";
             this.cbNeverModifyLoadOrder.Size = new System.Drawing.Size(138, 17);
             this.cbNeverModifyLoadOrder.TabIndex = 29;
@@ -452,7 +453,7 @@ namespace OblivionModManager {
             this.cbAskToBeNexusDownloadManager.AutoSize = true;
             this.cbAskToBeNexusDownloadManager.Checked = true;
             this.cbAskToBeNexusDownloadManager.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbAskToBeNexusDownloadManager.Location = new System.Drawing.Point(11, 180);
+            this.cbAskToBeNexusDownloadManager.Location = new System.Drawing.Point(11, 173);
             this.cbAskToBeNexusDownloadManager.Name = "cbAskToBeNexusDownloadManager";
             this.cbAskToBeNexusDownloadManager.Size = new System.Drawing.Size(200, 17);
             this.cbAskToBeNexusDownloadManager.TabIndex = 30;
@@ -466,7 +467,7 @@ namespace OblivionModManager {
             this.cbActivateOnDoubleClick.AutoSize = true;
             this.cbActivateOnDoubleClick.Checked = true;
             this.cbActivateOnDoubleClick.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbActivateOnDoubleClick.Location = new System.Drawing.Point(227, 201);
+            this.cbActivateOnDoubleClick.Location = new System.Drawing.Point(238, 150);
             this.cbActivateOnDoubleClick.Name = "cbActivateOnDoubleClick";
             this.cbActivateOnDoubleClick.Size = new System.Drawing.Size(180, 17);
             this.cbActivateOnDoubleClick.TabIndex = 31;
@@ -478,7 +479,7 @@ namespace OblivionModManager {
             // cbLoadOrderAsUTF8
             // 
             this.cbLoadOrderAsUTF8.AutoSize = true;
-            this.cbLoadOrderAsUTF8.Location = new System.Drawing.Point(11, 204);
+            this.cbLoadOrderAsUTF8.Location = new System.Drawing.Point(11, 196);
             this.cbLoadOrderAsUTF8.Name = "cbLoadOrderAsUTF8";
             this.cbLoadOrderAsUTF8.Size = new System.Drawing.Size(174, 17);
             this.cbLoadOrderAsUTF8.TabIndex = 32;
@@ -492,7 +493,7 @@ namespace OblivionModManager {
             this.cbUseTimeStamps.AutoSize = true;
             this.cbUseTimeStamps.Checked = true;
             this.cbUseTimeStamps.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbUseTimeStamps.Location = new System.Drawing.Point(227, 222);
+            this.cbUseTimeStamps.Location = new System.Drawing.Point(238, 265);
             this.cbUseTimeStamps.Name = "cbUseTimeStamps";
             this.cbUseTimeStamps.Size = new System.Drawing.Size(193, 17);
             this.cbUseTimeStamps.TabIndex = 33;
@@ -505,7 +506,7 @@ namespace OblivionModManager {
             // cbEnableDebugLogging
             // 
             this.cbEnableDebugLogging.AutoSize = true;
-            this.cbEnableDebugLogging.Location = new System.Drawing.Point(11, 228);
+            this.cbEnableDebugLogging.Location = new System.Drawing.Point(11, 219);
             this.cbEnableDebugLogging.Name = "cbEnableDebugLogging";
             this.cbEnableDebugLogging.Size = new System.Drawing.Size(129, 17);
             this.cbEnableDebugLogging.TabIndex = 34;
@@ -517,7 +518,7 @@ namespace OblivionModManager {
             // cbGhostInactiveMods
             // 
             this.cbGhostInactiveMods.AutoSize = true;
-            this.cbGhostInactiveMods.Location = new System.Drawing.Point(227, 243);
+            this.cbGhostInactiveMods.Location = new System.Drawing.Point(238, 311);
             this.cbGhostInactiveMods.Name = "cbGhostInactiveMods";
             this.cbGhostInactiveMods.Size = new System.Drawing.Size(122, 17);
             this.cbGhostInactiveMods.TabIndex = 35;
@@ -530,7 +531,7 @@ namespace OblivionModManager {
             // cbShowHidden
             // 
             this.cbShowHidden.AutoSize = true;
-            this.cbShowHidden.Location = new System.Drawing.Point(11, 252);
+            this.cbShowHidden.Location = new System.Drawing.Point(238, 288);
             this.cbShowHidden.Name = "cbShowHidden";
             this.cbShowHidden.Size = new System.Drawing.Size(116, 17);
             this.cbShowHidden.TabIndex = 36;
@@ -542,7 +543,7 @@ namespace OblivionModManager {
             // cbSaveOmod2AsZip
             // 
             this.cbSaveOmod2AsZip.AutoSize = true;
-            this.cbSaveOmod2AsZip.Location = new System.Drawing.Point(227, 264);
+            this.cbSaveOmod2AsZip.Location = new System.Drawing.Point(238, 380);
             this.cbSaveOmod2AsZip.Name = "cbSaveOmod2AsZip";
             this.cbSaveOmod2AsZip.Size = new System.Drawing.Size(175, 17);
             this.cbSaveOmod2AsZip.TabIndex = 38;
@@ -555,7 +556,7 @@ namespace OblivionModManager {
             // cbDeactivateMissingOMODs
             // 
             this.cbDeactivateMissingOMODs.AutoSize = true;
-            this.cbDeactivateMissingOMODs.Location = new System.Drawing.Point(11, 276);
+            this.cbDeactivateMissingOMODs.Location = new System.Drawing.Point(11, 265);
             this.cbDeactivateMissingOMODs.Name = "cbDeactivateMissingOMODs";
             this.cbDeactivateMissingOMODs.Size = new System.Drawing.Size(156, 17);
             this.cbDeactivateMissingOMODs.TabIndex = 39;
@@ -569,7 +570,7 @@ namespace OblivionModManager {
             this.cbWarnAboutMissingInfo.AutoSize = true;
             this.cbWarnAboutMissingInfo.Checked = true;
             this.cbWarnAboutMissingInfo.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.cbWarnAboutMissingInfo.Location = new System.Drawing.Point(227, 285);
+            this.cbWarnAboutMissingInfo.Location = new System.Drawing.Point(238, 334);
             this.cbWarnAboutMissingInfo.Name = "cbWarnAboutMissingInfo";
             this.cbWarnAboutMissingInfo.Size = new System.Drawing.Size(211, 17);
             this.cbWarnAboutMissingInfo.TabIndex = 40;
@@ -582,7 +583,7 @@ namespace OblivionModManager {
             // cbShowSimpleConflictDialog
             // 
             this.cbShowSimpleConflictDialog.AutoSize = true;
-            this.cbShowSimpleConflictDialog.Location = new System.Drawing.Point(11, 300);
+            this.cbShowSimpleConflictDialog.Location = new System.Drawing.Point(11, 288);
             this.cbShowSimpleConflictDialog.Name = "cbShowSimpleConflictDialog";
             this.cbShowSimpleConflictDialog.Size = new System.Drawing.Size(173, 17);
             this.cbShowSimpleConflictDialog.TabIndex = 41;
@@ -594,7 +595,7 @@ namespace OblivionModManager {
             // cbAlwaysImportOmodData
             // 
             this.cbAlwaysImportOmodData.AutoSize = true;
-            this.cbAlwaysImportOmodData.Location = new System.Drawing.Point(11, 324);
+            this.cbAlwaysImportOmodData.Location = new System.Drawing.Point(11, 311);
             this.cbAlwaysImportOmodData.Name = "cbAlwaysImportOmodData";
             this.cbAlwaysImportOmodData.Size = new System.Drawing.Size(145, 17);
             this.cbAlwaysImportOmodData.TabIndex = 42;
@@ -606,7 +607,7 @@ namespace OblivionModManager {
             // cbAlwaysImportNexusData
             // 
             this.cbAlwaysImportNexusData.AutoSize = true;
-            this.cbAlwaysImportNexusData.Location = new System.Drawing.Point(11, 348);
+            this.cbAlwaysImportNexusData.Location = new System.Drawing.Point(11, 334);
             this.cbAlwaysImportNexusData.Name = "cbAlwaysImportNexusData";
             this.cbAlwaysImportNexusData.Size = new System.Drawing.Size(147, 17);
             this.cbAlwaysImportNexusData.TabIndex = 43;
@@ -618,7 +619,7 @@ namespace OblivionModManager {
             // cbAlwaysImportOCDData
             // 
             this.cbAlwaysImportOCDData.AutoSize = true;
-            this.cbAlwaysImportOCDData.Location = new System.Drawing.Point(11, 372);
+            this.cbAlwaysImportOCDData.Location = new System.Drawing.Point(11, 357);
             this.cbAlwaysImportOCDData.Name = "cbAlwaysImportOCDData";
             this.cbAlwaysImportOCDData.Size = new System.Drawing.Size(143, 17);
             this.cbAlwaysImportOCDData.TabIndex = 44;
@@ -630,7 +631,7 @@ namespace OblivionModManager {
             // cbIncludeVersionInModName
             // 
             this.cbIncludeVersionInModName.AutoSize = true;
-            this.cbIncludeVersionInModName.Location = new System.Drawing.Point(227, 306);
+            this.cbIncludeVersionInModName.Location = new System.Drawing.Point(12, 403);
             this.cbIncludeVersionInModName.Name = "cbIncludeVersionInModName";
             this.cbIncludeVersionInModName.Size = new System.Drawing.Size(162, 17);
             this.cbIncludeVersionInModName.TabIndex = 45;
@@ -642,7 +643,7 @@ namespace OblivionModManager {
             // cbShowModNameInsteadOfFilename
             // 
             this.cbShowModNameInsteadOfFilename.AutoSize = true;
-            this.cbShowModNameInsteadOfFilename.Location = new System.Drawing.Point(227, 327);
+            this.cbShowModNameInsteadOfFilename.Location = new System.Drawing.Point(238, 357);
             this.cbShowModNameInsteadOfFilename.Name = "cbShowModNameInsteadOfFilename";
             this.cbShowModNameInsteadOfFilename.Size = new System.Drawing.Size(196, 17);
             this.cbShowModNameInsteadOfFilename.TabIndex = 46;
@@ -662,6 +663,18 @@ namespace OblivionModManager {
             this.bAlternateBackupFolder.UseVisualStyleBackColor = true;
             this.bAlternateBackupFolder.Click += new System.EventHandler(this.bAlternateBackupFolder_Click);
             // 
+            // cbAskIfLoadAsIsOrImport
+            // 
+            this.cbAskIfLoadAsIsOrImport.AutoSize = true;
+            this.cbAskIfLoadAsIsOrImport.Location = new System.Drawing.Point(11, 380);
+            this.cbAskIfLoadAsIsOrImport.Name = "cbAskIfLoadAsIsOrImport";
+            this.cbAskIfLoadAsIsOrImport.Size = new System.Drawing.Size(226, 17);
+            this.cbAskIfLoadAsIsOrImport.TabIndex = 50;
+            this.cbAskIfLoadAsIsOrImport.Text = "Always import Nexus files for customization";
+            this.toolTip.SetToolTip(this.cbAskIfLoadAsIsOrImport, "Unchecked asks if load as is is wanted");
+            this.cbAskIfLoadAsIsOrImport.UseVisualStyleBackColor = true;
+            this.cbAskIfLoadAsIsOrImport.CheckedChanged += new System.EventHandler(this.cbAskIfLoadAsIsOrImport_CheckedChanged);
+            // 
             // btnNexusLoginInfo
             // 
             this.btnNexusLoginInfo.Location = new System.Drawing.Point(11, 616);
@@ -675,7 +688,7 @@ namespace OblivionModManager {
             // cbPreventMovingAnESPBeforeAnESM
             // 
             this.cbPreventMovingAnESPBeforeAnESM.AutoSize = true;
-            this.cbPreventMovingAnESPBeforeAnESM.Location = new System.Drawing.Point(227, 348);
+            this.cbPreventMovingAnESPBeforeAnESM.Location = new System.Drawing.Point(238, 219);
             this.cbPreventMovingAnESPBeforeAnESM.Name = "cbPreventMovingAnESPBeforeAnESM";
             this.cbPreventMovingAnESPBeforeAnESM.Size = new System.Drawing.Size(213, 17);
             this.cbPreventMovingAnESPBeforeAnESM.TabIndex = 47;
@@ -686,7 +699,7 @@ namespace OblivionModManager {
             // cbOmod2IsDefault
             // 
             this.cbOmod2IsDefault.AutoSize = true;
-            this.cbOmod2IsDefault.Location = new System.Drawing.Point(227, 369);
+            this.cbOmod2IsDefault.Location = new System.Drawing.Point(238, 403);
             this.cbOmod2IsDefault.Name = "cbOmod2IsDefault";
             this.cbOmod2IsDefault.Size = new System.Drawing.Size(160, 17);
             this.cbOmod2IsDefault.TabIndex = 48;
@@ -694,23 +707,22 @@ namespace OblivionModManager {
             this.cbOmod2IsDefault.UseVisualStyleBackColor = true;
             this.cbOmod2IsDefault.CheckedChanged += new System.EventHandler(this.cbOmod2IsDefault_CheckedChanged);
             // 
-            // cbAskIfLoadAsIsOrImport
+            // btnSetGamePath
             // 
-            this.cbAskIfLoadAsIsOrImport.AutoSize = true;
-            this.cbAskIfLoadAsIsOrImport.Location = new System.Drawing.Point(11, 395);
-            this.cbAskIfLoadAsIsOrImport.Name = "cbAskIfLoadAsIsOrImport";
-            this.cbAskIfLoadAsIsOrImport.Size = new System.Drawing.Size(226, 17);
-            this.cbAskIfLoadAsIsOrImport.TabIndex = 50;
-            this.cbAskIfLoadAsIsOrImport.Text = "Always import Nexus files for customization";
-            this.toolTip.SetToolTip(this.cbAskIfLoadAsIsOrImport, "Unchecked asks if load as is is wanted");
-            this.cbAskIfLoadAsIsOrImport.UseVisualStyleBackColor = true;
-            this.cbAskIfLoadAsIsOrImport.CheckedChanged += new System.EventHandler(this.cbAskIfLoadAsIsOrImport_CheckedChanged);
+            this.btnSetGamePath.Location = new System.Drawing.Point(11, 568);
+            this.btnSetGamePath.Name = "btnSetGamePath";
+            this.btnSetGamePath.Size = new System.Drawing.Size(186, 23);
+            this.btnSetGamePath.TabIndex = 51;
+            this.btnSetGamePath.Text = "Set game path";
+            this.btnSetGamePath.UseVisualStyleBackColor = true;
+            this.btnSetGamePath.Click += new System.EventHandler(this.btnSetGamePath_Click);
             // 
             // OptionsForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(437, 646);
+            this.ClientSize = new System.Drawing.Size(468, 646);
+            this.Controls.Add(this.btnSetGamePath);
             this.Controls.Add(this.cbAskIfLoadAsIsOrImport);
             this.Controls.Add(this.bAlternateBackupFolder);
             this.Controls.Add(this.cbOmod2IsDefault);
@@ -829,5 +841,6 @@ namespace OblivionModManager {
         private System.Windows.Forms.CheckBox cbOmod2IsDefault;
         private System.Windows.Forms.Button bAlternateBackupFolder;
         private System.Windows.Forms.CheckBox cbAskIfLoadAsIsOrImport;
+        private System.Windows.Forms.Button btnSetGamePath;
     }
 }

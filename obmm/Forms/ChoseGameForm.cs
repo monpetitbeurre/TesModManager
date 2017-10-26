@@ -14,11 +14,18 @@ namespace OblivionModManager.Forms
     {
         public Game ChosenGame = null;
 
-        public ChoseGameForm(Game[] games)
+        public ChoseGameForm(Game[] games, bool startMode = true)
         {
             InitializeComponent();
             this.dgGames.AutoGenerateColumns = false;
             this.dgGames.DataSource = games;
+
+            if (!startMode)
+            {
+                this.Text = "Set game path";
+                this.lblPick.Text = string.Empty;
+                this.btnStart.Text = "Ok";
+            }
         }
 
         private void BtnStart_Click(object sender, EventArgs e)

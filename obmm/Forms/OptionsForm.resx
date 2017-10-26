@@ -126,9 +126,6 @@
   <metadata name="DudMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>142, 17</value>
   </metadata>
-  <metadata name="toolTip.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
-    <value>376, 17</value>
-  </metadata>
   <data name="cbCompressionBoost.ToolTip" xml:space="preserve">
     <value>If checked, 7-zips created when converting omods to normal archives will use -mx9 compression instead of -mx7, and also omod compression will be slightly greater
 Uncheck this to speed up omod creation</value>
