@@ -66,7 +66,7 @@ namespace OblivionModManager.Forms
             }
             else
             {
-                Process.Start("http://www.nexusmods.com/skyrim/mods/29865");
+                Process.Start("https://www.nexusmods.com/skyrim/mods/29865");
             }
         }
     }

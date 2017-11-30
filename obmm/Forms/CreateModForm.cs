@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -762,7 +762,7 @@ namespace OblivionModManager {
                                 string modid = Program.GetModID(zipname);
                                 if (modid.Length > 0 && (modWebsite == null || modWebsite.Length == 0))
                                 {
-                                    ops.website = tbWebsite.Text = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
+                                    ops.website = tbWebsite.Text = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                                 }
                             }
                             catch { };
@@ -961,11 +961,11 @@ namespace OblivionModManager {
 			if (omodWebsite != null)
 			{
 				if (omodWebsite.StartsWith("PES://", StringComparison.CurrentCultureIgnoreCase))
-					omodWebsite = "http://planetelderscrolls.gamespy.com/View.php?view=OblivionMods.Detail&id=" + omodWebsite.Substring(6);
+					omodWebsite = "https://planetelderscrolls.gamespy.com/View.php?view=OblivionMods.Detail&id=" + omodWebsite.Substring(6);
 				else if (omodWebsite.StartsWith("TESNEXUS://", StringComparison.CurrentCultureIgnoreCase))
-					omodWebsite = "http://www.nexusmods.com/oblivion/mods/" + omodWebsite.Substring(11);
+					omodWebsite = "https://www.nexusmods.com/oblivion/mods/" + omodWebsite.Substring(11);
                 else if (omodWebsite.StartsWith("SKYRIMNEXUS://", StringComparison.CurrentCultureIgnoreCase))
-                    omodWebsite = "http://www.nexusmods.com/skyrim/mods/" + omodWebsite.Substring(11);
+                    omodWebsite = "https://www.nexusmods.com/skyrim/mods/" + omodWebsite.Substring(11);
                 tbWebsite.Text = omodWebsite;
 			}
 			

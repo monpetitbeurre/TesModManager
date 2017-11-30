@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -384,7 +384,7 @@ namespace OblivionModManager.Scripting {
 					{
 						previews[i] = null;
 					}
-					else if (previews[i].StartsWith("http://", StringComparison.CurrentCultureIgnoreCase))
+					else if (previews[i].StartsWith("https://", StringComparison.CurrentCultureIgnoreCase) || previews[i].StartsWith("http://", StringComparison.CurrentCultureIgnoreCase))
 					{
 						List<MemoryStream> allstreams = DownloadForm.DownloadFiles(new string[] { previews[i] }, false);
 						

@@ -51,7 +51,7 @@ namespace OblivionModManager {
         /// <summary>
         /// Wrapper class for unrar DLL supplied by RARSoft.  
         /// Calls unrar DLL via platform invocation services (pinvoke).
-        /// DLL is available at http://www.rarlab.com/rar/UnRARDLL.exe
+        /// DLL is available at https://www.rarlab.com/rar/UnRARDLL.exe
         /// </summary>
         public class Unrar : IDisposable {
             #region Unrar DLL enumerations

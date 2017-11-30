@@ -76,7 +76,7 @@ namespace OblivionModManager.Properties {
         
         /// <summary>
         ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot; ?&gt;
-        ///&lt;xsd:schema xmlns:xsd=&quot;http://www.w3.org/2001/XMLSchema&quot; &gt;
+        ///&lt;xsd:schema xmlns:xsd=&quot;https://www.w3.org/2001/XMLSchema&quot; &gt;
         ///	&lt;xsd:annotation&gt;
         ///		&lt;xsd:documentation&gt;
         ///		This schema defines the syntax for mode definitions in SharpDevelop.

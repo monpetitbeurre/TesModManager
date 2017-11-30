@@ -92,14 +92,17 @@ namespace OblivionModManager
 				MemoryStream streamLocal = null;
 				try
 				{
-					// the URL to download the file from
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
 
-					// first, we need to get the exact size (in bytes) of the file we are downloading
-					Uri url = new Uri(fileurl);
+                    // the URL to download the file from
+
+                    // first, we need to get the exact size (in bytes) of the file we are downloading
+                    Uri url = new Uri(fileurl);
 
 					System.Net.HttpWebRequest request = (System.Net.HttpWebRequest)System.Net.WebRequest.Create(url);
-					//MessageBox.Show(request.Timeout.ToString());
-					System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
+                    //MessageBox.Show(request.Timeout.ToString());
+                    System.Net.HttpWebResponse response = (System.Net.HttpWebResponse)request.GetResponse();
 
 					response.Close();
 

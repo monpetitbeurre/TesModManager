@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 using System;
 using System.Drawing;
@@ -137,7 +137,7 @@ namespace OblivionModManager
 			
 			if (omodWebsite != null)
 				txtWebsite.Text = omodWebsite.Replace("http://www.tesnexus.com/downloads/file.php?id=", "TESNexus://").Replace(
-					"http://planetelderscrolls.gamespy.com/View.php?view=OblivionMods.Detail&id=", "PES://");
+					"https://planetelderscrolls.gamespy.com/View.php?view=OblivionMods.Detail&id=", "PES://");
 			
 			if (omodDescription != null)
 				txtDescription.Text = omodDescription.Replace("\r\n", "\n").Replace("\n", "\r\n");
@@ -580,7 +580,7 @@ namespace OblivionModManager
 		{
 			try
 			{
-				System.Diagnostics.Process.Start(txtWebsite.Text.Replace("TESNexus://", "http://www.tesnexus.com/downloads/file.php?id=").Replace("PES://", "http://planetelderscrolls.gamespy.com/View.php?view=OblivionMods.Detail&id="));
+				System.Diagnostics.Process.Start(txtWebsite.Text.Replace("TESNexus://", "http://www.tesnexus.com/downloads/file.php?id=").Replace("PES://", "https://planetelderscrolls.gamespy.com/View.php?view=OblivionMods.Detail&id="));
 			}
 			catch(Exception)
 			{
@@ -622,7 +622,9 @@ namespace OblivionModManager
 		}
 		TextReader DownloadFile(string url)
 		{
-			WebClient wc = new WebClient();
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+            WebClient wc = new WebClient();
 			MemoryStream ms = new MemoryStream(wc.DownloadData(url));
 			TextReader tr = new StreamReader(ms);
 			return tr;

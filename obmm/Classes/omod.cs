@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -1155,7 +1155,7 @@ namespace OblivionModManager {
                             string s = Program.GetModID(path);
                             if (s.Length != 0)
                             {
-                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
+                                Website = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
                             }
                             try
                             {
@@ -1319,7 +1319,7 @@ namespace OblivionModManager {
                             string modid = Program.GetModID(LowerFileName);
                             if (modid.Length > 0 && (Website == null || Website.Length == 0))
                             {
-                                Website = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
+                                Website = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                             }
 
                             Config.Close();
@@ -3523,7 +3523,7 @@ namespace OblivionModManager {
             string modAuthor = "";
             string modWebsite = "";
             string imagefile = "";
-            Program.GetNexusModInfo(tesid, ref modName, ref modVersion, ref modDescription, ref modAuthor, ref modWebsite, ref imagefile, true);
+            Program.GetNexusModInfo(this.FileName.Contains(tesid) ? this.FileName : tesid, ref modName, ref modVersion, ref modDescription, ref modAuthor, ref modWebsite, ref imagefile, true);
             if (this.Description==null || this.Description.Length == 0)
                 this.Description = modDescription;
             if (this.Author==null || this.Author.Length == 0)

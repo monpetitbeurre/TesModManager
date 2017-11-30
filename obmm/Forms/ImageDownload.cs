@@ -62,62 +62,65 @@ namespace OblivionModManager
 				// gets the size of the file in bytes
 				Int64 iSize = response.ContentLength;
 
-                if (iSize>0)
+                if (iSize > 0)
                 {
-				// keeps track of the total bytes downloaded so we can update the progress bar
-				Int64 iRunningByteTotal = 0;
+                    // keeps track of the total bytes downloaded so we can update the progress bar
+                    Int64 iRunningByteTotal = 0;
 
-				// use the webclient object to download the file
-                using (System.Net.WebClient client = new System.Net.WebClient())
-                {
-                    // open the file at the remote URL for reading
-                    using (System.IO.Stream streamRemote = client.OpenRead(new Uri(sUrlToReadFileFrom)))
+                    System.Net.ServicePointManager.Expect100Continue = true;
+                    System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
+
+                    // use the webclient object to download the file
+                    using (System.Net.WebClient client = new System.Net.WebClient())
                     {
-                        // using the FileStream object, we can write the downloaded bytes to the file system
-
-                        using (Stream streamLocal = new FileStream(sFilePathToWriteFileTo, FileMode.Create, FileAccess.Write, FileShare.None))
+                        // open the file at the remote URL for reading
+                        using (System.IO.Stream streamRemote = client.OpenRead(new Uri(sUrlToReadFileFrom)))
                         {
+                            // using the FileStream object, we can write the downloaded bytes to the file system
 
-                            // loop the stream and get the file into the byte buffer
-
-                            int iByteSize = 0;
-
-                            byte[] byteBuffer = new byte[iSize];
-
-                            while ((iByteSize = streamRemote.Read(byteBuffer, 0, byteBuffer.Length)) > 0)
+                            using (Stream streamLocal = new FileStream(sFilePathToWriteFileTo, FileMode.Create, FileAccess.Write, FileShare.None))
                             {
-                                // write the bytes to the file system at the file path specified
-                                streamLocal.Write(byteBuffer, 0, iByteSize);
 
-                                iRunningByteTotal += iByteSize;
-                                // calculate the progress out of a base "100"
+                                // loop the stream and get the file into the byte buffer
 
-                                double dIndex = (double)(iRunningByteTotal);
+                                int iByteSize = 0;
 
-                                double dTotal = (double)byteBuffer.Length;
+                                byte[] byteBuffer = new byte[iSize];
 
-                                double dProgressPercentage = (dIndex / dTotal);
+                                while ((iByteSize = streamRemote.Read(byteBuffer, 0, byteBuffer.Length)) > 0)
+                                {
+                                    // write the bytes to the file system at the file path specified
+                                    streamLocal.Write(byteBuffer, 0, iByteSize);
 
-                                int iProgressPercentage = (int)(dProgressPercentage * 100);
-                                // update the progress bar
+                                    iRunningByteTotal += iByteSize;
+                                    // calculate the progress out of a base "100"
 
-                                bgwDownload.ReportProgress(iProgressPercentage);
+                                    double dIndex = (double)(iRunningByteTotal);
+
+                                    double dTotal = (double)byteBuffer.Length;
+
+                                    double dProgressPercentage = (dIndex / dTotal);
+
+                                    int iProgressPercentage = (int)(dProgressPercentage * 100);
+                                    // update the progress bar
+
+                                    bgwDownload.ReportProgress(iProgressPercentage);
+                                }
+
+                                // clean up the file stream
+                                streamLocal.Close();
+
                             }
 
-                            // clean up the file stream
-                            streamLocal.Close();
+                            // close the connection to the remote server
+
+                            streamRemote.Close();
 
                         }
-
-                        // close the connection to the remote server
-
-                        streamRemote.Close();
-
                     }
+                    notifyform.NotifyImage();
+
                 }
-                notifyform.NotifyImage();
-	
-				}
 				
 			}
 			catch(Exception ex)

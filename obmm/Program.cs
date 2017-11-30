@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.25"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.26"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -324,7 +324,7 @@ namespace OblivionModManager {
         public static bool Login(string strWebsite, string UserAgent, string p_strUsername, string p_strPassword, out Dictionary<string, string> p_dicTokens)
         {
             string strSite = strWebsite;
-            string strLoginUrl = String.Format("http://{0}/modules/login/do_login.php", strSite);
+            string strLoginUrl = String.Format("https://{0}/modules/login/do_login.php", strSite);
             HttpWebRequest hwrLogin = (HttpWebRequest)WebRequest.Create(strLoginUrl);
             CookieContainer ckcCookies = new CookieContainer();
             hwrLogin.CookieContainer = ckcCookies;
@@ -360,7 +360,7 @@ namespace OblivionModManager {
             }
             //Dictionary<string, string>  
             dicAuthenticationTokens = new Dictionary<string, string>();
-            foreach (Cookie ckeToken in ckcCookies.GetCookies(new Uri("http://" + strSite)))
+            foreach (Cookie ckeToken in ckcCookies.GetCookies(new Uri("https://" + strSite)))
                 if (ckeToken.Name.EndsWith("_Member") || ckeToken.Name.EndsWith("_Premium"))
                     dicAuthenticationTokens[ckeToken.Name] = ckeToken.Value;
             p_dicTokens = dicAuthenticationTokens;
@@ -381,6 +381,8 @@ namespace OblivionModManager {
             else
                 remoteAddress = "http://nmm.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/";// "http://oblivion.nexusmods.com/";
 
+            ServicePointManager.Expect100Continue = true;
+            ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
             System.ServiceModel.WebHttpBinding binding = new WebHttpBinding();
             binding.MaxReceivedMessageSize = 2147483647;
             binding.ReaderQuotas.MaxStringContentLength = 2147483647;
@@ -810,7 +812,7 @@ namespace OblivionModManager {
         //            HttpWebRequest hwrDownload = (HttpWebRequest)WebRequest.Create(URL);
         //            intLineTracker = 1;
         //            CookieContainer ckcCookies = new CookieContainer();
-        //            string host = URL; host = host.Replace("http://", ""); host = host.Substring(0, host.IndexOf('/'));
+        //            string host = URL; host = host.Replace("https://", ""); host = host.Substring(0, host.IndexOf('/'));
         //            foreach (KeyValuePair<string, string> kvpCookie in Cookies)
         //                ckcCookies.Add(new Cookie(kvpCookie.Key, kvpCookie.Value, "/", host));
         //            intLineTracker = 2;
@@ -1003,6 +1005,8 @@ namespace OblivionModManager {
 
                 //bool bAbortDownload = false;
                 fullpath = Path.Combine(dir, download.filename);
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
                 WebClient webClient = new WebClient();
                 webClient.Headers["Cookie"] = strCookie;
 
@@ -1058,6 +1062,7 @@ namespace OblivionModManager {
                 if (download.totalBytesToDownload == 0)
                 {
                     string servername = download.url;
+                    servername = servername.Replace("https://", "");
                     servername = servername.Replace("http://", "");
                     servername = servername.Substring(0, servername.IndexOf('/'));
                     logger.WriteToLog("File is not yet mirrored on server (" + servername + ")", Logger.LogLevel.High);
@@ -3250,6 +3255,8 @@ namespace OblivionModManager {
             }
             else
             {
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
                 System.Net.WebClient wc = new System.Net.WebClient();
                 MemoryStream ms = new MemoryStream(wc.DownloadData(url));
                 TextReader tr = new StreamReader(ms);
@@ -3277,7 +3284,7 @@ namespace OblivionModManager {
         //        if (fileid != null && fileid.Length > 0)
         //        {
         //            TextReader tr;
-        //            tr = DownloadFile("http://" + (Program.bSkyrimMode ? "skyrim" : "oblivion") + ".nexusmods.com/mods/" + fileid, bSilent); // DownloadFile("http://www.tesnexus.com/downloads/file.php?id=" + fileid);
+        //            tr = DownloadFile("https://" + (Program.bSkyrimMode ? "skyrim" : "oblivion") + ".nexusmods.com/mods/" + fileid, bSilent); // DownloadFile("http://www.tesnexus.com/downloads/file.php?id=" + fileid);
 
         //            string modVersion = null;
         //            string modName = "File not found";
@@ -3328,7 +3335,7 @@ namespace OblivionModManager {
                 if (fileid != null && fileid.Length > 0)
                 {
                     TextReader tr;
-                    tr = DownloadFile("http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modactionlog/?id=" + fileid, bSilent);
+                    tr = DownloadFile("https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modactionlog/?id=" + fileid, bSilent);
                     bool bVersion = false;
                     string lastline = "";
                     string line = "";
@@ -3466,7 +3473,7 @@ namespace OblivionModManager {
             if (modName != null && modName.Contains("Adult-only") || modVersion == null || modVersion == "")
             {
                 modAuthor = Program.currentGame.NexusName + "Nexus";
-                tr = DownloadFile("http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/ajax/modactionlog/?id=" + fileid, bSilent);
+                tr = DownloadFile("https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/ajax/modactionlog/?id=" + fileid, bSilent);
                 bool bVersion = false;
                 string lastline = "";
                 while (tr!=null && (line = tr.ReadLine()) != null)
@@ -3569,100 +3576,108 @@ namespace OblivionModManager {
             string imagepath = "";
 
             //List<MemoryStream> mses = DownloadForm.DownloadFiles((!Program.bSkyrimMode ?
-            //    new string[] { "http://www.oblivion.nexusmods.com/ajax/modimages/?user=0&id=" + modid } :
-            //    new string[] { "http://www.skyrim.nexusmods.com/ajax/modimages/?user=0&id=" + modid }), false);
+            //    new string[] { "https://www.oblivion.nexusmods.com/ajax/modimages/?user=0&id=" + modid } :
+            //    new string[] { "https://www.skyrim.nexusmods.com/ajax/modimages/?user=0&id=" + modid }), false);
             TextReader tr;
             string line;
             List<object> modImages = new List<object>();
 
-            string imagespage = "http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modimages/?user=0&id=" + modid;
-            System.Net.WebClient wc = new System.Net.WebClient();
-            byte[] bytepage = wc.DownloadData(imagespage);
-            MemoryStream ms = new MemoryStream(bytepage);
+            string imagespage = "https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modimages/?user=0&id=" + modid;
 
-
-            if (ms != null)
+            try
             {
-                tr = new StreamReader(ms);
-                while ((line = tr.ReadLine()) != null)
-                {
-                    if (line.Contains("class=\"image\""))
-                    {
-                        System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                ServicePointManager.Expect100Continue = true;
+                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+                System.Net.WebClient wc = new System.Net.WebClient();
+                byte[] bytepage = wc.DownloadData(imagespage);
+                MemoryStream ms = new MemoryStream(bytepage);
 
-                        bool ignore = true;
-                        for (int i = 0; i < line.Length; i++)
+
+                if (ms != null)
+                {
+                    tr = new StreamReader(ms);
+                    while ((line = tr.ReadLine()) != null)
+                    {
+                        if (line.Contains("class=\"image\""))
                         {
-                            char c = line[i];
-                            if (ignore)
+                            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                            bool ignore = true;
+                            for (int i = 0; i < line.Length; i++)
                             {
-                                if (c == '"')
+                                char c = line[i];
+                                if (ignore)
                                 {
-                                    ignore = false;
+                                    if (c == '"')
+                                    {
+                                        ignore = false;
+                                    }
+                                }
+                                else
+                                {
+                                    if (c == '"')
+                                        break;
+                                    else
+                                        sb.Append(c);
                                 }
                             }
-                            else
-                            {
-                                if (c == '"')
-                                    break;
-                                else
-                                    sb.Append(c);
-                            }
+
+                            modImages.Add(sb.ToString());
+                        }
+                    }
+                    tr.Close();
+                }
+                if (modImages.Count > 0)
+                {
+                    string omodImage;
+
+                    if (modImages.Count == 1)
+                        omodImage = (string)modImages[0];
+                    else
+                    {
+                        Random r = new Random();
+                        omodImage = modImages[r.Next() % modImages.Count].ToString();
+                    }
+
+                    // check for relative URL
+                    if (omodImage[0] == '/')
+                        omodImage = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + omodImage;
+                    string path = Program.CreateTempDirectory();
+                    //System.Net.WebClient wc = new System.Net.WebClient();
+                    bytepage = wc.DownloadData(omodImage);
+                    imagepath = Path.Combine(path, "image.jpg");
+                    File.WriteAllBytes(imagepath, bytepage);
+
+                    // verify the content
+                    try
+                    {
+                        FileStream fs = File.OpenRead(imagepath);
+                        fs.Seek(0, SeekOrigin.Begin);
+                        byte[] byteHeader = new byte[20]; //fs.Length];
+                        fs.Read(byteHeader, 0, (int)byteHeader.Length);
+                        fs.Close();
+                        string header = "";
+                        for (int i = 0; i < byteHeader.Length; i++) header += (char)byteHeader[i];
+                        header = header.ToLower();
+                        if (header.StartsWith("<!doctype html>"))
+                        {
+                            // not an image...
+                            File.Delete(imagepath);
+                            imagepath = "";
                         }
 
-                        modImages.Add(sb.ToString());
                     }
-                }
-                tr.Close();
-            }
-
-            if (modImages.Count > 0)
-            {
-                string omodImage;
-
-                if (modImages.Count == 1)
-                    omodImage = (string)modImages[0];
-                else
-                {
-                    Random r = new Random();
-                    omodImage = modImages[r.Next() % modImages.Count].ToString();
-                }
-
-                // check for relative URL
-                if (omodImage[0] == '/')
-                    omodImage = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + omodImage;
-                string path = Program.CreateTempDirectory();
-                //System.Net.WebClient wc = new System.Net.WebClient();
-                bytepage = wc.DownloadData(omodImage);
-                imagepath = Path.Combine(path, "image.jpg");
-                File.WriteAllBytes(imagepath, bytepage);
-
-                // verify the content
-                try
-                {
-                    FileStream fs = File.OpenRead(imagepath);
-                    fs.Seek(0, SeekOrigin.Begin);
-                    byte[] byteHeader = new byte[20]; //fs.Length];
-                    fs.Read(byteHeader, 0, (int)byteHeader.Length);
-                    fs.Close();
-                    string header = "";
-                    for (int i = 0; i < byteHeader.Length; i++) header += (char)byteHeader[i];
-                    header = header.ToLower();
-                    if (header.StartsWith("<!doctype html>"))
+                    catch (Exception ex)
                     {
-                        // not an image...
-                        File.Delete(imagepath);
-                        imagepath = "";
+                        throw ex;
                     }
-
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }
-
-
             }
+            catch (Exception ex)
+            {
+                Program.logger.WriteToLog($"Could not get mod image: {ex.Message}", Logger.LogLevel.Low);
+            }
+
 
             return imagepath;
         }
@@ -3707,7 +3722,7 @@ namespace OblivionModManager {
                         modAuthor = strAuthor;
                         modVersion = (strVersion.Length > 0 ? strVersion : strModVersion);
                         modDescription = strModDescription; // (strDescription.Length > 0 ? strDescription : strModDescription); // Mod file description may not be very descriptive
-                        modWebsite = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
+                        modWebsite = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                     }
 
                     if (modName == null || modName.Length == 0)
@@ -3715,8 +3730,8 @@ namespace OblivionModManager {
 
                         List<MemoryStream> mses = DownloadForm.DownloadFiles
                         ((new string[] {
-						 	"http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/mods/" + modid,
-						 	"http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/ajax/moddescription/?id=" + modid
+						 	"https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/mods/" + modid,
+						 	"https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/ajax/moddescription/?id=" + modid
 						 }), bSilent);
 
                         if (mses.Count==0 || (mses.Count==1 && mses[0]==null) || (mses.Count==2 && mses[0]==null && mses[1]==null))
@@ -3743,7 +3758,7 @@ namespace OblivionModManager {
                             modVersion = Program.GetTESVersion(modid, bSilent);
                         }
 
-                        modWebsite = "http://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
+                        modWebsite = "https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
                     }
 
                     // was image requested?

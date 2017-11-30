@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -382,7 +382,7 @@ namespace OblivionModManager {
                         }
                     }
                     else
-                        MessageBox.Show("Please install NifSkope to preview NIF files (http://niftools.sourceforge.net/wiki/NifSkope)","NifSkope was not found",MessageBoxButtons.OK,MessageBoxIcon.Error);
+                        MessageBox.Show("Please install NifSkope to preview NIF files (https://niftools.sourceforge.net/wiki/NifSkope)","NifSkope was not found",MessageBoxButtons.OK,MessageBoxIcon.Error);
                     break;
                 case ".dds":
                 case ".tga":

@@ -11,7 +11,7 @@
  * GNU General Public License for more details.
  * 
  * You should have received a copy of the GNU General Public License
- * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
 using System;
@@ -319,6 +319,8 @@ namespace OblivionModManager {
 
             try
             {
+                System.Net.ServicePointManager.Expect100Continue = true;
+                System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
                 System.Net.WebClient wc = new System.Net.WebClient();
                 byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
@@ -1406,7 +1408,7 @@ namespace OblivionModManager {
                     return;
                 }
                 string s = o.Website;
-                if (!s.ToLower().StartsWith("http://")) s = "http://" + s;
+                if (!s.ToLower().StartsWith("https://") && !s.ToLower().StartsWith("http://")) s = "https://" + s;
                 System.Diagnostics.Process p = System.Diagnostics.Process.Start(s);
                 if (p != null) p.Close();
             }
@@ -2435,11 +2437,11 @@ namespace OblivionModManager {
 //            string s=Website.Replace("http://tesnexus.com", "http://www.tesnexus.com");
 
 
-//            s = s.Replace("http://www.tesnexus.com/downloads/file.php?id=", "http://www.oblivion.nexusmods.com/mods/");
-//            s = s.Replace("http://www.skyrimnexus.com/downloads/file.php?id=", "http://www.skyrim.nexusmods.com/mods/");
+//            s = s.Replace("http://www.tesnexus.com/downloads/file.php?id=", "https://www.oblivion.nexusmods.com/mods/");
+//            s = s.Replace("https://www.skyrimnexus.com/downloads/file.php?id=", "https://www.skyrim.nexusmods.com/mods/");
 
-//            if (s.StartsWith("http://www.oblivion.nexusmods.com/mods/", StringComparison.CurrentCultureIgnoreCase) ||
-//                s.StartsWith("http://www.skyrim.nexusmods.com/mods/", StringComparison.CurrentCultureIgnoreCase))
+//            if (s.StartsWith("https://www.oblivion.nexusmods.com/mods/", StringComparison.CurrentCultureIgnoreCase) ||
+//                s.StartsWith("https://www.skyrim.nexusmods.com/mods/", StringComparison.CurrentCultureIgnoreCase))
 //            {
 //                version = Program.GetTESVersion(s, bSilent);
 
@@ -2487,7 +2489,7 @@ namespace OblivionModManager {
                     //					MessageBox.Show(o.FileName+" does not have a website", "Error");
                     return false;
                 }
-                s = "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
+                s = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
 			}
             s=s.Replace("http://tesnexus.com", "http://www.tesnexus.com");
 
@@ -2495,11 +2497,11 @@ namespace OblivionModManager {
 
             s = s.Replace("http://skyrimnexus", "http://www.skyrimnexus");
 
-            s = s.Replace("http://www.tesnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/oblivion/mods/");
-            s = s.Replace("http://www.skyrimnexus.com/downloads/file.php?id=", "http://www.nexusmods.com/skyrim/mods/");
-            s = s.Replace("http://www." + Program.currentGame.NexusNameNoSpaces + ".nexusmods.com/mods/", "http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/");
+            s = s.Replace("http://www.tesnexus.com/downloads/file.php?id=", "https://www.nexusmods.com/oblivion/mods/");
+            s = s.Replace("http://www.skyrimnexus.com/downloads/file.php?id=", "https://www.nexusmods.com/skyrim/mods/");
+            s = s.Replace("https://www." + Program.currentGame.NexusNameNoSpaces + ".nexusmods.com/mods/", "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/");
 
-            if (s.StartsWith("http://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/", StringComparison.CurrentCultureIgnoreCase))
+            if (s.StartsWith("https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/", StringComparison.CurrentCultureIgnoreCase))
 			{
                 string modid=s.Substring(s.LastIndexOf('/')+1);
                 string name = "", version = "", description = "", author = "", website = "", imagefile = null;
@@ -2600,7 +2602,7 @@ namespace OblivionModManager {
         //        if (fileid != null && fileid.Length > 0)
         //        {
         //            TextReader tr;
-        //            tr = DownloadFile("http://"+(Program.bSkyrimMode ? "skyrim":"oblivion") +".nexusmods.com/mods/"+ fileid, bSilent); // DownloadFile("http://www.tesnexus.com/downloads/file.php?id=" + fileid);
+        //            tr = DownloadFile("https://"+(Program.bSkyrimMode ? "skyrim":"oblivion") +".nexusmods.com/mods/"+ fileid, bSilent); // DownloadFile("http://www.tesnexus.com/downloads/file.php?id=" + fileid);
         //            string modVersion = null;
         //            string modName = "";
         //            string modAuthor = "";
@@ -2644,7 +2646,7 @@ namespace OblivionModManager {
 //                if (fileid != null && fileid.Length > 0)
 //                {
 //                    TextReader tr;
-//                    tr = DownloadFile((!Program.bSkyrimMode ? "http://www.oblivion.nexusmods.com/ajax/modactionlog/?id=" : "http://www.skyrim.nexusmods.com/ajax/modactionlog/?id=") + fileid, bSilent);
+//                    tr = DownloadFile((!Program.bSkyrimMode ? "https://www.oblivion.nexusmods.com/ajax/modactionlog/?id=" : "https://www.skyrim.nexusmods.com/ajax/modactionlog/?id=") + fileid, bSilent);
 //                    bool bVersion = false;
 //                    string lastline = "";
 //                    string line = "";
@@ -2749,7 +2751,7 @@ namespace OblivionModManager {
 					if (MessageBox.Show("An update is available for TesModManager"+
 					                    ". Do you want to download it now?", "Update", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
 					{
-                        System.Diagnostics.Process.Start("http://www.nexusmods.com/skyrim/mods/5010/?tab=2&navtag=http%3A%2F%2Fwww.nexusmods.com%2Fskyrim%2Fajax%2Fmodfiles%2F%3Fid%3D5010&pUp=1");
+                        System.Diagnostics.Process.Start("https://www.nexusmods.com/skyrim/mods/5010/?tab=2&navtag=http%3A%2F%2Fwww.nexusmods.com%2Fskyrim%2Fajax%2Fmodfiles%2F%3Fid%3D5010&pUp=1");
 					}
 				}
 			}
@@ -3539,10 +3541,12 @@ namespace OblivionModManager {
                 Application.DoEvents();
                 try
                 {
+                    System.Net.ServicePointManager.Expect100Continue = true;
+                    System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
 
                     // there is an update to install?
                     System.Net.WebClient wc = new System.Net.WebClient();
-                    byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
+                    byte[] bytepage = wc.DownloadData("https://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
                     string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
                     string tempScriptExtenderFile = System.IO.Path.Combine(Program.TempDir, "scriptextender.7z");
@@ -3566,7 +3570,7 @@ namespace OblivionModManager {
                             else
                                 extension = ".zip";
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
+                            filelink = "https://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
@@ -3584,7 +3588,7 @@ namespace OblivionModManager {
                             else
                                 extension = ".zip";
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "http://" + Program.currentGame.ScriptExtenderName + filelink + extension;
+                            filelink = "https://" + Program.currentGame.ScriptExtenderName + filelink + extension;
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
@@ -3755,7 +3759,7 @@ namespace OblivionModManager {
                 if (o.Website.Length > 0 && o.bUpdateExists)
                 {
                     string s = o.Website;
-                    if (!s.ToLower().StartsWith("http://")) s = "http://" + s;
+                    if (!s.ToLower().StartsWith("https://") && !s.ToLower().StartsWith("http://")) s = "https://" + s;
                     System.Diagnostics.Process p = System.Diagnostics.Process.Start(s);
                     if (p != null) p.Close();
                 }

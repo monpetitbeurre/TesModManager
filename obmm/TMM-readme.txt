@@ -78,7 +78,7 @@ Q: TesModManager will not start
 A: windows 7 security might be blocking the registry access needed to check Nexus Download Manager registration. Try starting the application with a right click and selecting "run as administrator"
 
 Q: I get Type: System.DllNotFoundException Error message: The DLL "devil.dll" is missing a dependency
-A: You need to install Microsoft's vc DLL (known as vcredist_x86.exe) from http://www.microsoft.com/en-us/download/details.aspx?id=30679
+A: You need to install Microsoft's vc DLL (known as vcredist_x86.exe) from https://www.microsoft.com/en-us/download/details.aspx?id=30679
 
 Credits
 -------
@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.26
+--------------
+* Add https support
+
 Version 1.6.25
 --------------
 * Allows users to set defaults on first start
@@ -827,7 +831,7 @@ Fixed a crash when BOSS is not installed
 
 version 1.1.29
 --------------
-BOSS can be run from TMM if it is installed (BOSS for Skyrim and Oblivion can be found at http://tes.nexusmods.com/downloads/file.php?id=20516)
+BOSS can be run from TMM if it is installed (BOSS for Skyrim and Oblivion can be found at https://tes.nexusmods.com/downloads/file.php?id=20516)
 Fixed an error decoding mod version
 
 version 1.1.28
