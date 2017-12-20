@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.26"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.27"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -1312,6 +1312,7 @@ namespace OblivionModManager {
                             filelist.AddRange(Directory.GetFiles(strTmpDir,"*.esp"));
                             filelist.AddRange(Directory.GetFiles(strTmpDir, "*.esm"));
                             filelist.AddRange(Directory.GetFiles(strTmpDir, "*.bsa"));
+                            filelist.AddRange(Directory.GetFiles(strTmpDir, "*.dll"));
                             string[] txtfiles = Directory.GetFiles(strTmpDir, "*.txt");
                             if (txtfiles.Length > 0)
                                 createModForm.ops.readme = File.ReadAllText(txtfiles[0]);

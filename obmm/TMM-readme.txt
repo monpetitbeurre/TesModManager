@@ -90,6 +90,11 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.27
+--------------
+* Fixed case where files would end up getting written to the root of the drive
+* Fixed case where a DLL is removed  from the mod (for system mod)
+
 Version 1.6.26
 --------------
 * Add https support

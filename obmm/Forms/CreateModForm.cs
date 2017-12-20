@@ -909,6 +909,13 @@ namespace OblivionModManager {
                 for (int i = 0; i < MatchedPaths.Count; i++)
                 {
                     MatchedPaths[i] = MatchedPaths[i].Substring(folder.Length);
+
+                    // avoid starting with \
+                    if (MatchedPaths[i][0] == '\\')
+                    {
+                        MatchedPaths[i] = MatchedPaths[i].Substring(1);
+                    }
+
                     if (MatchedPaths[i].ToLower().StartsWith(Program.currentGame.DataFolderPath+"\\"))
                         MatchedPaths[i] = MatchedPaths[i].Substring((Program.currentGame.DataFolderPath+"\\").Length);
                 }
