@@ -430,7 +430,7 @@ namespace OblivionModManager {
 			AdvSelectMany=false;
 			ScriptEdSize=new System.Drawing.Size(0, 0);
 			ScriptEdMaximized=true;
-			NeverTouchLoadOrder=false;
+			NeverTouchLoadOrder=true;
 
 			CDShowMajor=true;
 			CDShowMinor=false;
@@ -467,7 +467,7 @@ namespace OblivionModManager {
             bLoadOrderAsUTF8 = false;
             bUseTimeStamps = true;
             bEnableDebugLogging = false;
-            bGhostInactiveMods = true;
+            bGhostInactiveMods = false;
             bSaveOmod2AsZip = true;
             bDeactivateMissingOMODs = false;
             bShowSimpleOverwriteForm = false;

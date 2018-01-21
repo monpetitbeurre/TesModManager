@@ -2695,6 +2695,8 @@ namespace OblivionModManager {
                         }
 
                     }
+
+#if UseFileCount
                     FileSystemWatcher fswatch = new FileSystemWatcher(path, "*.*");
                     fswatch.IncludeSubdirectories = true;
                     fswatch.Created += Program.fswatch_Created;
@@ -2702,12 +2704,17 @@ namespace OblivionModManager {
                     Program.bEnableFileSystemWatcher = true;
 
                     Program.pf.SetProgressRange(files.Count);
+#else
+                    Program.pf.SetProgressRange(100);
+#endif
                     zextract.FileExtractionFinished += new EventHandler<SevenZip.FileInfoEventArgs>(Program.sevenZipExtract_FileExtractionFinished);
                     zextract.ExtractFiles(path, files.ToArray());
                     zextract.Dispose();
 
+#if UseFileCount
                     Program.bEnableFileSystemWatcher = false;
                     fswatch.EnableRaisingEvents = false;
+#endif
 
                     // make sure that the current dir did not change
                     Directory.SetCurrentDirectory(currentDirectory);

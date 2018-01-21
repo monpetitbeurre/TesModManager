@@ -90,6 +90,11 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.28
+--------------
+* Changed the default so that TMM does not touch load order by default
+* Changed the default so that TMM does not ghost inactive mods by default
+
 Version 1.6.27
 --------------
 * Fixed case where files would end up getting written to the root of the drive
