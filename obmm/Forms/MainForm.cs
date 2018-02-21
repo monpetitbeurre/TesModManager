@@ -3546,7 +3546,7 @@ namespace OblivionModManager {
 
                     // there is an update to install?
                     System.Net.WebClient wc = new System.Net.WebClient();
-                    byte[] bytepage = wc.DownloadData("https://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
+                    byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
                     string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
                     string tempScriptExtenderFile = System.IO.Path.Combine(Program.TempDir, "scriptextender.7z");
@@ -3570,7 +3570,7 @@ namespace OblivionModManager {
                             else
                                 extension = ".zip";
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "https://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
+                            filelink = "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);
@@ -3588,7 +3588,7 @@ namespace OblivionModManager {
                             else
                                 extension = ".zip";
                             filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "https://" + Program.currentGame.ScriptExtenderName + filelink + extension;
+                            filelink = "http://" + Program.currentGame.ScriptExtenderName + filelink + extension;
                             toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
                             Application.DoEvents();
                             bytepage = wc.DownloadData(filelink);

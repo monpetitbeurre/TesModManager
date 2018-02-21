@@ -73,7 +73,7 @@ namespace OblivionModManager {
         public static bool bWarnAboutMissingInfo;
         public static bool bShowSimpleOverwriteForm;
         public static bool bPreventMovingESPBeforeESM;
-        public static bool bOmod2IsDefault;
+        public static bool bOmod2IsDefault = true;
         public static bool bAskIfLoadAsIsOrImport;
         public static bool CDShowMajor;
 		public static bool CDShowMinor;

@@ -90,6 +90,10 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.29
+--------------
+* Moved OBSE/SKSE download back to http.
+
 Version 1.6.28
 --------------
 * Changed the default so that TMM does not touch load order by default
