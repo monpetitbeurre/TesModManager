@@ -337,7 +337,7 @@ namespace OblivionModManager {
             this.lvModList.Sorting = System.Windows.Forms.SortOrder.Ascending;
             this.lvModList.TabIndex = 0;
             this.lvModList.UseCompatibleStateImageBehavior = false;
-            this.lvModList.View = System.Windows.Forms.View.List;
+            this.lvModList.View = System.Windows.Forms.View.Details;
             this.lvModList.ColumnClick += new System.Windows.Forms.ColumnClickEventHandler(this.lvModList_ColumnClick);
             this.lvModList.ColumnWidthChanged += new System.Windows.Forms.ColumnWidthChangedEventHandler(this.lvModList_ColumnWidthChanged);
             this.lvModList.ItemActivate += new System.EventHandler(this.lvModList_ItemActivate);
@@ -720,6 +720,7 @@ namespace OblivionModManager {
             // radDetail
             // 
             this.radDetail.AutoSize = true;
+            this.radDetail.Checked = true;
             this.radDetail.Location = new System.Drawing.Point(107, 4);
             this.radDetail.Name = "radDetail";
             this.radDetail.Size = new System.Drawing.Size(77, 17);
@@ -732,12 +733,10 @@ namespace OblivionModManager {
             // radList
             // 
             this.radList.AutoSize = true;
-            this.radList.Checked = true;
             this.radList.Location = new System.Drawing.Point(35, 4);
             this.radList.Name = "radList";
             this.radList.Size = new System.Drawing.Size(66, 17);
             this.radList.TabIndex = 1;
-            this.radList.TabStop = true;
             this.radList.Text = "List view";
             this.radList.UseVisualStyleBackColor = true;
             this.radList.CheckedChanged += new System.EventHandler(this.radList_CheckedChanged);
@@ -1498,7 +1497,6 @@ namespace OblivionModManager {
             this.Controls.Add(this.statusStrip);
             this.DataBindings.Add(new System.Windows.Forms.Binding("Location", global::OblivionModManager.Properties.Settings.Default, "location", true, System.Windows.Forms.DataSourceUpdateMode.OnPropertyChanged));
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Location = global::OblivionModManager.Properties.Settings.Default.location;
             this.MinimumSize = new System.Drawing.Size(773, 400);
             this.Name = "MainForm";
             this.Text = "Tes Mod Manager Extended";

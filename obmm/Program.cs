@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.29"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.30"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -1572,7 +1572,7 @@ namespace OblivionModManager {
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Could not import mod " + filename + ": " + ex.Message, "Error importing mod", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Could not import mod " + Path.GetFileName(filename) + ": " + ex.Message, "Error importing mod", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             finally
             {
@@ -1926,7 +1926,7 @@ namespace OblivionModManager {
                         {
                             try
                             {
-                                game.GamePath = lm.GetValue(game.Name).ToString();
+                                game.GamePath = lm.GetValue(game.Name)?.ToString();
                             }
                             catch
                             { }
@@ -1985,16 +1985,16 @@ namespace OblivionModManager {
                     switch (game.NickName)
                     {
                         case "oblivion":
-                            game.GamePath = game.GamePath.Length == 0 ? oblivionpath : game.GamePath;
+                            game.GamePath = string.IsNullOrWhiteSpace(game.GamePath) ? oblivionpath : game.GamePath;
                             break;
                         case "skyrimse":
-                            game.GamePath = game.GamePath.Length == 0 ? skyrimsepath : game.GamePath;
+                            game.GamePath = string.IsNullOrWhiteSpace(game.GamePath) ? skyrimsepath : game.GamePath;
                             break;
                         case "skyrim":
-                            game.GamePath = game.GamePath.Length == 0 ? skyrimpath : game.GamePath;
+                            game.GamePath = string.IsNullOrWhiteSpace(game.GamePath) ? skyrimpath : game.GamePath;
                             break;
                         case "morrowind":
-                            game.GamePath = game.GamePath.Length == 0 ? morrowindpath : game.GamePath;
+                            game.GamePath = string.IsNullOrWhiteSpace(game.GamePath) ? morrowindpath : game.GamePath;
                             break;
                     }
                 }
@@ -3244,24 +3244,32 @@ namespace OblivionModManager {
 
         static TextReader DownloadFile(string url, bool bSilent)
         {
-            if (!bSilent)
+            try
             {
-                Stream s = DownloadForm.DownloadFile(url, bSilent);
-                if (s != null)
-                    return new StreamReader(s);
+                if (!bSilent)
+                {
+                    Stream s = DownloadForm.DownloadFile(url, bSilent);
+                    if (s != null)
+                        return new StreamReader(s);
+                    else
+                    {
+                        return null;
+                    }
+                }
                 else
                 {
-                    return null;
+                    ServicePointManager.Expect100Continue = true;
+                    ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
+                    System.Net.WebClient wc = new System.Net.WebClient();
+                    MemoryStream ms = new MemoryStream(wc.DownloadData(url));
+                    TextReader tr = new StreamReader(ms);
+                    return tr;
                 }
             }
-            else
+            catch (Exception ex)
             {
-                ServicePointManager.Expect100Continue = true;
-                ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-                System.Net.WebClient wc = new System.Net.WebClient();
-                MemoryStream ms = new MemoryStream(wc.DownloadData(url));
-                TextReader tr = new StreamReader(ms);
-                return tr;
+                Program.logger.WriteToLog($"Could not retrieve file from {url}: {ex.Message}", Logger.LogLevel.Medium);
+                return null;
             }
         }
         //public static string GetTESVersionMP(string fileid, bool bSilent)

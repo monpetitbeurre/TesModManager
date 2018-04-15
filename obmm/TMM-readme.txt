@@ -90,6 +90,14 @@ Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
 
 Version changes
 ===============
+Version 1.6.31
+--------------
+* Hide BOSS if the main game is not Oblivion
+
+Version 1.6.30
+--------------
+* Fixed a failure to activate DarkUI'd Darn mod
+
 Version 1.6.29
 --------------
 * Moved OBSE/SKSE download back to http.

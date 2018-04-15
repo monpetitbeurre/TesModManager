@@ -1610,7 +1610,7 @@ namespace OblivionModManager {
 						if((System.Windows.Forms.Control.ModifierKeys&Keys.Control)>0) HasClickedYesToAll=true;
 					}
 					iei.OldValue=edit.OldValue;
-					if(edit.Plugin.INIEdits!=null) edit.Plugin.INIEdits.Remove(edit);
+					if(edit.Plugin?.INIEdits!=null) edit.Plugin.INIEdits.Remove(edit);
 					Program.Data.INIEdits.Remove(edit);
 				} else {
 					iei.OldValue=INI.GetINIValue(iei.Section, iei.Name);

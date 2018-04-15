@@ -112,7 +112,7 @@ namespace OblivionModManager {
 			cmbEspSortOrder.SelectedIndex=Settings.EspSortOrder;
 			cmbOmodSortOrder.SelectedIndex=Settings.omodSortOrder;
 
-            if (Program.BOSSpath!=null && Program.BOSSpath.Length > 0)
+            if (Program.BOSSpath!=null && Program.BOSSpath.Length > 0 && Program.currentGame.Name.ToLower() == "oblivion")
                 btnBOSSSortPlugins.Visible = true;
             else
                 btnBOSSSortPlugins.Visible = false;
@@ -1137,7 +1137,7 @@ namespace OblivionModManager {
 					listcopy[i] = lvEspList.SelectedIndices[i];
 				}
 				
-				Array.Sort(listcopy);
+				// Array.Sort(listcopy);
 				
 				if (listcopy[listcopy.Length-1] > 0)
 				{
@@ -1187,7 +1187,7 @@ namespace OblivionModManager {
 					listcopy[i] = lvEspList.SelectedIndices[i];
 				}
 				
-				Array.Sort(listcopy);
+				// Array.Sort(listcopy);
 				
 				if (listcopy[listcopy.Length-1] < lvEspList.Items.Count-1)
 				{
@@ -3039,8 +3039,8 @@ namespace OblivionModManager {
             foreach (string filename in filenames)
             {
                 importStatusLabel.Visible = true;
-                importStatusLabel.Text = "Importing " + filename;
-                Program.pf = new ProgressForm("Importing " + filename, false);
+                importStatusLabel.Text = "Importing " + Path.GetFileName(filename);
+                Program.pf = new ProgressForm("Importing " + Path.GetFileName(filename), false);
                 Program.pf.SetProgressRange(100);
                 Program.pf.ShowInTaskbar = true;
                 Program.pf.Show();
@@ -3190,13 +3190,13 @@ namespace OblivionModManager {
                 string file = Program.importList[0];
                 System.Threading.Monitor.Exit(Program.importList);
 
-                ProgressForm pf = new ProgressForm("Importing " + file + " from Nexus.com", false);
+                ProgressForm pf = new ProgressForm("Importing " + Path.GetFileName(file) + " from Nexus.com", false);
                 pf.SetProgressRange(100);
                 pf.EnableCancel("");
                 pf.ShowInTaskbar = true;
                 pf.Show();
                 importStatusLabel.Visible = true;
-                importStatusLabel.Text = "Importing " + file + " (" + Program.importList.Count + " imports)";
+                importStatusLabel.Text = "Importing " + Path.GetFileName(file) + " (" + Program.importList.Count + " imports)";
                 //backgroundModImportWorker.ReportProgress(0, "Importing " + file + " (" + Program.importList.Count + " imports)");
                 try
                 {
