@@ -21,19 +21,19 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName={pf}\{#MyAppName}
 DisableProgramGroupPage=yes
-OutputDir=C:\dev\TesModManager\Install
+OutputDir=..\Install
 OutputBaseFilename=TMMsetup
-SetupIconFile=C:\dev\TesModManager\obmm\icon.ico
+SetupIconFile=.\icon.ico
 Compression=lzma
 SolidCompression=yes
 UninstallDisplayName=TesModManager
 UninstallDisplayIcon={app}\TesModManager.exe
-VersionInfoVersion=1.6.30
+VersionInfoVersion=1.6.31
 VersionInfoDescription=Mod manager for Skyrim, Oblivion and Morrowind
-VersionInfoTextVersion=1.6.30
+VersionInfoTextVersion=1.6.31
 VersionInfoProductName=TesModManager
-VersionInfoProductVersion=1.6.30
-VersionInfoProductTextVersion=1.6.30
+VersionInfoProductVersion=1.6.31
+VersionInfoProductTextVersion=1.6.31
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -46,6 +46,7 @@ Name: "morrowindshortcut"; Description: "TMM for Morrowind shortcut on desktop";
 
 [Files]
 Source: "..\Release\TesModManager.exe"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
+Source: "..\Release\HtmlAgilityPack.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\7z.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\BaseTools.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\BaseTools.xml"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE

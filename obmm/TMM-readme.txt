@@ -87,6 +87,7 @@ Oblivion Mod Manager Extended -  Scent Tree
 Icons by SneakyTomato and UESP
 Help Files, OCD List Submissions and Bug Finding in OBMM Extended - Isabelxxx
 Optimizations, Skyrim SE, Skyrim and Morrowind port by monpetitbeurre
+HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
