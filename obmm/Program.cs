@@ -40,7 +40,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.30"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.31"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -138,7 +138,7 @@ namespace OblivionModManager {
                 ScriptExtenderName ="SKSE", ScriptExtenderExe="skse_loader.exe", ScriptExtenderDLL="", GraphicsExtenderPath=@"skse\plugins\skge.dll" },
             new Game { Name="Skyrim Special Edition", NickName="skyrimse", DataFolderName = "Data", SaveFolder="", IniBaseName="skyrim",
                 NexusID =1704, TMMNexusID=6491, NexusName="skyrim special edition", CreationKitExe="CreationKit.exe", ExeName="SkyrimSE.exe",
-                ScriptExtenderExe ="", ScriptExtenderDLL=""},
+                ScriptExtenderName ="SKSE", ScriptExtenderExe ="skse64_loader.exe", ScriptExtenderDLL=""},
             new Game { Name="Morrowind", NickName="morrowind", DataFolderName = "Data Files", SaveFolder="", IniBaseName="morrowind",
                 NexusID =100, TMMNexusID=44664, NexusName="morrowind", ExeName="Morrowind.exe", CreationKitExe="TES Construction Set.exe",
                 ScriptExtenderName ="MWSE", ScriptExtenderExe="", ScriptExtenderDLL="mwse.dll", GraphicsExtenderPath=@"..\mge3\MGEfuncs.dll" }
@@ -1199,6 +1199,26 @@ namespace OblivionModManager {
                     case "rar":
                         // first extract all files
                         strTmpDir = Program.CreateTempDirectory();
+
+                        List<string> archiveFileNames = new List<string>();
+                        using (Stream stream = File.OpenRead(filename))
+                        using (var reader = SharpCompress.Readers.ReaderFactory.Open(stream))
+                        {
+                            while (reader.MoveToNextEntry())
+                            {
+                                archiveFileNames.Add(reader.Entry.Key);
+                                //if (!reader.Entry.IsDirectory)
+                                //{
+                                //    Console.WriteLine(reader.Entry.Key);
+                                //    reader.WriteEntryTo(@"C:\temp", new SharpCompress.Readers.ExtractionOptions()
+                                //    {
+                                //        ExtractFullPath = true,
+                                //        Overwrite = true
+                                //    });
+                                //}
+                            }
+                        }
+
                         SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(filename);
 
                         string fomodpath = "";
@@ -1887,7 +1907,7 @@ namespace OblivionModManager {
                             // what game is this for?
                             foreach (Game game in games)
                             {
-                                if (arg.ToLower() == game.NickName.ToLower() || arg.ToLower().StartsWith("nxm://" + game.NickName.ToLower()))
+                                if (arg.ToLower() == game.NickName.ToLower() || arg.ToLower().StartsWith("nxm://" + game.NickName.ToLower() + "/"))
                                 {
                                     currentGame = game;
                                     logger.WriteToLog(currentGame.Name + " Mode", Logger.LogLevel.High);
@@ -3591,51 +3611,86 @@ namespace OblivionModManager {
             string line;
             List<object> modImages = new List<object>();
 
-            string imagespage = "https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/ajax/modimages/?user=0&id=" + modid;
-
+            string imagespage = "https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces + "/mods/" + modid + "/images?tab=images";
             try
             {
                 ServicePointManager.Expect100Continue = true;
                 ServicePointManager.SecurityProtocol = (SecurityProtocolType)3072;
-                System.Net.WebClient wc = new System.Net.WebClient();
-                byte[] bytepage = wc.DownloadData(imagespage);
-                MemoryStream ms = new MemoryStream(bytepage);
 
-
-                if (ms != null)
+                try
                 {
-                    tr = new StreamReader(ms);
-                    while ((line = tr.ReadLine()) != null)
-                    {
-                        if (line.Contains("class=\"image\""))
-                        {
-                            System.Text.StringBuilder sb = new System.Text.StringBuilder();
+                    HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = web.Load(imagespage);
 
-                            bool ignore = true;
-                            for (int i = 0; i < line.Length; i++)
+                    var nodes = doc.DocumentNode.Descendants(); //.Select(y => y.Descendants().Where(x => x.Attributes["class"].Value == "box")).ToList();
+
+                    foreach (HtmlAgilityPack.HtmlNode node in nodes)
+                    {
+                        if (node.Name == "ul" && node.Attributes.Count > 0 && node.Attributes["id"]?.Value == "mod_images_list")
+                        {
+                            foreach (HtmlAgilityPack.HtmlNode imagenode in node.Descendants())
                             {
-                                char c = line[i];
-                                if (ignore)
+                                if (imagenode.Name == "a" && imagenode.Attributes.Count > 0 && imagenode.Attributes["class"]?.Value == "mod-image")
                                 {
-                                    if (c == '"')
-                                    {
-                                        ignore = false;
-                                    }
-                                }
-                                else
-                                {
-                                    if (c == '"')
-                                        break;
-                                    else
-                                        sb.Append(c);
+                                    string url = imagenode.Attributes["href"].Value;
+                                    modImages.Add(url);
+                                    break;
                                 }
                             }
 
-                            modImages.Add(sb.ToString());
+                            //string url = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["href"].Value;
+                            //modImages.Add(url);
+                            break;
                         }
                     }
-                    tr.Close();
                 }
+                catch (Exception ex)
+                {
+                    Program.logger.WriteToLog("Could not get image from '" + imagespage + "' :" + ex.Message, Logger.LogLevel.Low);
+                }
+
+                if (modImages.Count == 0)
+                {
+                    System.Net.WebClient wc = new System.Net.WebClient();
+                    byte[] bytepage = wc.DownloadData(imagespage);
+                    MemoryStream ms = new MemoryStream(bytepage);
+
+                    if (ms != null)
+                    {
+                        tr = new StreamReader(ms);
+                        while ((line = tr.ReadLine()) != null)
+                        {
+                            if (line.Contains("class=\"image\""))
+                            {
+                                System.Text.StringBuilder sb = new System.Text.StringBuilder();
+
+                                bool ignore = true;
+                                for (int i = 0; i < line.Length; i++)
+                                {
+                                    char c = line[i];
+                                    if (ignore)
+                                    {
+                                        if (c == '"')
+                                        {
+                                            ignore = false;
+                                        }
+                                    }
+                                    else
+                                    {
+                                        if (c == '"')
+                                            break;
+                                        else
+                                            sb.Append(c);
+                                    }
+                                }
+
+                                modImages.Add(sb.ToString());
+                            }
+                        }
+                        tr.Close();
+                    }
+                }
+
                 if (modImages.Count > 0)
                 {
                     string omodImage;
@@ -3652,8 +3707,8 @@ namespace OblivionModManager {
                     if (omodImage[0] == '/')
                         omodImage = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + omodImage;
                     string path = Program.CreateTempDirectory();
-                    //System.Net.WebClient wc = new System.Net.WebClient();
-                    bytepage = wc.DownloadData(omodImage);
+                    System.Net.WebClient wc = new System.Net.WebClient();
+                    byte[] bytepage = wc.DownloadData(omodImage);
                     imagepath = Path.Combine(path, "image.jpg");
                     File.WriteAllBytes(imagepath, bytepage);
 
@@ -3736,7 +3791,92 @@ namespace OblivionModManager {
 
                     if (modName == null || modName.Length == 0)
                     {
+                        try
+                        {
+                            modWebsite = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modid;
 
+                            HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+                            HtmlAgilityPack.HtmlDocument doc = web.Load(modWebsite);
+
+                            var nodes = doc.DocumentNode.Descendants();
+
+                            foreach (HtmlAgilityPack.HtmlNode node in nodes)
+                            {
+                                if (node.Name == "div" && node.Attributes.Count > 0 && node.Attributes["id"]?.Value == "featured")
+                                {
+                                    foreach (HtmlAgilityPack.HtmlNode featured_node in nodes)
+                                    {
+                                        if (featured_node.Name == "div" && featured_node.Attributes.Count > 0 && featured_node.Attributes["id"]?.Value == "pagetitle")
+                                        {
+                                            foreach (HtmlAgilityPack.HtmlNode childnode in featured_node.ChildNodes)
+                                            {
+                                                if (childnode.Name == "h1")
+                                                {
+                                                    modName = childnode.InnerText;
+                                                }
+                                            }
+                                            //modName = node.ChildNodes[3].InnerText;
+
+                                            foreach (HtmlAgilityPack.HtmlNode childnode in featured_node.Descendants())
+                                            {
+                                                if (childnode.Name == "li" && childnode.Attributes.Count > 0 && childnode.Attributes["class"]?.Value == "stat-version")
+                                                {
+                                                    foreach (HtmlAgilityPack.HtmlNode stat_node in childnode.Descendants())
+                                                    {
+                                                        if (stat_node.Name == "div" && stat_node.Attributes.Count > 0 && stat_node.Attributes["class"]?.Value == "stat")
+                                                        {
+                                                            modVersion = stat_node.InnerText;
+                                                        }
+                                                    }
+                                                }
+                                            }
+
+                                            break;
+                                        }
+                                    }
+                                }
+                                else if (node.Name == "div" && node.Attributes.Count > 0 && node.Attributes["class"]?.Value == "wrap flex")
+                                {
+                                    foreach (HtmlAgilityPack.HtmlNode wrap_node in node.Descendants())
+                                    {
+                                        if (wrap_node.Name == "div" && wrap_node.Attributes.Count > 0 && wrap_node.Attributes["id"]?.Value == "fileinfo")
+                                        {
+                                            foreach (HtmlAgilityPack.HtmlNode fileinfo_node in wrap_node.Descendants())
+                                            {
+                                                if (fileinfo_node.InnerText.Contains("Uploaded by"))
+                                                {
+                                                    modAuthor = fileinfo_node.InnerText.Replace("Uploaded by", string.Empty).Replace("\n", string.Empty);
+                                                    break;
+                                                }
+                                            }
+
+                                            break;
+                                        }
+                                    }
+                                }
+                                else if (node.Name == "div" && node.Attributes.Count > 0 && node.Attributes["class"]?.Value == "container tab-description")
+                                {
+                                    foreach (HtmlAgilityPack.HtmlNode description_node in node.ChildNodes)
+                                    {
+                                        if (description_node.Name == "p" && description_node.Attributes.Count == 0)
+                                        {
+                                            modDescription = description_node.InnerText.Replace("\n", string.Empty);
+                                            break;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.logger.WriteToLog("Could not get mod info from '" + modWebsite + "' :" + ex.Message, Logger.LogLevel.Low);
+                            modWebsite = string.Empty;
+                        }
+
+                    }
+
+                    if (modName == null || modName.Length == 0)
+                    {
                         List<MemoryStream> mses = DownloadForm.DownloadFiles
                         ((new string[] {
 						 	"https://www.nexusmods.com/"+Program.currentGame.NexusNameNoSpaces+"/mods/" + modid,

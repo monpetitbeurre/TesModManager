@@ -215,7 +215,7 @@ namespace OblivionModManager {
 			UpdateOmodList();
 		}
 
-        private bool IsScriptExtenderUpToDate(string latestSEversion, string currentSEversion)
+        private bool DoesScriptExtenderNeedUpdating(string latestSEversion, string currentSEversion)
         {
             bool bRet = false;
 
@@ -294,7 +294,7 @@ namespace OblivionModManager {
                 }
                 toolStripLblScriptExtenderVersion.Text += " - " + Program.currentGame.ScriptExtenderName + " " + currentSEversion;
 
-                if (IsScriptExtenderUpToDate(latestSEversion,currentSEversion)) //latestSEversion.Length > 0 && latestSEversion != currentSEversion)
+                if (DoesScriptExtenderNeedUpdating(latestSEversion,currentSEversion)) //latestSEversion.Length > 0 && latestSEversion != currentSEversion)
                 {
                     toolStripLblScriptExtenderVersion.ForeColor = Color.Red;
                     if (!string.IsNullOrWhiteSpace(Program.currentGame.ScriptExtenderName))
@@ -321,55 +321,99 @@ namespace OblivionModManager {
             {
                 System.Net.ServicePointManager.Expect100Continue = true;
                 System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
-                System.Net.WebClient wc = new System.Net.WebClient();
-                byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
 
-                string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
-                if (Program.currentGame.ScriptExtenderName=="SKSE")
+                try
                 {
-                    if (page.IndexOf("Current build (") != -1)
+                    HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+                    HtmlAgilityPack.HtmlDocument doc = web.Load("http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/");
+
+                    var nodes = doc.DocumentNode.Descendants(); //.Select(y => y.Descendants().Where(x => x.Attributes["class"].Value == "box")).ToList();
+
+                    string silverlockkeyword = "Current build";
+                    switch (Program.currentGame.NexusNameNoSpaces)
                     {
-                        page = page.Substring(page.IndexOf("Current build (") + "Current build (".Length);
-                        page = page.Substring(0, page.IndexOf(","));
-                        char[] separator = { '.' };
-                        string[] version = page.Split(separator);
+                        case "skyrim":
+                            silverlockkeyword = "Current build";
+                            break;
+                        case "skyrimspecialedition":
+                            silverlockkeyword = "Current SE build";
+                            break;
+                        case "oblivion":
+                            break;
+                    }
 
-
-                        foreach (string versionnumber in version)
+                    foreach (HtmlAgilityPack.HtmlNode node in nodes)
+                    {
+                        if (node.Name == "p" && node.InnerText.StartsWith(silverlockkeyword) && node.Attributes.Count > 0)
                         {
-                            ver += "" + Convert.ToInt32(versionnumber) + ".";
+                            ver = node.InnerText.Replace(silverlockkeyword, string.Empty).Trim();
+                            ver = ver.Substring(0, ver.IndexOf(" ")).Replace(":", string.Empty);
+                            break;
                         }
-                        if (ver.EndsWith("."))
-                            ver = ver.Substring(0, ver.Length - 1);
+                        else if (node.Name == "a" && node.InnerText.StartsWith("http://obse.silverlock.org/download/obse_"))
+                        {
+                            ver = Path.GetFileNameWithoutExtension(node.InnerText.Substring("http://obse.silverlock.org/download/obse_".Length));
+                            break;
+                        }
                     }
                 }
-                else
+                catch (Exception ex)
                 {
-                    if (page.IndexOf(".silverlock.org/download/") != -1)
+                    Program.logger.WriteToLog("Could not get image from '" + "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/' :" + ex.Message, Logger.LogLevel.Low);
+                }
+
+                if (ver.Length == 0)
+                {
+                    System.Net.WebClient wc = new System.Net.WebClient();
+                    byte[] bytepage = wc.DownloadData("http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/");
+
+                    string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
+                    if (Program.currentGame.ScriptExtenderName == "SKSE")
                     {
-                        page = page.Substring(page.IndexOf(".silverlock.org/download/"));
-                        int extensionindex = 0;
-                        if (page.IndexOf(".7z") != -1)
-                            extensionindex = page.IndexOf(".7z");
-                        else if (page.IndexOf(".zip") != -1)
-                            extensionindex = page.IndexOf(".zip");
-                        else
-                            extensionindex = page.IndexOf("<"); ; //??
-
-                        page = page.Substring(0, extensionindex);
-                        page = page.Replace(".silverlock.org/download/", "");
-                        page = page.Replace(Program.currentGame.ScriptExtenderName+"_", "");
-                        page = page.Replace(Program.currentGame.ScriptExtenderName.ToLower() + "_", "");
-                        char[] separator = { '_' };
-                        string[] version = page.Split(separator);
-
-
-                        foreach (string versionnumber in version)
+                        if (page.IndexOf("Current build (") != -1)
                         {
-                            ver += "" + Convert.ToInt32(versionnumber) + ".";
+                            page = page.Substring(page.IndexOf("Current build (") + "Current build (".Length);
+                            page = page.Substring(0, page.IndexOf(","));
+                            char[] separator = { '.' };
+                            string[] version = page.Split(separator);
+
+
+                            foreach (string versionnumber in version)
+                            {
+                                ver += "" + Convert.ToInt32(versionnumber) + ".";
+                            }
+                            if (ver.EndsWith("."))
+                                ver = ver.Substring(0, ver.Length - 1);
                         }
-                        if (ver.EndsWith("."))
-                            ver = ver.Substring(0, ver.Length - 1);
+                    }
+                    else
+                    {
+                        if (page.IndexOf(".silverlock.org/download/") != -1)
+                        {
+                            page = page.Substring(page.IndexOf(".silverlock.org/download/"));
+                            int extensionindex = 0;
+                            if (page.IndexOf(".7z") != -1)
+                                extensionindex = page.IndexOf(".7z");
+                            else if (page.IndexOf(".zip") != -1)
+                                extensionindex = page.IndexOf(".zip");
+                            else
+                                extensionindex = page.IndexOf("<"); ; //??
+
+                            page = page.Substring(0, extensionindex);
+                            page = page.Replace(".silverlock.org/download/", "");
+                            page = page.Replace(Program.currentGame.ScriptExtenderName + "_", "");
+                            page = page.Replace(Program.currentGame.ScriptExtenderName.ToLower() + "_", "");
+                            char[] separator = { '_' };
+                            string[] version = page.Split(separator);
+
+
+                            foreach (string versionnumber in version)
+                            {
+                                ver += "" + Convert.ToInt32(versionnumber) + ".";
+                            }
+                            if (ver.EndsWith("."))
+                                ver = ver.Substring(0, ver.Length - 1);
+                        }
                     }
                 }
             }
@@ -3544,57 +3588,130 @@ namespace OblivionModManager {
                     System.Net.ServicePointManager.Expect100Continue = true;
                     System.Net.ServicePointManager.SecurityProtocol = (System.Net.SecurityProtocolType)3072;
 
-                    // there is an update to install?
-                    System.Net.WebClient wc = new System.Net.WebClient();
-                    byte[] bytepage = wc.DownloadData("http://"+Program.currentGame.ScriptExtenderName+".silverlock.org/");
-
-                    string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
                     string tempScriptExtenderFile = System.IO.Path.Combine(Program.TempDir, "scriptextender.7z");
                     File.Delete(tempScriptExtenderFile);
-                    if (Program.currentGame.ScriptExtenderName=="SKSE")
+
+                    try
                     {
-                        string filelink = "";
-                        if (page.IndexOf("download/" + Program.currentGame.ScriptExtenderName.ToLower() + "_") != -1)
+                        HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
+                        HtmlAgilityPack.HtmlDocument doc = web.Load("http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/");
+
+                        var nodes = doc.DocumentNode.Descendants(); //.Select(y => y.Descendants().Where(x => x.Attributes["class"].Value == "box")).ToList();
+
+                        string silverlockkeyword = "Current build";
+                        switch (Program.currentGame.NexusNameNoSpaces)
                         {
-                            filelink = page.Substring(page.LastIndexOf("download/" + Program.currentGame.ScriptExtenderName.ToLower() + "_"));
+                            case "skyrim":
+                                silverlockkeyword = "Current build";
+                                break;
+                            case "skyrimspecialedition":
+                                silverlockkeyword = "Current SE build";
+                                break;
+                            case "oblivion":
+                                break;
                         }
-                        if (filelink.Length == 0  && page.IndexOf("beta/" + Program.currentGame.ScriptExtenderName.ToLower() + "_") != -1)
+
+                        foreach (HtmlAgilityPack.HtmlNode node in nodes)
                         {
-                            filelink = page.Substring(page.LastIndexOf("beta/" + Program.currentGame.ScriptExtenderName.ToLower() + "_"));
-                        }
-                        if (filelink.Length>0)
-                        {
-                            string extension = "";
-                            if (filelink.IndexOf(".7z") != -1)
-                                extension = ".7z";
-                            else
-                                extension = ".zip";
-                            filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
-                            toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
-                            Application.DoEvents();
-                            bytepage = wc.DownloadData(filelink);
-                            File.WriteAllBytes(tempScriptExtenderFile, bytepage);
+                            if (node.Name == "p" && node.InnerText.StartsWith(silverlockkeyword) && node.Attributes.Count > 0)
+                            {
+                                foreach (HtmlAgilityPack.HtmlNode node2 in node.ChildNodes)
+                                {
+                                    if (node2.Name == "a" && node2.InnerText == "7z archive")
+                                    {
+                                        string url = node2.Attributes["href"].Value;
+                                        string filelink = "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + url;
+                                        toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
+                                        Application.DoEvents();
+                                        System.Net.WebClient wc = new System.Net.WebClient();
+
+                                        byte[] bytepage = wc.DownloadData(filelink);
+                                        File.WriteAllBytes(tempScriptExtenderFile, bytepage);
+                                        break;
+                                    }
+                                }
+
+                                break;
+                            }
+                            else if (node.Name == "a" && node.InnerText.StartsWith("http://obse.silverlock.org/download/obse_"))
+                            {
+                                string filelink = node.InnerText;
+                                toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
+                                Application.DoEvents();
+                                System.Net.WebClient wc = new System.Net.WebClient();
+
+                                byte[] bytepage = wc.DownloadData(filelink);
+                                File.WriteAllBytes(tempScriptExtenderFile, bytepage);
+                                break;
+                            }
+
                         }
                     }
-                    else
+                    catch (Exception ex)
                     {
-                        if (page.IndexOf(".silverlock.org/download/") != -1)
+                        Program.logger.WriteToLog("Could not get image from '" + "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/' :" + ex.Message, Logger.LogLevel.Low);
+                    }
+
+                    if (!File.Exists(tempScriptExtenderFile))
+                    {
+                        try
                         {
-                            string filelink = page.Substring(page.IndexOf(".silverlock.org/download/"));
-                            string extension = "";
-                            if (filelink.IndexOf(".7z") != -1)
-                                extension = ".7z";
+                            // there is an update to install?
+                            System.Net.WebClient wc = new System.Net.WebClient();
+                            byte[] bytepage = wc.DownloadData("http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/");
+
+                            string page = System.Text.Encoding.ASCII.GetString(bytepage).ToString();
+                            if (Program.currentGame.ScriptExtenderName == "SKSE")
+                            {
+                                string filelink = "";
+                                if (page.IndexOf("download/" + Program.currentGame.ScriptExtenderName.ToLower() + "_") != -1)
+                                {
+                                    filelink = page.Substring(page.LastIndexOf("download/" + Program.currentGame.ScriptExtenderName.ToLower() + "_"));
+                                }
+                                if (filelink.Length == 0 && page.IndexOf("beta/" + Program.currentGame.ScriptExtenderName.ToLower() + "_") != -1)
+                                {
+                                    filelink = page.Substring(page.LastIndexOf("beta/" + Program.currentGame.ScriptExtenderName.ToLower() + "_"));
+                                }
+                                if (filelink.Length > 0)
+                                {
+                                    string extension = "";
+                                    if (filelink.IndexOf(".7z") != -1)
+                                        extension = ".7z";
+                                    else
+                                        extension = ".zip";
+                                    filelink = filelink.Substring(0, filelink.IndexOf(extension));
+                                    filelink = "http://" + Program.currentGame.ScriptExtenderName + ".silverlock.org/" + filelink + extension;
+                                    toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
+                                    Application.DoEvents();
+                                    bytepage = wc.DownloadData(filelink);
+                                    File.WriteAllBytes(tempScriptExtenderFile, bytepage);
+                                }
+                            }
                             else
-                                extension = ".zip";
-                            filelink = filelink.Substring(0, filelink.IndexOf(extension));
-                            filelink = "http://" + Program.currentGame.ScriptExtenderName + filelink + extension;
-                            toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
-                            Application.DoEvents();
-                            bytepage = wc.DownloadData(filelink);
-                            File.WriteAllBytes(tempScriptExtenderFile, bytepage);
+                            {
+                                if (page.IndexOf(".silverlock.org/download/") != -1)
+                                {
+                                    string filelink = page.Substring(page.IndexOf(".silverlock.org/download/"));
+                                    string extension = "";
+                                    if (filelink.IndexOf(".7z") != -1)
+                                        extension = ".7z";
+                                    else
+                                        extension = ".zip";
+                                    filelink = filelink.Substring(0, filelink.IndexOf(extension));
+                                    filelink = "http://" + Program.currentGame.ScriptExtenderName + filelink + extension;
+                                    toolStripProcessingStatusLabel.Text = "Downloading latest " + Program.currentGame.ScriptExtenderName;
+                                    Application.DoEvents();
+                                    bytepage = wc.DownloadData(filelink);
+                                    File.WriteAllBytes(tempScriptExtenderFile, bytepage);
+                                }
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+
                         }
                     }
+
                     if (File.Exists(tempScriptExtenderFile))
                     {
                         string extenderTmpDir = Path.Combine(Program.TempDir, "scriptextender");
@@ -3625,16 +3742,22 @@ namespace OblivionModManager {
 
                         // check if the files are in a subfolder
                         string pathtoremove = "";
-                        foreach (string file in files)
+
+                        if (Path.GetExtension(files[0]) == "" && files[0].ToLower() != "data")
                         {
-                            if (file.ToLower().EndsWith(Program.currentGame.ScriptExtenderExe))
-                            {
-                                pathtoremove=file.ToLower().Replace((Program.currentGame.ScriptExtenderExe),"");
-                                break;
-                            }
+                            pathtoremove = files[0];
                         }
-                        if (pathtoremove.IndexOf("\\Data") != -1)
-                            pathtoremove = pathtoremove.Substring(0, pathtoremove.IndexOf("\\Data"));
+
+                        //foreach (string file in files)
+                        //{
+                        //    if (file.ToLower().EndsWith(Program.currentGame.ScriptExtenderExe))
+                        //    {
+                        //        pathtoremove=file.ToLower().Replace((Program.currentGame.ScriptExtenderExe),"");
+                        //        break;
+                        //    }
+                        //}
+                        if (pathtoremove.ToLower().IndexOf("\\data") != -1)
+                            pathtoremove = pathtoremove.Substring(0, pathtoremove.ToLower().IndexOf("\\Data"));
                         else if (pathtoremove.IndexOf("\\")!=-1)
                             pathtoremove = pathtoremove.Substring(0, pathtoremove.IndexOf("\\"));
                         //else if (pathtoremove.IndexOf(Path.GetFileNameWithoutExtension(filelink))!=-1)

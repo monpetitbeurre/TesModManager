@@ -3,3 +3,16 @@
 ################################################################################
 
 /Install/TMMsetup-encrypted.zip
+/Release/TesModManager.pdb
+/Release/TesModManager.vshost.exe.manifest
+/obmm/.vs/config/applicationhost.config
+/obmm/.vs/OblivionModManager/v14/.suo
+/obmm/.vs/OblivionModManager/v15/Server/sqlite3/db.lock
+/obmm/.vs/OblivionModManager/v15/Server/sqlite3/storage.ide
+/obmm/.vs/OblivionModManager/v15/Server/sqlite3/storage.ide-shm
+/obmm/.vs/OblivionModManager/v15/Server/sqlite3/storage.ide-wal
+/obmm/.vs/OblivionModManager/v15/.suo
+/obmm/obj/Debug/DesignTimeResolveAssemblyReferencesInput.cache
+/obmm/obj/Debug/OblivionModManager.csproj.FileListAbsolute.txt
+/obmm/obj/x86
+/obmm/OblivionModManager.csproj.user

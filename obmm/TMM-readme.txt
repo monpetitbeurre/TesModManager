@@ -93,6 +93,10 @@ Version changes
 Version 1.6.31
 --------------
 * Hide BOSS if the main game is not Oblivion
+* Fixed a case where downloads started using "download manager" from nexusmods in Skyrim SE mode would not appear in TMM
+* Fixed mod image download
+* Added support for script extender for Skyrim Special Edition
+* Improved mod info retrieval from web site
 
 Version 1.6.30
 --------------

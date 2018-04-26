@@ -1047,7 +1047,40 @@ namespace OblivionModManager {
 				LowerFileName=FileName.ToLower();
                 Stream Config=null;
 
+                //List<string> archiveFileNames = new List<string>();
+                //using (Stream stream = File.OpenRead(Path.Combine(Settings.omodDir, FileName)))
+                //using (var reader = SharpCompress.Readers.ReaderFactory.Open(stream))
+                //{
+                //    while (reader.MoveToNextEntry())
+                //    {
+                //        archiveFileNames.Add(reader.Entry.Key);
+                //        //if (!reader.Entry.IsDirectory)
+                //        //{
+                //        //    Console.WriteLine(reader.Entry.Key);
+                //        //    reader.WriteEntryTo(@"C:\temp", new SharpCompress.Readers.ExtractionOptions()
+                //        //    {
+                //        //        ExtractFullPath = true,
+                //        //        Overwrite = true
+                //        //    });
+                //        //}
+                //    }
+                //}
 
+                //using (SevenZipExtractor.ArchiveFile archiveFile = new SevenZipExtractor.ArchiveFile(@"Archive.ARJ"))
+                //{
+                //    foreach (SevenZipExtractor.Entry entry in archiveFile.Entries)
+                //    {
+                //        Console.WriteLine(entry.FileName);
+
+                //        // extract to file
+                //        entry.Extract(entry.FileName);
+
+                //        // extract to stream
+                //        MemoryStream memoryStream = new MemoryStream();
+                //        entry.Extract(memoryStream);
+                //    }
+                //}
+                SevenZip.SevenZipCompressor.SetLibraryPath(Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "7z.dll"));
                 SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir, FileName));
 
                 //bool bBainPackage = false;
