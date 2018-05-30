@@ -129,7 +129,7 @@ namespace OblivionModManager.Scripting {
             }
             for (int i = 0; i < datafiles.Count; i++)
             {
-                if (datafiles[i].ToLower().EndsWith(".esp") || datafiles[i].ToLower().EndsWith(".esm"))
+                if (datafiles[i].ToLower().EndsWith(".esp") || datafiles[i].ToLower().EndsWith(".esm") || datafiles[i].ToLower().EndsWith(".esl"))
                     continue;
                 finalDatafiles.Add(datafiles[i].Replace(dataFilesPath, ""));
             }
@@ -774,7 +774,7 @@ namespace OblivionModManager.Scripting {
                 to = Path.GetFileName(from);
 			CheckPathSafty(to);
 			string lto=to.ToLower();
-			if(!lto.EndsWith(".esp")&&!lto.EndsWith(".esm")) throw new ScriptingException("Copied plugins must have a .esp or .esm file extension");
+			if(!lto.EndsWith(".esp")&&!lto.EndsWith(".esm") && !lto.EndsWith(".esl")) throw new ScriptingException("Copied plugins must have a .esp, .esl or .esm file extension");
 			if(to.Contains("\\")||to.Contains("/")) throw new ScriptingException("Cannot copy a plugin to a subdirectory of the data folder");
 			for(int i=0;i<srd.CopyPlugins.Count;i++) {
 				if(srd.CopyPlugins[i].CopyTo==lto) srd.CopyPlugins.RemoveAt(i--);
@@ -844,7 +844,7 @@ namespace OblivionModManager.Scripting {
 					    for(int i=0;i<srd.CopyDataFiles.Count;i++) {
 						    if(srd.CopyDataFiles[i].CopyTo==lto) srd.CopyDataFiles.RemoveAt(i--);
 					    }
-                        if (!lto.EndsWith(".esp") && !lto.EndsWith(".esm"))
+                        if (!lto.EndsWith(".esp") && !lto.EndsWith(".esm") && !lto.EndsWith(".esl"))
                             srd.CopyDataFiles.Add(new ScriptCopyDataFile(filefrom, fileto));
                         else
                             srd.CopyPlugins.Add(new ScriptCopyDataFile(filefrom, fileto));
@@ -871,7 +871,7 @@ namespace OblivionModManager.Scripting {
 			CheckPluginSafty(from);
 			CheckPathSafty(to);
 			string lto=to.ToLower();
-			if(!lto.EndsWith(".esp")&&!lto.EndsWith(".esm")) throw new ScriptingException("Copied plugins must have a .esp or .esm file extension");
+			if(!lto.EndsWith(".esp")&&!lto.EndsWith(".esm") && !lto.EndsWith(".esl")) throw new ScriptingException("Copied plugins must have a .esp, .esl or .esm file extension");
 			if(to.Contains("\\")||to.Contains("/")) throw new ScriptingException("Cannot copy a plugin to a subdirectory of the data folder");
 			to=Path.Combine(Program.currentGame.DataFolderPath,to);
 
@@ -900,7 +900,7 @@ namespace OblivionModManager.Scripting {
 			CheckDataSafety(from);
 			CheckPathSafty(to);
 			string lto=to.ToLower();
-			if(lto.EndsWith(".esp")||lto.EndsWith(".esm")) throw new ScriptingException("Copied data files must not have a .esp or .esm file extension");
+			if(lto.EndsWith(".esp")||lto.EndsWith(".esm") || lto.EndsWith(".esl")) throw new ScriptingException("Copied data files must not have a .esp, .esl or .esm file extension");
 			to=Path.Combine(Program.currentGame.DataFolderPath,to);
 
 			permissions.Assert();
@@ -1130,7 +1130,7 @@ namespace OblivionModManager.Scripting {
 			string file2=Path.Combine(DataFiles, file);
 			if(!File.Exists(file2)) {
 				string lto=file.ToLower();
-				if(lto.EndsWith(".esm")||lto.EndsWith(".esp")) throw new ScriptingException("Copied data files cannot have a .esp or .esm file extension");
+				if(lto.EndsWith(".esm")||lto.EndsWith(".esp") || lto.EndsWith(".esl")) throw new ScriptingException("Copied data files cannot have a .esp, .esl or .esm file extension");
 				for(int i=0;i<srd.CopyDataFiles.Count;i++) {
 					if(srd.CopyDataFiles[i].CopyTo==lto) srd.CopyDataFiles.RemoveAt(i--);
 				}
@@ -1177,7 +1177,7 @@ namespace OblivionModManager.Scripting {
 			string file2=Path.Combine(DataFiles, file);
 			if(!File.Exists(file2)) {
 				string lto=file.ToLower();
-				if(lto.EndsWith(".esm")||lto.EndsWith(".esp")) throw new ScriptingException("Copied data files cannot have a .esp or .esm file extension");
+				if(lto.EndsWith(".esm")||lto.EndsWith(".esp") || lto.EndsWith(".esl")) throw new ScriptingException("Copied data files cannot have a .esp, .esl or .esm file extension");
 				for(int i=0;i<srd.CopyDataFiles.Count;i++) {
 					if(srd.CopyDataFiles[i].CopyTo==lto) srd.CopyDataFiles.RemoveAt(i--);
 				}

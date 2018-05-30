@@ -37,7 +37,8 @@ namespace OblivionModManager
 					List<FileInfo> allESPM = new List<FileInfo>();
 					allESPM.AddRange(dataDir.GetFiles("*.esp"));
 					allESPM.AddRange(dataDir.GetFiles("*.esm"));
-					allESPM.AddRange(dataDir.GetFiles("*.bsa"));
+                    allESPM.AddRange(dataDir.GetFiles("*.esl"));
+                    allESPM.AddRange(dataDir.GetFiles("*.bsa"));
 					
 					foreach(FileInfo espm in allESPM)
 					{
@@ -102,8 +103,9 @@ namespace OblivionModManager
 			List<FileInfo> allESPM = new List<FileInfo>();
 			allESPM.AddRange(dataDir.GetFiles("*.esp"));
 			allESPM.AddRange(dataDir.GetFiles("*.esm"));
-			
-			foreach(FileInfo espm in allESPM)
+            allESPM.AddRange(dataDir.GetFiles("*.esl"));
+
+            foreach (FileInfo espm in allESPM)
 			{
                 if (!activeESPM.Contains(espm.Name) && Settings.bGhostInactiveMods)
                 {

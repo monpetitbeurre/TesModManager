@@ -327,7 +327,7 @@ namespace fomm.Scripting
         static public void CopyDataFile(string from, string to)
         { 
             string str=from.ToLower();
-            if (str.Contains(".esp") || str.Contains(".esm"))
+            if (str.Contains(".esp") || str.Contains(".esm") || str.Contains(".esl"))
                 OblivionModManager.Scripting.ScriptFunctions._CopyPlugin(from, to);
             else
                 OblivionModManager.Scripting.ScriptFunctions._CopyDataFile( from,  to);

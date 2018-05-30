@@ -324,7 +324,7 @@ namespace OblivionModManager.Scripting {
                     else if (lowerfilename.IndexOf("/") != -1)
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("/") + 1);
 
-                    if (lowerfilename.EndsWith(".esp") || lowerfilename.EndsWith(".esm"))
+                    if (lowerfilename.EndsWith(".esp") || lowerfilename.EndsWith(".esm") || lowerfilename.EndsWith(".esl"))
                         functions.CopyPlugin(file.Substring(1), lowerfilename);
                     else
                         functions.CopyDataFile(file.Substring(1), lowerfilename);
@@ -355,7 +355,7 @@ namespace OblivionModManager.Scripting {
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("\\") + 1);
                     else if (lowerfilename.IndexOf("/") != -1)
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("/") + 1);
-                    if (lowerfilename.EndsWith(".esp") || lowerfilename.EndsWith(".esm"))
+                    if (lowerfilename.EndsWith(".esp") || lowerfilename.EndsWith(".esm") || lowerfilename.EndsWith(".esl"))
                         functions.CopyPlugin(file.Substring(1), lowerfilename);
                     else
                         functions.CopyDataFile(file.Substring(1), lowerfilename);
@@ -406,7 +406,7 @@ namespace OblivionModManager.Scripting {
                     {
                         string source = mc.requiredInstallFiles.Items[k].source.ToLower();
                         string dest = mc.requiredInstallFiles.Items[k].destination;
-                        if (source.EndsWith(".esp") || source.EndsWith(".esm"))
+                        if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
                             functions.CopyPlugin(source, dest);
                         else if (source.EndsWith(".bsa"))
                             functions.CopyDataFile(source, dest);
@@ -522,7 +522,7 @@ namespace OblivionModManager.Scripting {
                             {
                                 if (optionlist[i] == selected[j])
                                 {
-                                    for (int item = 0; item < step.optionalFileGroups.group[grp].plugins.plugin[i].Items.GetLength(0); item++)
+                                    for (int item = 0; item < step.optionalFileGroups.group[grp].plugins.plugin[i].Items?.GetLength(0); item++)
                                     {
                                         if (step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item].GetType() == typeof(fomod.conditionFlagList))
                                         {
@@ -547,7 +547,7 @@ namespace OblivionModManager.Scripting {
                                                 {
                                                     string source = ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items[k].source;
                                                     string dest = ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items[k].destination;
-                                                    if (source.EndsWith(".esp") || source.EndsWith(".esm"))
+                                                    if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
                                                         functions.CopyPlugin(source, dest);
                                                     else if (source.EndsWith(".bsa"))
                                                         functions.CopyDataFile(source, dest);
@@ -703,7 +703,7 @@ namespace OblivionModManager.Scripting {
                             string source = fsitem.source.Replace("/","\\");// ((fomod.fileSystemItem)(pattern.files.Items[0])).source;
                             string dest = fsitem.destination.Replace("/", "\\"); // ((fomod.fileSystemItem)(pattern.files.Items[0])).destination;
 
-                            if (source.EndsWith(".esp") || source.EndsWith(".esm"))
+                            if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
                                 functions.CopyPlugin(source, dest);
                             else if (source.EndsWith(".bsa"))
                                 functions.CopyDataFile(source, dest);

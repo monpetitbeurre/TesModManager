@@ -30,6 +30,7 @@ using System.Security.Cryptography;
 using System.Diagnostics;
 using OblivionModManager.Classes;
 using OblivionModManager.Forms;
+using System.Collections.Specialized;
 //TODO: Scripts shouldn't have write access to the root oblivion folder. Make it read/discovery only
 //TODO: BSA browser should be able to preview text files
 
@@ -40,7 +41,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.31"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.33"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -1201,23 +1202,23 @@ namespace OblivionModManager {
                         strTmpDir = Program.CreateTempDirectory();
 
                         List<string> archiveFileNames = new List<string>();
-                        using (Stream stream = File.OpenRead(filename))
-                        using (var reader = SharpCompress.Readers.ReaderFactory.Open(stream))
-                        {
-                            while (reader.MoveToNextEntry())
-                            {
-                                archiveFileNames.Add(reader.Entry.Key);
-                                //if (!reader.Entry.IsDirectory)
-                                //{
-                                //    Console.WriteLine(reader.Entry.Key);
-                                //    reader.WriteEntryTo(@"C:\temp", new SharpCompress.Readers.ExtractionOptions()
-                                //    {
-                                //        ExtractFullPath = true,
-                                //        Overwrite = true
-                                //    });
-                                //}
-                            }
-                        }
+                        //using (Stream stream = File.OpenRead(filename))
+                        //using (var reader = SharpCompress.Readers.ReaderFactory.Open(stream))
+                        //{
+                        //    while (reader.MoveToNextEntry())
+                        //    {
+                        //        archiveFileNames.Add(reader.Entry.Key);
+                        //        //if (!reader.Entry.IsDirectory)
+                        //        //{
+                        //        //    Console.WriteLine(reader.Entry.Key);
+                        //        //    reader.WriteEntryTo(@"C:\temp", new SharpCompress.Readers.ExtractionOptions()
+                        //        //    {
+                        //        //        ExtractFullPath = true,
+                        //        //        Overwrite = true
+                        //        //    });
+                        //        //}
+                        //    }
+                        //}
 
                         SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(filename);
 
@@ -1330,6 +1331,7 @@ namespace OblivionModManager {
                             // does the zip contain only a Data folder?
                             List<string> filelist = new List<string>();
                             filelist.AddRange(Directory.GetFiles(strTmpDir,"*.esp"));
+                            filelist.AddRange(Directory.GetFiles(strTmpDir, "*.esl"));
                             filelist.AddRange(Directory.GetFiles(strTmpDir, "*.esm"));
                             filelist.AddRange(Directory.GetFiles(strTmpDir, "*.bsa"));
                             filelist.AddRange(Directory.GetFiles(strTmpDir, "*.dll"));
@@ -1457,6 +1459,7 @@ namespace OblivionModManager {
                             string[] bsalist = Directory.GetFiles(strTmpDir, "*.bsa", SearchOption.AllDirectories);
                             string[] esmlist = Directory.GetFiles(strTmpDir, "*.esm", SearchOption.AllDirectories);
                             string[] esplist = Directory.GetFiles(strTmpDir, "*.esp", SearchOption.AllDirectories);
+                            string[] esllist = Directory.GetFiles(strTmpDir, "*.esl", SearchOption.AllDirectories);
                             List<string> pluginslist = new List<string>(createModForm.ops.esps);
                             List<string> espPathList = new List<string>(createModForm.ops.espPaths);
                             List<string> espSourcesList = new List<string>(createModForm.ops.espSources);
@@ -1476,6 +1479,15 @@ namespace OblivionModManager {
                                 {
                                     pluginslist.Add(esp);
                                     espPathList.Add(Path.GetFileName(esp));
+                                    espSourcesList.Add(Path.GetFileName(filename));
+                                }
+                            }
+                            foreach (string esl in esllist)
+                            {
+                                if (!pluginslist.Contains(esl))
+                                {
+                                    pluginslist.Add(esl);
+                                    espPathList.Add(Path.GetFileName(esl));
                                     espSourcesList.Add(Path.GetFileName(filename));
                                 }
                             }
@@ -2735,7 +2747,7 @@ namespace OblivionModManager {
 			//Search for any esps the have appeared since the last time this was run
 			List<string> Plugins=new List<string>();
 			foreach(string s in Directory.GetFiles(currentGame.DataFolderPath +"")) {
-				if(Path.GetExtension(s)!=".esp"&&Path.GetExtension(s)!=".esm") continue;
+				if(!Path.GetExtension(s).ToLower().StartsWith(".es")) continue;
 				if(!Data.DoesEspExist(Path.GetFileName(s))) {
 					Plugins.Add(Path.GetFileName(s));
 				}
@@ -3619,28 +3631,50 @@ namespace OblivionModManager {
 
                 try
                 {
+                    byte[] page = new byte[0];
+                    using (WebClient client = new WebClient())
+                    {
+
+                        byte[] response =
+                        client.UploadValues("https://www.nexusmods.com/Sessions/?Login", new NameValueCollection()
+                        {
+                            { "username", Program.nexususername },
+                            { "password", Program.nexuspassword },
+                            { "remember-me", "Remember me" }
+                        });
+
+                        string result = System.Text.Encoding.UTF8.GetString(response);
+                        client.Headers.Add("cookie", client.ResponseHeaders["Set-Cookie"]); 
+                        string pageString = client.DownloadString(imagespage);
+                        page = client.DownloadData(imagespage);
+                    }
+
                     HtmlAgilityPack.HtmlWeb web = new HtmlAgilityPack.HtmlWeb();
-                    HtmlAgilityPack.HtmlDocument doc = web.Load(imagespage);
+                    HtmlAgilityPack.HtmlDocument doc = new HtmlAgilityPack.HtmlDocument(); //  web.Load(imagespage);
+                    doc.Load(new MemoryStream(page));
 
                     var nodes = doc.DocumentNode.Descendants(); //.Select(y => y.Descendants().Where(x => x.Attributes["class"].Value == "box")).ToList();
 
                     foreach (HtmlAgilityPack.HtmlNode node in nodes)
                     {
-                        if (node.Name == "ul" && node.Attributes.Count > 0 && node.Attributes["id"]?.Value == "mod_images_list")
+                        if (node.Name == "ul")
                         {
-                            foreach (HtmlAgilityPack.HtmlNode imagenode in node.Descendants())
+                            if (node.Attributes.Count > 0 && node.Attributes["id"]?.Value == "mod_images_list")
                             {
-                                if (imagenode.Name == "a" && imagenode.Attributes.Count > 0 && imagenode.Attributes["class"]?.Value == "mod-image")
+                                foreach (HtmlAgilityPack.HtmlNode imagenode in node.Descendants())
                                 {
-                                    string url = imagenode.Attributes["href"].Value;
-                                    modImages.Add(url);
-                                    break;
+                                    if (imagenode.Name == "a" && imagenode.Attributes.Count > 0 && imagenode.Attributes["class"]?.Value == "mod-image")
+                                    {
+                                        string url = imagenode.Attributes["href"].Value;
+                                        modImages.Add(url);
+                                        break;
+                                    }
                                 }
-                            }
 
-                            //string url = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["href"].Value;
-                            //modImages.Add(url);
-                            break;
+                                //string url = node.ChildNodes[1].ChildNodes[1].ChildNodes[1].Attributes["href"].Value;
+                                //modImages.Add(url);
+                                break;
+                            }
                         }
                     }
                 }

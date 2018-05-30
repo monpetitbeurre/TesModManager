@@ -161,7 +161,7 @@ namespace ConflictDetector {
 
             if(IncludeEsps|IncludeOmods) {
                 foreach(OblivionModManager.EspInfo ei in OblivionModManager.Program.Data.Esps) {
-                    if(Path.GetExtension(ei.FileName)!=".esp"||ei.BelongsTo==OblivionModManager.EspInfo.BaseOwner) continue;
+                    if(!Path.GetExtension(ei.FileName).ToLower().StartsWith(".es")||ei.BelongsTo==OblivionModManager.EspInfo.BaseOwner) continue;
                     if(ei.Parent==null) {
                         if(!IncludeEsps) continue;
                         if(!ei.Active&&IgnoreInactiveEsps) continue;
@@ -188,7 +188,7 @@ namespace ConflictDetector {
                     foreach(OblivionModManager.omod o in OblivionModManager.Program.Data.omods) {
                         string s=o.GetPlugins();
                         if(s==null) continue;
-                        foreach(string file in Directory.GetFiles(s, "*.esp")) {
+                        foreach(string file in Directory.GetFiles(s, "*.es*")) {
                             plugin p=new plugin(Path.GetFileName(file), o.FileName, o.Conflict==OblivionModManager.ConflictLevel.Active);
                             list.AddRange(TesFile.GetIDList(file, p));
                             plugins.Add(p);

@@ -54,9 +54,10 @@ namespace OblivionModManager.Forms {
             }
             foreach(string file in Directory.GetFiles(Program.currentGame.DataFolderPath, "*", SearchOption.AllDirectories)) {
                 switch(Path.GetExtension(file)) {
-                case ".esp":
-                case ".esm":
-                    continue;
+                    case ".esp":
+                    case ".esl":
+                    case ".esm":
+                        continue;
                 }
                 string file2;
                 if(Path.IsPathRooted(file)) file2=file.Substring((Program.currentGame.DataFolderPath+"\\").Length);

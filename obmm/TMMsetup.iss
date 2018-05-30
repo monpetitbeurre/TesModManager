@@ -28,12 +28,12 @@ Compression=lzma
 SolidCompression=yes
 UninstallDisplayName=TesModManager
 UninstallDisplayIcon={app}\TesModManager.exe
-VersionInfoVersion=1.6.31
+VersionInfoVersion=1.6.33
 VersionInfoDescription=Mod manager for Skyrim, Oblivion and Morrowind
-VersionInfoTextVersion=1.6.31
+VersionInfoTextVersion=1.6.33
 VersionInfoProductName=TesModManager
-VersionInfoProductVersion=1.6.31
-VersionInfoProductTextVersion=1.6.31
+VersionInfoProductVersion=1.6.33
+VersionInfoProductTextVersion=1.6.33
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -57,8 +57,11 @@ Source: "..\Release\il.dll"; DestDir: "{app}"; Flags: ignoreversion; Components:
 Source: "..\Release\ILU.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\IronMath.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\IronPython.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
+Source: "..\Release\SharpCompress.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\msvcp110.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\msvcr110.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
+Source: "..\Release\HtmlAgilityPack.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
+Source: "..\Release\HtmlAgilityPack.xml"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\SevenZipSharp.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\Tao.DevIl.dll"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE
 Source: "..\Release\TMM-readme.txt"; DestDir: "{app}"; Flags: ignoreversion; Components: TesModManagerforMorrowind TesModManagerforOblivion TesModManagerforSkyrim TesModManagerForSkyrimSE

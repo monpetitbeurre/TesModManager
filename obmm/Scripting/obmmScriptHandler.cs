@@ -950,8 +950,8 @@ namespace OblivionModManager.Scripting {
 					Warn("Plugins cannot be copied to subdirectories of the data folder");
 					return;
 				}
-				if(!(line[2].EndsWith(".esp")||line[2].EndsWith(".esm"))) {
-					Warn("Copied plugins must have a .esp or .esm extension");
+				if(!(line[2].EndsWith(".esp")||line[2].EndsWith(".esm") || line[2].EndsWith(".esl"))) {
+					Warn("Copied plugins must have a .esp, .esl or .esm extension");
 					return;
 				}
 			} else {
@@ -959,8 +959,8 @@ namespace OblivionModManager.Scripting {
 					Warn("Invalid argument to CopyDataFile\nFile '"+upperfrom+"' is not part of this plugin");
 					return;
 				}
-				if(line[2].EndsWith(".esp")||line[2].EndsWith(".esm")) {
-					Warn("Copied data files cannot have a .esp or .esm extension");
+				if(line[2].EndsWith(".esp")||line[2].EndsWith(".esm") || line[2].EndsWith(".esl")) {
+					Warn("Copied data files cannot have a .esp, .esl or .esm extension");
 					return;
 				}
 			}
@@ -1049,8 +1049,8 @@ namespace OblivionModManager.Scripting {
 					Warn("Plugins cannot be copied to subdirectories of the data folder");
 					return;
 				}
-				if(!(lowerto.EndsWith(".esp")||lowerto.EndsWith(".esm"))) {
-					Warn("Plugins must have a .esp or .esm extension");
+				if(!(lowerto.EndsWith(".esp")||lowerto.EndsWith(".esm") || lowerto.EndsWith(".esl"))) {
+					Warn("Plugins must have a .esp, .esl or .esm extension");
 					return;
 				}
 
@@ -1060,8 +1060,8 @@ namespace OblivionModManager.Scripting {
 					Warn("Invalid argument to PatchDataFile\nFile '"+line[1]+"' is not part of this plugin");
 					return;
 				}
-				if(lowerto.EndsWith(".esp")||lowerto.EndsWith(".esm")) {
-					Warn("Data files cannot have a .esp or .esm extension");
+				if(lowerto.EndsWith(".esp")||lowerto.EndsWith(".esm") || lowerto.EndsWith(".esl")) {
+					Warn("Data files cannot have a .esp, .esl or .esm extension");
 					return;
 				}
 			}

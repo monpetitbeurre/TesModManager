@@ -291,7 +291,7 @@ namespace OblivionModManager {
                     date = date.AddMinutes(1);
                     if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,Esps[j].FileName)))
                         File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath,Esps[j].FileName), date);
-                    string bsa = Esps[j].LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
+                    string bsa = Esps[j].LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".esl", "").Replace(".ghost", ""); bsa += ".bsa";
                     if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,bsa)))
                         File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath,bsa), date);
                 }
@@ -368,7 +368,7 @@ namespace OblivionModManager {
                 try
                 {
                     File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath,ei.FileName), InsertAt);
-                    string bsa = ei.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
+                    string bsa = ei.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".esl", "").Replace(".ghost", ""); bsa += ".bsa";
                     if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,bsa)))
                         File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath,bsa), InsertAt);
                 }

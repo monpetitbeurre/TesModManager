@@ -1205,7 +1205,7 @@ namespace OblivionModManager {
                         int fileindex = 0;
                         foreach (string file in sevenZipExtract.ArchiveFileNames)
                         {
-                            if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
+                            if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm") || file.ToLower().EndsWith(".esl"))
                                 pluginlist.Add(file);
                             else if (!sevenZipExtract.ArchiveFileData[fileindex].IsDirectory)
                                 datafileslist.Add(new DataFileInfo(file, sevenZipExtract.ArchiveFileData[fileindex].Crc));
@@ -1582,7 +1582,7 @@ namespace OblivionModManager {
             List<DataFileInfo> dtemp2 = new List<DataFileInfo>();
             foreach (DataFileInfo dfi in dtemp1)
             {
-                if (Path.GetExtension(dfi.FileName).ToLower().StartsWith(".esp"))
+                if (Path.GetExtension(dfi.FileName).ToLower().StartsWith(".es"))
                 {
                     bool bFound=false;
                     // plugin as data file? Check that it is not already installed as a plugin
@@ -2295,50 +2295,50 @@ namespace OblivionModManager {
         {
             List<string> ar = new List<string>();
 
-/*
-            if (LowerFileName.EndsWith(".omod2") || LowerFileName.EndsWith(".omod2.ghost"))
-                bOmod2 = true;
-            else if (!LowerFileName.EndsWith(".omod") || LowerFileName.EndsWith(".omod.ghost"))
-                bFomod = true;
+            /*
+                        if (LowerFileName.EndsWith(".omod2") || LowerFileName.EndsWith(".omod2.ghost"))
+                            bOmod2 = true;
+                        else if (!LowerFileName.EndsWith(".omod") || LowerFileName.EndsWith(".omod.ghost"))
+                            bFomod = true;
 
-            if (bOmod2)
-            {
-                foreach (ZipEntry e in ModFile)
-                {
-                    if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm"))
-                        ar.Add(e.Name);
-                }
-            }
-            else if (bFomod)
-            {
-                SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Settings.omodDir + FileName);
-                foreach (string file in zextract.ArchiveFileNames)
-                {
-                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
-                    {
-                        ar.Add(file);
-                    }
-                }
-//                string[] esps = Directory.GetFiles(strTempDir, "*.es?", SearchOption.AllDirectories);
-//                foreach (string esp in esps)
-//                {
-//                    ar.Add(esp.Replace(strTempDir,""));
-//                }
-            }
-            else
-            {
-                Stream TempStream = ExtractWholeFile("plugins.crc");
-                if (TempStream == null) return new string[0];
-                BinaryReader br = new BinaryReader(TempStream);
-                while (br.PeekChar() != -1)
-                {
-                    ar.Add(br.ReadString());
-                    br.ReadInt32();
-                    br.ReadInt64();
-                }
-                br.Close();
-            }
-*/
+                        if (bOmod2)
+                        {
+                            foreach (ZipEntry e in ModFile)
+                            {
+                                if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm") || e.Name.ToLower().EndsWith(".esl"))
+                                    ar.Add(e.Name);
+                            }
+                        }
+                        else if (bFomod)
+                        {
+                            SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Settings.omodDir + FileName);
+                            foreach (string file in zextract.ArchiveFileNames)
+                            {
+                                if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
+                                {
+                                    ar.Add(file);
+                                }
+                            }
+            //                string[] esps = Directory.GetFiles(strTempDir, "*.es?", SearchOption.AllDirectories);
+            //                foreach (string esp in esps)
+            //                {
+            //                    ar.Add(esp.Replace(strTempDir,""));
+            //                }
+                        }
+                        else
+                        {
+                            Stream TempStream = ExtractWholeFile("plugins.crc");
+                            if (TempStream == null) return new string[0];
+                            BinaryReader br = new BinaryReader(TempStream);
+                            while (br.PeekChar() != -1)
+                            {
+                                ar.Add(br.ReadString());
+                                br.ReadInt32();
+                                br.ReadInt64();
+                            }
+                            br.Close();
+                        }
+            */
 
             if (FileName.ToLower().EndsWith(".omod") || (CompType == CompressionType.Zip && ModFile != null))
             {
@@ -2359,7 +2359,7 @@ namespace OblivionModManager {
                 {
                     foreach (ZipEntry e in ModFile)
                     {
-                        if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm"))
+                        if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm") || e.Name.ToLower().EndsWith(".esl"))
                             ar.Add(e.Name);
                     }
                 }
@@ -2369,7 +2369,7 @@ namespace OblivionModManager {
                 SevenZip.SevenZipExtractor zextract = new SevenZip.SevenZipExtractor(Path.Combine(Settings.omodDir,FileName));
                 foreach (string file in zextract.ArchiveFileNames)
                 {
-                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
+                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm") || file.ToLower().EndsWith(".esl"))
                     {
                         ar.Add(file);
                     }
@@ -2397,7 +2397,7 @@ namespace OblivionModManager {
             {
                 foreach (ZipEntry e in ModFile)
                 {
-                    if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") && !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
+                    if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm")  && !e.Name.ToLower().EndsWith(".esl") && !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
                         ar.Add(new DataFileInfo(e.Name, (uint)e.Crc));
                 }
             }
@@ -2455,7 +2455,7 @@ namespace OblivionModManager {
                 {
                     foreach (ZipEntry e in ModFile)
                     {
-                        if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") &&
+                        if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") && !e.Name.ToLower().EndsWith(".esl") &&
                             e.Name.ToLower() != "script.txt" && e.Name.ToLower() != "config.ini" && e.Name.ToLower() != "image.jpg" && e.Name.ToLower() != "readme.txt" && !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
                             ar.Add(new DataFileInfo(e.Name, (uint)e.Crc));
                     }
@@ -2509,7 +2509,7 @@ namespace OblivionModManager {
                         string filepath = path;
                         foreach (ZipEntry e in ModFile)
                         {
-                            if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm"))
+                            if (e.Name.ToLower().EndsWith(".esp") || e.Name.ToLower().EndsWith(".esm") || e.Name.ToLower().EndsWith(".esl"))
                             {
                                 Program.logger.WriteToLog(" Extracting " + e.Name, Logger.LogLevel.High);
                                 ExtractWholeFile(e.Name, ref filepath).Close();
@@ -2545,12 +2545,12 @@ namespace OblivionModManager {
                     List<string> files = new List<string>(zextract.ArchiveFileNames);
                     foreach (string file in zextract.ArchiveFileNames)
                     {
-                        if (!file.ToLower().EndsWith(".esp") && !file.ToLower().EndsWith(".esm"))
+                        if (!file.ToLower().EndsWith(".esp") && !file.ToLower().EndsWith(".esm") && !file.ToLower().EndsWith(".esl"))
                         {
                             files.Remove(file);
                         }
                         Program.pf.UpdateProgress(count);
-                        //                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
+                        //                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm") || file.ToLower().EndsWith(".esl"))
                         //                    {
                         //                        Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(path, file)));
                         //                        StreamWriter sw = new StreamWriter(Path.Combine(path, file));
@@ -2608,7 +2608,7 @@ namespace OblivionModManager {
                 CreateDirectoryStructure(AllDataFiles, ref path);
                 foreach (ZipEntry e in ModFile)
                 {
-                    if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") && !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
+                    if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") && !e.Name.ToLower().EndsWith(".esl") && !e.Name.EndsWith("\\") && !e.Name.EndsWith("/"))
                     {
                         ExtractWholeFile(e.Name, ref filepath).Close();
                         if (File.Exists(Path.Combine(path, e.Name))) File.Delete(Path.Combine(path, e.Name));
@@ -2629,12 +2629,12 @@ namespace OblivionModManager {
                 List<string> files = new List<string>(zextract.ArchiveFileNames);
                 foreach (string file in zextract.ArchiveFileNames)
                 {
-                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm"))
+                    if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm") || file.ToLower().EndsWith(".esl"))
                     {
                         files.Remove(file);
                     }
                     //                    pf.UpdateProgress(count);
-                    //                    if (!file.ToLower().Contains(".esp") && !file.ToLower().Contains(".esm"))
+                    //                    if (!file.ToLower().Contains(".esp") && !file.ToLower().Contains(".esm") && !file.ToLower().Contains(".esl"))
                     //                    {
                     //                        if (Path.GetExtension(Path.Combine(path, file)).Length==0)
                     //                            Directory.CreateDirectory(Path.Combine(path, file));
@@ -2682,7 +2682,7 @@ namespace OblivionModManager {
                     CreateDirectoryStructure(AllDataFiles, ref path);
                     foreach (ZipEntry e in ModFile)
                     {
-                        if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") &&
+                        if (!e.Name.ToLower().EndsWith(".esp") && !e.Name.ToLower().EndsWith(".esm") && !e.Name.ToLower().EndsWith(".esl") &&
                              e.Name.ToLower() != "script.txt" && e.Name.ToLower() != "config.ini" && 
                              e.Name.ToLower() != "image.jpg" && e.Name.ToLower() != "readme.txt" &&
                              e.Name.ToLower() != "image" && e.Name.ToLower() != "readme" &&
@@ -2721,7 +2721,7 @@ namespace OblivionModManager {
                     List<string> files = new List<string>(zextract.ArchiveFileNames);
                     foreach (string file in zextract.ArchiveFileNames)
                     {
-                        if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm") ||
+                        if (file.ToLower().EndsWith(".esp") || file.ToLower().EndsWith(".esm") || file.ToLower().EndsWith(".esl") ||
                             file.ToLower() == "script.txt" || file.ToLower() == "config.ini" || file.ToLower() == "image.jpg" || file.ToLower() == "readme.txt")
                         {
                             files.Remove(file);

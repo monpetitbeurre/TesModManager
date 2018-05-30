@@ -556,7 +556,7 @@ namespace OblivionModManager {
 			OpenDialog.Multiselect=true;
 			if(rbPlugins.Checked) {
 				OpenDialog.Title="Select plugins to add";
-				OpenDialog.Filter="plugin files (*.esp,*.esm)|*.esp;*.esm";
+				OpenDialog.Filter="plugin files (*.esp,*.esm, *.esl)|*.esp;*.esm;*.esl";
 			} else {
 				OpenDialog.Title="Select other files to add";
 				OpenDialog.Filter="All files|*.*";
@@ -610,10 +610,13 @@ namespace OblivionModManager {
                     {
                         string[] esps=Directory.GetFiles(dir, "*.esp", SearchOption.AllDirectories);
                         string[] esms=Directory.GetFiles(dir, "*.esm", SearchOption.AllDirectories);
-                        if (esps.Length > 0 || esms.Length > 0)
+                        string[] esls = Directory.GetFiles(dir, "*.esl", SearchOption.AllDirectories);
+                        if (esps.Length > 0 || esms.Length > 0 || esls.Length > 0)
                         {
                             if (MessageBox.Show("Warning - this folder contains esp files in sub directories." +
-                                                (esps.Length > 0 ? "\n* " + esps[0].Replace(dir+"\\", "") : "") + (esms.Length > 0 ? "\n* " + esms[0].Replace(dir+"\\", "") : "") +
+                                                (esps.Length > 0 ? "\n* " + esps[0].Replace(dir+"\\", "") : "") + 
+                                                (esms.Length > 0 ? "\n* " + esms[0].Replace(dir+"\\", "") : "") +
+                                                (esls.Length > 0 ? "\n* " + esls[0].Replace(dir + "\\", "") : "") +
                                                "\nThis mod may have been packed in a non standard way or contains multiple versions." +
                                                "\nThis requires a script to tell TesModManager what to do with any optional esps." +
                                                "\nYou can copy the mod to a new folder and set it up as you'd like, and then use " +
@@ -802,7 +805,8 @@ namespace OblivionModManager {
 				//esps/esms
 				MatchedPaths.AddRange(Directory.GetFiles(folder, "*.esp", SearchOption.AllDirectories));
 				MatchedPaths.AddRange(Directory.GetFiles(folder, "*.esm", SearchOption.AllDirectories));
-				MatchedFiles.AddRange(MatchedPaths);
+                MatchedPaths.AddRange(Directory.GetFiles(folder, "*.esl", SearchOption.AllDirectories));
+                MatchedFiles.AddRange(MatchedPaths);
 				
 				
 				

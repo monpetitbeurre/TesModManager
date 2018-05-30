@@ -51,7 +51,7 @@ namespace ConflictDetector {
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.Filter = "Oblivion plugins(*.esp, *.esm)|*.esp;*.esm";
+            this.openFileDialog1.Filter = "Oblivion plugins(*.esp, *.esm, *.esl)|*.esp;*.esm;*,esl";
             this.openFileDialog1.Multiselect = true;
             this.openFileDialog1.RestoreDirectory = true;
             // 

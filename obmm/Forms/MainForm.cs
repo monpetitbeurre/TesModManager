@@ -496,7 +496,7 @@ namespace OblivionModManager {
                         {
                             ei.BelongsTo = Program.SteamModList[filename];
 
-                            string bsa = filename.Replace(".esp", ".bsa").Replace(".esm", ".bsa");
+                            string bsa = filename.Replace(".esp", ".bsa").Replace(".esm", ".bsa").Replace(".esl", ".bsa");
                             if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,bsa)))
                             {
                                 toolText += "\n\nData file: " + bsa;
@@ -1139,11 +1139,11 @@ namespace OblivionModManager {
                         Program.logger.WriteToLog("Setting timestamps ", Logger.LogLevel.High);
                         DateTime oldtime = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bottom.FileName));
                         File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bottom.FileName), File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, top.FileName)));
-                        string bsa = bottom.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
+                        string bsa = bottom.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".esl", "").Replace(".ghost", ""); bsa += ".bsa";
                         if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, bsa)))
                             File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bsa), File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, top.FileName)));
                         File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, top.FileName), oldtime);
-                        bsa = top.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".ghost", ""); bsa += ".bsa";
+                        bsa = top.LowerFileName; bsa = bsa.Replace(".esm", "").Replace(".esp", "").Replace(".esl", "").Replace(".ghost", ""); bsa += ".bsa";
                         if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, bsa)))
                             File.SetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, bsa), oldtime);
                         Program.logger.WriteToLog("Done setting timestamps ", Logger.LogLevel.High);

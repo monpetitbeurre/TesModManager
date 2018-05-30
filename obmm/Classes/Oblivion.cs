@@ -1157,7 +1157,7 @@ namespace OblivionModManager {
                 // now cover BSAs according to esp/esm order
                 foreach (EspInfo espi in Program.Data.Esps)
                 {
-                    string s = espi.FileName; s = s.Replace(".esm", "").Replace(".esp", ""); s = s + ".bsa"; s = Path.Combine(Program.currentGame.DataFolderPath,s);
+                    string s = espi.FileName; s = s.Replace(".esm", "").Replace(".esp", "").Replace(".esl", ""); s = s + ".bsa"; s = Path.Combine(Program.currentGame.DataFolderPath,s);
                     if (System.IO.File.Exists(s))
                     {
                         date=date.AddMinutes(1);

@@ -260,7 +260,7 @@ namespace OblivionModManager.Forms {
 
         private void bAddEsp_Click(object sender, EventArgs e) {
             openFileDialog1.Title="Select plugins to add";
-            openFileDialog1.Filter="any plugins (*.esp, *.esm)|*.esp;*.esm";
+            openFileDialog1.Filter = "any plugins (*.esp, *.esm, *.esl)|*.esp;*.esm;*.esl";
             if(openFileDialog1.ShowDialog()!=DialogResult.OK) return;
             lvFiles.Sorting=SortOrder.None;
             foreach(string file in openFileDialog1.FileNames) {

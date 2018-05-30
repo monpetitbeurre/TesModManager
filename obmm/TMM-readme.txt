@@ -91,6 +91,15 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.33
+--------------
+* Added support for ESL plugins
+
+Version 1.6.32
+--------------
+* Fixed a crash when installing unique landscape fomod
+* Fixed missing compression DLL
+
 Version 1.6.31
 --------------
 * Hide BOSS if the main game is not Oblivion
