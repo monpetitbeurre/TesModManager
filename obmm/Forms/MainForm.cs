@@ -539,7 +539,14 @@ namespace OblivionModManager {
                     if (ei.Active)
                     {
                         lvi.Checked = true;
-                        toolText += "\n\nFormID: " + (ActiveCount++).ToString("X").PadLeft(2, '0');
+                        if (ei.FileName.ToLower().EndsWith(".esl"))
+                        {
+                            toolText += "\n\nFormID: " + (0xFE).ToString("x").PadLeft(2, '0');
+                        }
+                        else
+                        {
+                            toolText += "\n\nFormID: " + (ActiveCount++).ToString("x").PadLeft(2, '0');
+                        }
                     }
                     toolText += "\n\nBelongs to:" + ei.BelongsTo;
                     if (ei.header.Description != null)
@@ -924,7 +931,11 @@ namespace OblivionModManager {
 
 				if (lvEspList.Items[i].Checked)
 				{
-					cnt++;
+                    if (!espname.EndsWith(".esl"))
+                    {
+                        cnt++;
+                    }
+
 					if (lvEspList.Items[i].SubItems[1].Text != "Unknown")
 					{
 						omodnum++;

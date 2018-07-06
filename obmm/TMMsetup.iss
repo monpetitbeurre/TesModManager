@@ -28,12 +28,12 @@ Compression=lzma
 SolidCompression=yes
 UninstallDisplayName=TesModManager
 UninstallDisplayIcon={app}\TesModManager.exe
-VersionInfoVersion=1.6.33
+VersionInfoVersion=1.6.34
 VersionInfoDescription=Mod manager for Skyrim, Oblivion and Morrowind
-VersionInfoTextVersion=1.6.33
+VersionInfoTextVersion=1.6.34
 VersionInfoProductName=TesModManager
-VersionInfoProductVersion=1.6.33
-VersionInfoProductTextVersion=1.6.33
+VersionInfoProductVersion=1.6.34
+VersionInfoProductTextVersion=1.6.34
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"

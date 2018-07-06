@@ -91,6 +91,10 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.34
+--------------
+* Changed FormID handling for ESL plugins
+
 Version 1.6.33
 --------------
 * Added support for ESL plugins

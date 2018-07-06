@@ -587,11 +587,15 @@ namespace OblivionModManager.ConflictReport {
             lActive = new string[Active.Length];
             for(int i=0;i<Active.Length;i++) lActive[i]=Active[i].ToLower();
             List<Plugin> plugins=new List<Plugin>();
-            for(int i=0;i<Active.Length && !bCancelled;i++) {
+            int formID = 0;
+            for (int i=0;i<Active.Length && !bCancelled;i++) {
                 try {
                     pf.Text = "Scanning " + Active[i];
-                    plugins.Add(new Plugin(Path.Combine(Program.currentGame.DataFolderPath,Active[i]), new Node(Active[i], Active[i], null, 0, false, uint.MaxValue, null), (byte)i,
-                        (i==0&&!cbShowMain.Checked)?false:true));
+                    plugins.Add(
+                        new Plugin(Path.Combine(Program.currentGame.DataFolderPath,Active[i]), 
+                            new Node(Active[i], Active[i], null, 0, false, uint.MaxValue, null), 
+                            (byte)(lActive[i].EndsWith(".esl") ? 0xfe : formID++),
+                            (i==0&&!cbShowMain.Checked)?false:true));
                     pf.UpdateProgress(i);
                     Application.DoEvents();
                 }
