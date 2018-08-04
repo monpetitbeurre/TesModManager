@@ -539,7 +539,7 @@ namespace OblivionModManager {
                     if (ei.Active)
                     {
                         lvi.Checked = true;
-                        if (ei.FileName.ToLower().EndsWith(".esl"))
+                        if (ei.FileName.ToLower().EndsWith(".esl") || ei.header.isLightMaster)
                         {
                             toolText += "\n\nFormID: " + (0xFE).ToString("x").PadLeft(2, '0');
                         }
@@ -1617,6 +1617,8 @@ namespace OblivionModManager {
 
             backgroundNexusModUpdateChecker.CancelAsync();
 
+            this.cmbEspSortOrder.SelectedItem = "Load order";
+            Application.DoEvents();
             OblivionESP.SetActivePlugins();
 		}
 
@@ -4059,21 +4061,41 @@ namespace OblivionModManager {
 
         private void btnLootSortPlugins_Click(object sender, EventArgs e)
         {
-
-            System.Diagnostics.Process tmm = new System.Diagnostics.Process();
-            tmm.StartInfo.FileName = Path.Combine(Program.LOOTpath, "LOOT.exe");
-            tmm.StartInfo.WorkingDirectory = Program.LOOTpath;
-            //tmm.StartInfo.Arguments = "-g " + Program.gameName;
-            tmm.Start();
-            tmm.WaitForExit();
-            Program.loadLoadOrderTxtFile();
-            string[] esps = OblivionESP.GetActivePlugins();
-            foreach (ListViewItem lvi in lvEspList.Items)
+            if (File.Exists(OblivionESP.loadorder))
             {
-                EspInfo ea = (EspInfo)lvi.Tag;
-                ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, ea.FileName));
+                File.Delete(OblivionESP.loadorder + ".bak");
+                File.Move(OblivionESP.loadorder, OblivionESP.loadorder + ".bak");
             }
-            lvEspList.Sort();
+
+            List<string> oldOrder = Program.loadOrderList;
+            try
+            {
+                Program.loadOrderList = new List<string>();
+
+                System.Diagnostics.Process tmm = new System.Diagnostics.Process();
+                tmm.StartInfo.FileName = Path.Combine(Program.LOOTpath, "LOOT.exe");
+                tmm.StartInfo.WorkingDirectory = Program.LOOTpath;
+                tmm.StartInfo.Arguments = "--game=\"" + Program.currentGame.Name + "\"";
+                tmm.Start();
+                tmm.WaitForExit();
+                Program.loadLoadOrderTxtFile();
+                foreach (ListViewItem lvi in lvEspList.Items)
+                {
+                    EspInfo ea = (EspInfo)lvi.Tag;
+                    ea.DateModified = File.GetLastWriteTime(Path.Combine(Program.currentGame.DataFolderPath, ea.FileName));
+                }
+                lvEspList.Sort();
+
+                string[] esps = OblivionESP.GetActivePlugins();
+            }
+            catch
+            {
+                Program.loadOrderList = oldOrder;
+                if (File.Exists(OblivionESP.loadorder + ".bak"))
+                {
+                    File.Move(OblivionESP.loadorder + ".bak", OblivionESP.loadorder);
+                }
+            }
 
         }
 

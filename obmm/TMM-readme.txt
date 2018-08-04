@@ -91,6 +91,14 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.36
+--------------
+* Fixed a case where plugin sort was lost
+
+Version 1.6.35
+--------------
+* Fixed system mod installation failure
+
 Version 1.6.34
 --------------
 * Changed FormID handling for ESL plugins

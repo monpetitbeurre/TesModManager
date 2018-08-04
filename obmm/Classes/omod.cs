@@ -1837,7 +1837,7 @@ namespace OblivionModManager {
             List<DataFileInfo> conflicts = new List<DataFileInfo>();
 
             string targetfilename = "";
-            string targetroot = (bSystemMod ? "" : Program.currentGame.DataFolderPath+"\\");
+            string targetroot = (bSystemMod ? Program.currentGame.GamePath : Program.currentGame.DataFolderPath) + "\\";
 
 			for(int i=0;i<DataFiles.Length;i++)
 			{

@@ -26,6 +26,8 @@ namespace ConflictDetector {
         public string Author;
         public string Description;
         public string DependsOn;
+        public bool isMaster = false;
+        public bool isLightMaster = false;
     }
 
     public struct EDID {
@@ -576,11 +578,27 @@ namespace ConflictDetector {
                 s = OblivionModManager.Program.ReadBString(br, 4);
                 if (s != "TES4") return hi;
                 size = br.ReadUInt32();
+                uint flags = br.ReadUInt32();
+                if ((flags & 1) > 0)
+                {
+                    // master
+                    hi.isMaster = true;
+                }
+                if ((flags & 0x200) > 0)
+                {
+                    // ESL
+                    hi.isLightMaster = true;
+                }
+                if ((flags & 0x80) > 0)
+                {
+                    // localized
+                }
+
                 while (br.PeekChar() != -1 && br.PeekChar() != 'H') br.BaseStream.Position++; // look for HEDR
 
                 // found HEDR
                 s = Program.ReadBString(br, 4);
-                // skip some constant crap 0C 00 00 00 80 3f for Oblivion  0C 00 D7 A3 70 3F for Skyrim
+                // skip some constant crap 0C 00 00 00 80 3f for Oblivion  0C 00 D7 A3 70 3F for Skyrim 0C 00 9A 99 D9 3F for SSE
                 br.BaseStream.Position += 6;
 
                 Int32 numrecords = br.ReadInt32();

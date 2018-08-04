@@ -126,6 +126,7 @@ namespace OblivionModManager.ConflictReport {
             public readonly string path;
             public readonly string name;
             public readonly bool IsMaster;
+            public readonly bool IsLightMaster;
             public readonly Node baseNode;
             public readonly byte FormID;
 
@@ -136,8 +137,9 @@ namespace OblivionModManager.ConflictReport {
             public Plugin(string Path, Node BaseNode, byte formID, bool Walk) {
                 path=Path;
                 name=System.IO.Path.GetFileName(path);
-                if(name.ToLower().EndsWith(".esm")) IsMaster=true; else IsMaster=false;
-                FormID=formID;
+                IsMaster = name.ToLower().EndsWith(".esm");
+                IsLightMaster = name.ToLower().EndsWith(".esl");
+                FormID = formID;
                 baseNode=BaseNode;
                 if(Walk) IDs=GenIDList();
             }
@@ -377,7 +379,8 @@ namespace OblivionModManager.ConflictReport {
             public void GenTree() {
                 baseNode.description="Path: "+path+Environment.NewLine+
                     "FormID: "+FormID.ToString("X").PadLeft(2, '0')+Environment.NewLine+
-                    "Is master file: "+(IsMaster?"Yes":"No");
+                    "Is master file: "+(IsMaster?"Yes":"No") + Environment.NewLine +
+                    "Is light master file: " + (IsLightMaster ? "Yes" : "No");
                 List<TreeNode> conflicts=new List<TreeNode>();
                 WalkTree(baseNode, null, conflicts);
                 FullStructure=new TreeNode[MainNode.Nodes.Count];

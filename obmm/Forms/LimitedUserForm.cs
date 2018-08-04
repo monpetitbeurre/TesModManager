@@ -35,7 +35,7 @@ namespace OblivionModManager.Forms {
                 ListViewItem lvi=new ListViewItem(new string[] { ei.FileName, ei.BelongsTo });
                 if(ei.Active) {
                     lvi.Checked=true;
-                    if (ei.FileName.ToLower().EndsWith(".esl"))
+                    if (ei.FileName.ToLower().EndsWith(".esl") || ei.header.isLightMaster)
                     {
                         toolText += "\n\nFormID: " + (0xFE).ToString("x").PadLeft(2, '0');
                     }
