@@ -41,7 +41,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.36"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.37"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -2383,6 +2383,7 @@ namespace OblivionModManager {
         {
             if (Program.currentGame.NickName.Contains("skyrim"))
             {
+                string espfile = Path.Combine(Program.ESPDir, "plugins.txt");
                 if (File.Exists(OblivionESP.loadorder))
                 {
                     Program.loadOrderList.Clear();
@@ -2399,6 +2400,42 @@ namespace OblivionModManager {
                     {
                         MessageBox.Show("Load order cannot be imported: " + ex.Message + ". Please close any application locking loadorder.txt.");
                         logger.WriteToLog("Load order cannot be imported: " + ex.Message, Logger.LogLevel.Error);
+                    }
+                }
+                else if (File.Exists(espfile))
+                {
+                    if (Program.currentGame.NickName == "skyrimse")
+                    {
+                        Program.loadOrderList.Add("Skyrim.esm");
+
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, "Update.esm")))
+                        {
+                            Program.loadOrderList.Add("Update.esm");
+                        }
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, "Hearthfires.esm")))
+                        {
+                            Program.loadOrderList.Add("Hearthfires.esm");
+                        }
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, "Dawnguard.esm")))
+                        {
+                            Program.loadOrderList.Add("Dawnguard.esm");
+                        }
+                        if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, "Dragonborn.esm")))
+                        {
+                            Program.loadOrderList.Add("Dragonborn.esm");
+                        }
+                    }
+
+                    string esp = string.Empty;
+
+                    List<string> ActiveEsps = new List<string>(File.ReadAllLines(espfile, System.Text.Encoding.Default));
+                    foreach (string s in ActiveEsps)
+                    {
+                        esp = s;
+                        if (Program.currentGame.NickName == "skyrimse" && s.StartsWith("*"))
+                            esp = esp.Substring(1);
+
+                        Program.loadOrderList.Add(esp);
                     }
                 }
             }
