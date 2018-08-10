@@ -710,9 +710,10 @@ namespace OblivionModManager.Scripting {
                             else
                             {
                                 string[] esplist = functions.getpluginList();
+                                string sourceAsPath = source.EndsWith("\\") ? source : source + "\\";
                                 foreach (string esp in esplist)
                                 {
-                                    if (esp.Contains(source + "\\"))
+                                    if (esp.Contains(sourceAsPath))
                                     {
                                         functions.CopyPlugin(esp, Path.GetFileName(esp));
                                     }
@@ -721,7 +722,7 @@ namespace OblivionModManager.Scripting {
                                 string[] datalist = functions.getdataFileList();
                                 foreach (string data in datalist)
                                 {
-                                    if (data.Contains(source + "\\"))
+                                    if (data.Contains(sourceAsPath))
                                     {
                                         functions.CopyDataFolder(source, dest, true);
                                         break;

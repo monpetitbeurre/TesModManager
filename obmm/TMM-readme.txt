@@ -91,6 +91,10 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.38
+--------------
+* Fixed a case where a FOMOD would not install anything (QUASIPC)
+
 Version 1.6.37
 --------------
 * Fixed another case where plugin sort was lost
