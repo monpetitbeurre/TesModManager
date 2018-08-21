@@ -584,6 +584,12 @@ namespace OblivionModManager {
 		}
 		public void AddFilesFromFolder(string folder, string zipname, bool bAutomatic)
         {
+            string sourceFolder = folder;
+            if (Directory.Exists(Path.Combine(folder, "data")) && Directory.GetFiles(folder).Length == 0)
+            {
+                sourceFolder = Path.Combine(folder, "data");
+            }
+
             bool bModeESPToDataFolder = false;
 			bool usefoldername = false;
 			if (zipname == null)
@@ -598,7 +604,7 @@ namespace OblivionModManager {
 				addedname = Path.GetFileNameWithoutExtension(addedname);
 			}
 			
-			if(!Path.IsPathRooted(folder)) folder=Path.GetFullPath(folder);
+			if(!Path.IsPathRooted(sourceFolder)) sourceFolder = Path.GetFullPath(sourceFolder);
 			string readme=null;
 			{
 				string[] Files;
@@ -606,7 +612,7 @@ namespace OblivionModManager {
 				//Check for esps in subdirectorys
                 if (!bAutomatic)
                 {
-                    foreach (string dir in Directory.GetDirectories(folder))
+                    foreach (string dir in Directory.GetDirectories(sourceFolder))
                     {
                         string[] esps=Directory.GetFiles(dir, "*.esp", SearchOption.AllDirectories);
                         string[] esms=Directory.GetFiles(dir, "*.esm", SearchOption.AllDirectories);
@@ -628,8 +634,8 @@ namespace OblivionModManager {
                     }
                 }
 				//readme
-				Files=Directory.GetFiles(folder, "*readme*.txt");
-				if(Files.Length==0) Files=Directory.GetFiles(folder, "*readme*.rtf");
+				Files=Directory.GetFiles(sourceFolder, "*readme*.txt");
+				if(Files.Length==0) Files=Directory.GetFiles(sourceFolder, "*readme*.rtf");
 				if(Files.Length>0) {
                     if (ops.readme == "" || bAutomatic || MessageBox.Show("Overwrite current readme with contents of '" + Files[0] + "'?",
 					                                   "Question", MessageBoxButtons.YesNo)==DialogResult.Yes) {
@@ -637,8 +643,8 @@ namespace OblivionModManager {
 						ops.readme=Program.ReadAllText(readme);
 					}
 				} else {
-					Files=Directory.GetFiles(folder, "*.txt");
-					if(Files.Length==0) Files=Directory.GetFiles(folder, "*.rtf");
+					Files=Directory.GetFiles(sourceFolder, "*.txt");
+					if(Files.Length==0) Files=Directory.GetFiles(sourceFolder, "*.rtf");
 					if(Files.Length==1) {
                         if (ops.readme == "" || bAutomatic || MessageBox.Show("Overwrite current readme with contents of '" + Files[0] + "'?",
 						                                   "Question", MessageBoxButtons.YesNo)==DialogResult.Yes) {
@@ -648,7 +654,7 @@ namespace OblivionModManager {
 					}
 				}
 				
-				string omodCD = Path.Combine(folder, Program.omodConversionData);
+				string omodCD = Path.Combine(sourceFolder, Program.omodConversionData);
 				
                 //if (!Directory.Exists(omodCD) && zipname != null)
                 //{
@@ -716,15 +722,15 @@ namespace OblivionModManager {
 						}
 					}
 				}
-				else if (File.Exists(Path.Combine(folder, "ocd.xbt")))
+				else if (File.Exists(Path.Combine(sourceFolder, "ocd.xbt")))
 				{
 					if (RequestImport())
-						LoadXBT(new GeneralConfig().LoadConfiguration(Path.Combine(folder, "ocd.xbt")));
+						LoadXBT(new GeneralConfig().LoadConfiguration(Path.Combine(sourceFolder, "ocd.xbt")));
 				}
-                else if (Directory.Exists(Path.Combine(folder,"fomod")))
+                else if (Directory.Exists(Path.Combine(sourceFolder, "fomod")))
                 {
                     //script
-                    Files = Directory.GetFiles(Path.Combine(folder, "fomod"), "ModuleConfig.xml");
+                    Files = Directory.GetFiles(Path.Combine(sourceFolder, "fomod"), "ModuleConfig.xml");
                     if (Files.Length > 0)
                     {
                         if (ops.script == "" || bAutomatic || MessageBox.Show("Overwrite current script with contents of 'ModuleConfig.xml'?",
@@ -733,7 +739,7 @@ namespace OblivionModManager {
                             ops.script = ""+(char)(ScriptType.xml)+Program.ReadAllText(Files[0]);
                         }
                     }
-                    Files = Directory.GetFiles(Path.Combine(folder, "fomod"), "script.cs");
+                    Files = Directory.GetFiles(Path.Combine(sourceFolder, "fomod"), "script.cs");
                     if (Files.Length > 0)
                     {
                         if (ops.script == "" || bAutomatic|| MessageBox.Show("Overwrite current script with contents of 'script.cs'?",
@@ -743,7 +749,7 @@ namespace OblivionModManager {
                         }
                     }
                     //data
-                    string infofile = Path.Combine(Path.Combine(folder, "fomod"), "info.xml");
+                    string infofile = Path.Combine(Path.Combine(sourceFolder, "fomod"), "info.xml");
                     if (File.Exists(infofile))
                     {
                         if (bAutomatic || RequestImport("fomod"))
@@ -803,15 +809,21 @@ namespace OblivionModManager {
 				string[] NewSources;
 				
 				//esps/esms
-				MatchedPaths.AddRange(Directory.GetFiles(folder, "*.esp", SearchOption.AllDirectories));
-				MatchedPaths.AddRange(Directory.GetFiles(folder, "*.esm", SearchOption.AllDirectories));
-                MatchedPaths.AddRange(Directory.GetFiles(folder, "*.esl", SearchOption.AllDirectories));
+				MatchedPaths.AddRange(Directory.GetFiles(sourceFolder, "*.esp", SearchOption.AllDirectories));
+				MatchedPaths.AddRange(Directory.GetFiles(sourceFolder, "*.esm", SearchOption.AllDirectories));
+                MatchedPaths.AddRange(Directory.GetFiles(sourceFolder, "*.esl", SearchOption.AllDirectories));
                 MatchedFiles.AddRange(MatchedPaths);
-				
-				
-				
-				for(int i=0;i<MatchedPaths.Count;i++)
-					MatchedPaths[i] = MatchedPaths[i].Substring(folder.Length);
+
+
+
+                for (int i = 0; i < MatchedPaths.Count; i++)
+                {
+                    MatchedPaths[i] = MatchedPaths[i].Substring(sourceFolder.Length);
+                    if (MatchedPaths[i].StartsWith("\\"))
+                    {
+                        MatchedPaths[i] = MatchedPaths[i].Substring(1);
+                    }
+                }
 				
 				if (ops.espPaths.Length > 0)
 				{
@@ -859,7 +871,7 @@ namespace OblivionModManager {
 				ops.espSources = NewSources;
 				//data files
 				MatchedPaths.Clear();
-				MatchedPaths.AddRange(Directory.GetFiles(folder, "*", SearchOption.AllDirectories));
+				MatchedPaths.AddRange(Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories));
 				foreach(string s in MatchedFiles)
 					MatchedPaths.Remove(s);
 				
@@ -869,7 +881,7 @@ namespace OblivionModManager {
 					
 					foreach(string s in MatchedPaths)
 					{
-						rels.Add(s.Substring(folder.Length));
+						rels.Add(s.Substring(sourceFolder.Length));
 					}
 					
 					List<string> DataFilePaths, DataFiles, DataSources;
@@ -912,7 +924,7 @@ namespace OblivionModManager {
 				MatchedFiles.AddRange(MatchedPaths);
                 for (int i = 0; i < MatchedPaths.Count; i++)
                 {
-                    MatchedPaths[i] = MatchedPaths[i].Substring(folder.Length);
+                    MatchedPaths[i] = MatchedPaths[i].Substring(sourceFolder.Length);
 
                     // avoid starting with \
                     if (MatchedPaths[i][0] == '\\')

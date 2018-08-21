@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='iso-8859-1'?>
-<SettingsFile xmlns="https://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OblivionModManager.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="OblivionModManager.Properties" GeneratedClassName="Settings">
   <Profiles />
   <Settings>
     <Setting Name="NexusUsername" Type="System.String" Scope="User">
@@ -35,7 +35,7 @@
     <Setting Name="MainFormH" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
-    <Setting Name="location" Type="System.Drawing.Point" Scope="User">
+    <Setting Name="location" Type="System.String" Scope="User">
       <Value Profile="(Default)">0, 0</Value>
     </Setting>
     <Setting Name="DefaultView" Type="System.String" Scope="User">
@@ -64,6 +64,9 @@
     </Setting>
     <Setting Name="FileSizeColumnWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">100</Value>
+    </Setting>
+    <Setting Name="UpgradeRequired" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>
 </SettingsFile>

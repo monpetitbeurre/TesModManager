@@ -28,12 +28,12 @@ Compression=lzma
 SolidCompression=yes
 UninstallDisplayName=TesModManager
 UninstallDisplayIcon={app}\TesModManager.exe
-VersionInfoVersion=1.6.38
+VersionInfoVersion=1.6.40
 VersionInfoDescription=Mod manager for Skyrim, Oblivion and Morrowind
-VersionInfoTextVersion=1.6.38
+VersionInfoTextVersion=1.6.40
 VersionInfoProductName=TesModManager
-VersionInfoProductVersion=1.6.38
-VersionInfoProductTextVersion=1.6.38
+VersionInfoProductVersion=1.6.40
+VersionInfoProductTextVersion=1.6.40
 
 [Languages]
 Name: "english"; MessagesFile: "compiler:Default.isl"
@@ -81,7 +81,7 @@ Name: "{commondesktop}\TesModManager for Oblivion"; Filename: "{app}\{#MyAppExeN
 Name: "{commondesktop}\TesModManager for Morrowind"; Filename: "{app}\{#MyAppExeName}"; Parameters: "Morrowind"; Components: TesModManagerforMorrowind; Tasks: morrowindshortcut
 
 [Run]
-Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
+; Filename: "{app}\{#MyAppExeName}"; Description: "{cm:LaunchProgram,{#StringChange(MyAppName, '&', '&&')}}"; Flags: nowait postinstall skipifsilent
 
 [Registry]
 Root: "HKLM"; Subkey: "Software\Classes\nxm"; ValueType: string; ValueData: """URL: Nexus mod protocol"""; Flags: createvalueifdoesntexist noerror uninsdeletekey

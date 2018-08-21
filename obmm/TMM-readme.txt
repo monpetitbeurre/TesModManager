@@ -91,6 +91,14 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.40
+--------------
+* Improved handling of mod file that includes DATA folder
+
+Version 1.6.39
+--------------
+* Keep settings across version change
+
 Version 1.6.38
 --------------
 * Fixed a case where a FOMOD would not install anything (QUASIPC)

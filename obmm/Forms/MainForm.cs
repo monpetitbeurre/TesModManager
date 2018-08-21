@@ -83,7 +83,7 @@ namespace OblivionModManager {
                 radList.Checked = true;
                 lvModList.View = View.List;
             }
-            else if (Properties.Settings.Default.DefaultView == "Details")
+            else // if (Properties.Settings.Default.DefaultView == "Details")
             {
                 radDetail.Checked = true;
                 lvModList.View = View.Details;
