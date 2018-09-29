@@ -806,6 +806,11 @@ namespace OblivionModManager.Scripting {
         public void CopyDataFolder(string from, string to, bool recurse) { _CopyDataFolder(from, to, recurse); }
         public static void _CopyDataFolder(string from, string to, bool recurse)
         {
+            if (string.IsNullOrWhiteSpace(to))
+            {
+                to = from;
+            }
+
             // check if it's actually a folder
             if (File.Exists(DataFiles+from))
             {

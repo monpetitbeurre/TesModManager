@@ -3721,7 +3721,7 @@ namespace OblivionModManager {
                         }
                         catch (Exception ex)
                         {
-
+                            Program.logger.WriteToLog("Could not apply script extender update:"+ex.Message, Logger.LogLevel.Low);
                         }
                     }
 

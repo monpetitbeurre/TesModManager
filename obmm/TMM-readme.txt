@@ -91,6 +91,20 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.43
+--------------
+* Fixed a case where a SKSE plugin would be ignored
+
+Version 1.6.42
+--------------
+* Fixed a case where TMM would fail to start
+
+Version 1.6.41
+--------------
+* Fixed an import issue with "Helgen reborn"
+* Fixed an activation issue with "Nether's follower framework"
+* Fixed import and activation issues with "Dynamic potions SSE"
+
 Version 1.6.40
 --------------
 * Improved handling of mod file that includes DATA folder

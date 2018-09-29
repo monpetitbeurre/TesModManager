@@ -116,9 +116,6 @@
       <HintPath>.\IronPython.dll</HintPath>
       <Private>False</Private>
     </Reference>
-    <Reference Include="SevenZipExtractor">
-      <HintPath>packages\SevenZipExtractor.1.0.12\lib\net45\SevenZipExtractor.dll</HintPath>
-    </Reference>
     <Reference Include="SevenZipSharp">
       <HintPath>..\Release\SevenZipSharp.dll</HintPath>
     </Reference>

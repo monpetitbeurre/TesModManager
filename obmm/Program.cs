@@ -42,7 +42,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.40"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.43"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -270,12 +270,19 @@ namespace OblivionModManager {
 			}
 			if(!Init()) return;
 
-            // with assembly version change, settings config file name changes so, we need to upgrade the settings file
-            if (Properties.Settings.Default.UpgradeRequired)
+            try
             {
-                Properties.Settings.Default.Upgrade();
-                Properties.Settings.Default.UpgradeRequired = false;
-                Properties.Settings.Default.Save();
+                // with assembly version change, settings config file name changes so, we need to upgrade the settings file
+                if (Properties.Settings.Default.UpgradeRequired)
+                {
+                    Properties.Settings.Default.Upgrade();
+                    Properties.Settings.Default.UpgradeRequired = false;
+                    Properties.Settings.Default.Save();
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.WriteToLog($"Could not update settings {ex.Message}", Logger.LogLevel.Low);
             }
 
             nexususername = Properties.Settings.Default.NexusUsername;
@@ -1287,8 +1294,8 @@ namespace OblivionModManager {
                         if (pf != null)
                         {
                             pf.Focus();
-                            pf.SetProgressRange(zextract.ArchiveFileNames.Count * 2);
-                            pf.UpdateRatio(0.25f);
+                            pf.SetProgressRange(100); // zextract.ArchiveFileNames.Count * 2);
+                            pf.UpdateRatio(0); // 0.25f);
                             pf.Text = "Extracting " + filename;
                         }
                         FileSystemWatcher fswatch = new FileSystemWatcher(strTmpDir, "*.*");
@@ -1356,6 +1363,7 @@ namespace OblivionModManager {
                             string[] sounddirlist = Directory.GetDirectories(strTmpDir, "sound", SearchOption.AllDirectories);
                             string[] scriptsdirlist = Directory.GetDirectories(strTmpDir, "scripts", SearchOption.AllDirectories);
                             string[] skyproclist = Directory.GetDirectories(strTmpDir, "SkyProc Patchers", SearchOption.AllDirectories);
+                            string[] sksedirlist = Directory.GetDirectories(strTmpDir, "skse", SearchOption.AllDirectories);
                             List<string> dirlist = new List<string>();
                             foreach (string dir in texturesdirlist)
                             {
@@ -1379,6 +1387,13 @@ namespace OblivionModManager {
                                     dirlist.Add(dir2);
                             }
                             foreach (string dir in skyproclist)
+                            {
+                                // get the parent directory
+                                string dir2 = dir.Substring(0, dir.LastIndexOf('\\') + 1);
+                                if (!dirlist.Contains(dir2))
+                                    dirlist.Add(dir2);
+                            }
+                            foreach (string dir in sksedirlist)
                             {
                                 // get the parent directory
                                 string dir2 = dir.Substring(0, dir.LastIndexOf('\\') + 1);
@@ -2963,7 +2978,7 @@ namespace OblivionModManager {
 		}
 
 		public static bool IsSafeFileName(string s) {
-            if (s==null || s == "") return true;
+            if (string.IsNullOrWhiteSpace(s)) return false;
 			s=s.Replace('/', '\\');
 			if(s.IndexOfAny(Path.GetInvalidPathChars())!=-1) return false;
 			if(Path.IsPathRooted(s)) return false;
@@ -2974,7 +2989,7 @@ namespace OblivionModManager {
 		}
 
 		public static bool IsSafeFolderName(string s) {
-			if(s.Length==0) return true;
+			if(string.IsNullOrWhiteSpace(s)) return false;
 			s=s.Replace('/', '\\');
 			if(s.IndexOfAny(Path.GetInvalidPathChars())!=-1) return false;
 			if(Path.IsPathRooted(s)) return false;

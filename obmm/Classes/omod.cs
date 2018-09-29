@@ -1563,7 +1563,7 @@ namespace OblivionModManager {
                 }
                 else
                 {
-					if(scd.CopyFrom!=scd.CopyTo) {
+					if (Path.GetFullPath(scd.CopyFrom)!=Path.GetFullPath(scd.CopyTo)) {
 						if(!Directory.Exists(Path.GetDirectoryName(Path.Combine(data,scd.CopyTo)))) Directory.CreateDirectory(Path.GetDirectoryName(Path.Combine(data,scd.hCopyTo)));
 						if(File.Exists(Path.Combine(data,scd.CopyTo))) File.Delete(Path.Combine(data,scd.CopyTo));
 						File.Copy(Path.Combine(data,scd.CopyFrom), Path.Combine(data,scd.hCopyTo));
@@ -2077,6 +2077,12 @@ namespace OblivionModManager {
 			Conflict=ConflictLevel.Active;
             LogModAction("Activated " + this.FileName);
             Program.logger.WriteToLog("Activated " + this.FileName, Logger.LogLevel.Low);
+
+            if (Program.pf != null)
+            {
+                Program.pf.Close();
+                Program.pf = null;
+            }
             return bRet;
         }
 

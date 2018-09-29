@@ -406,6 +406,11 @@ namespace OblivionModManager.Scripting {
                     {
                         string source = mc.requiredInstallFiles.Items[k].source.ToLower();
                         string dest = mc.requiredInstallFiles.Items[k].destination;
+                        if (dest == null)
+                        {
+                            dest = source;
+                        }
+
                         if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
                             functions.CopyPlugin(source, dest);
                         else if (source.EndsWith(".bsa"))
@@ -425,7 +430,15 @@ namespace OblivionModManager.Scripting {
                         //    else
                         //        functions.CopyDataFile(file, destdir);
                         //}
-                        functions.CopyDataFolder(sourcedir, destdir, true);
+                        if (string.IsNullOrWhiteSpace(destdir))
+                        {
+                            destdir = sourcedir;
+                        }
+
+                        if (!string.IsNullOrWhiteSpace(sourcedir))
+                        {
+                            functions.CopyDataFolder(sourcedir, destdir, true);
+                        }
                     }
                 }
             }
@@ -435,135 +448,139 @@ namespace OblivionModManager.Scripting {
             // go through all the steps
             bool bInstallstep = false;
             bool bMissingDependency = false;
-            foreach (fomod.installStep step in mc.installSteps.installStep)
+            if (mc.installSteps != null)
             {
-                bInstallstep = false;
-                bMissingDependency = false;
-
-                if (step.visible == null)
-                    bInstallstep = true;
-                else if (step.visible.Items != null && step.visible.Items.Length > 0)
+                foreach (fomod.installStep step in mc.installSteps.installStep)
                 {
-                    if (step.visible.Items[0] is fomod.compositeDependency)
+                    bInstallstep = false;
+                    bMissingDependency = false;
+
+                    if (step.visible == null)
+                        bInstallstep = true;
+                    else if (step.visible.Items != null && step.visible.Items.Length > 0)
                     {
-                        foreach (Object o in ((fomod.compositeDependency)step.visible.Items[0]).Items)
+                        if (step.visible.Items[0] is fomod.compositeDependency)
                         {
-                            if (o is fomod.flagDependency)
+                            foreach (Object o in ((fomod.compositeDependency)step.visible.Items[0]).Items)
                             {
-                                if (flaglist.Contains(((fomod.flagDependency)o).flag.ToLower()))
+                                if (o is fomod.flagDependency)
                                 {
+                                    if (flaglist.Contains(((fomod.flagDependency)o).flag.ToLower()))
+                                    {
+                                        bInstallstep = true;
+                                    }
+                                    else
+                                    {
+                                        bMissingDependency = true;
+                                        break;
+                                    }
+                                }
+                                else if (o is fomod.fileDependency)
+                                {
+                                    if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath, ((fomod.fileDependency)o).file)))
+                                    {
+                                        bInstallstep = true;
+                                    }
+                                    else
+                                    {
+                                        bMissingDependency = true;
+                                        break;
+                                    }
+                                }
+                                else if (o is fomod.versionDependency)
+                                {
+                                    // ???
                                     bInstallstep = true;
                                 }
-                                else
-                                {
-                                    bMissingDependency = true;
-                                    break;
-                                }
                             }
-                            else if (o is fomod.fileDependency)
+                        }
+                        else if (step.visible.Items[0] is fomod.flagDependency)
+                        {
+                            if (flaglist.Contains(((fomod.flagDependency)(step.visible.Items[0])).flag.ToLower()))
                             {
-                                if (File.Exists(Path.Combine(Program.currentGame.DataFolderPath,((fomod.fileDependency)o).file)))
-                                {
-                                    bInstallstep = true;
-                                }
-                                else
-                                {
-                                    bMissingDependency = true;
-                                    break;
-                                }
-                            }
-                            else if (o is fomod.versionDependency)
-                            {
-                                // ???
                                 bInstallstep = true;
                             }
-                        }
-                    }
-                    else if (step.visible.Items[0] is fomod.flagDependency)
-                    {
-                        if (flaglist.Contains(((fomod.flagDependency)(step.visible.Items[0])).flag.ToLower()))
-                        {
-                            bInstallstep = true;
-                        }
-                        else
-                        {
-                            bMissingDependency = true;
-                        }
-                    }
-                }
-
-                // check: <visible> <flagDependency value="On" flag="<previousChoiceItDependsOn>"/> </visible> to find if dependent
-                if (bInstallstep && !bMissingDependency) // step.visible == null || (flaglist.Contains(((fomod.flagDependency)(step.visible.Items[0])).flag.ToLower()))) // && flagvaluelist[index])
-                {
-                    for (int grp = 0; grp < step.optionalFileGroups.group.GetLength(0); grp++)
-                    {
-                        string[] optionlist = new string[step.optionalFileGroups.group[grp].plugins.plugin.GetLength(0)];
-                        string[] previewlist = new string[optionlist.Length];
-                        string[] desclist = new string[optionlist.Length];
-                        for (int i = 0; i < optionlist.Length; i++)
-                        {
-                            try { optionlist[i] = step.optionalFileGroups.group[grp].plugins.plugin[i].name; }catch { };
-                            try { desclist[i] = step.optionalFileGroups.group[grp].plugins.plugin[i].description; }catch { };
-                            if (step.optionalFileGroups.group[grp].plugins.plugin[i].image!=null)
-                                previewlist[i] = (step.optionalFileGroups.group[grp].plugins.plugin[i].image.path).Replace("\\\\", "\\");
-                        }
-                        bool bMulti= step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAny;
-                        bMulti = bMulti || step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAtLeastOne;
-                        bMulti = bMulti && !(step.optionalFileGroups.group[grp].type == fomod.groupType.SelectExactlyOne || step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAtMostOne);
-                        bool bAtLeastOne = step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAtLeastOne;
-                        bAtLeastOne = bAtLeastOne || step.optionalFileGroups.group[grp].type == fomod.groupType.SelectExactlyOne;
-                        string[] selected = functions.Select(optionlist, previewlist, desclist, step.optionalFileGroups.group[grp].name, bMulti ,bAtLeastOne);
-                        //                    Forms.SelectForm sf = new Forms.SelectForm(optionlist, step.name, step.optionalFileGroups.group[0].type == fomod.groupType.SelectAtLeastOne, previewlist, desclist, false); // true);
-                        //                    sf.ShowDialog();
-                        // install all selected
-                        for (int i = 0; i < optionlist.Length; i++)
-                        {
-                            for (int j = 0; j < selected.Length; j++)
+                            else
                             {
-                                if (optionlist[i] == selected[j])
+                                bMissingDependency = true;
+                            }
+                        }
+                    }
+
+                    // check: <visible> <flagDependency value="On" flag="<previousChoiceItDependsOn>"/> </visible> to find if dependent
+                    if (bInstallstep && !bMissingDependency) // step.visible == null || (flaglist.Contains(((fomod.flagDependency)(step.visible.Items[0])).flag.ToLower()))) // && flagvaluelist[index])
+                    {
+                        for (int grp = 0; grp < step.optionalFileGroups.group.GetLength(0); grp++)
+                        {
+                            string[] optionlist = new string[step.optionalFileGroups.group[grp].plugins.plugin.GetLength(0)];
+                            string[] previewlist = new string[optionlist.Length];
+                            string[] desclist = new string[optionlist.Length];
+                            for (int i = 0; i < optionlist.Length; i++)
+                            {
+                                try { optionlist[i] = step.optionalFileGroups.group[grp].plugins.plugin[i].name; } catch { };
+                                try { desclist[i] = step.optionalFileGroups.group[grp].plugins.plugin[i].description; } catch { };
+                                if (step.optionalFileGroups.group[grp].plugins.plugin[i].image != null)
+                                    previewlist[i] = (step.optionalFileGroups.group[grp].plugins.plugin[i].image.path).Replace("\\\\", "\\");
+                            }
+                            bool bMulti = step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAny;
+                            bMulti = bMulti || step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAtLeastOne;
+                            bMulti = bMulti && !(step.optionalFileGroups.group[grp].type == fomod.groupType.SelectExactlyOne || step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAtMostOne);
+                            bool bAtLeastOne = step.optionalFileGroups.group[grp].type == fomod.groupType.SelectAtLeastOne;
+                            bAtLeastOne = bAtLeastOne || step.optionalFileGroups.group[grp].type == fomod.groupType.SelectExactlyOne;
+                            string[] selected = functions.Select(optionlist, previewlist, desclist, step.optionalFileGroups.group[grp].name, bMulti, bAtLeastOne);
+                            //                    Forms.SelectForm sf = new Forms.SelectForm(optionlist, step.name, step.optionalFileGroups.group[0].type == fomod.groupType.SelectAtLeastOne, previewlist, desclist, false); // true);
+                            //                    sf.ShowDialog();
+                            // install all selected
+                            for (int i = 0; i < optionlist.Length; i++)
+                            {
+                                for (int j = 0; j < selected.Length; j++)
                                 {
-                                    for (int item = 0; item < step.optionalFileGroups.group[grp].plugins.plugin[i].Items?.GetLength(0); item++)
+                                    if (optionlist[i] == selected[j])
                                     {
-                                        if (step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item].GetType() == typeof(fomod.conditionFlagList))
+                                        for (int item = 0; item < step.optionalFileGroups.group[grp].plugins.plugin[i].Items?.GetLength(0); item++)
                                         {
-                                            foreach (fomod.setConditionFlag flag in ((fomod.conditionFlagList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).flag)
+                                            if (step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item].GetType() == typeof(fomod.conditionFlagList))
                                             {
-                                                // set the flag ((fomod.conditionFlagList)(step.optionalFileGroups.group[0].plugins.plugin[0].Items[0])).flag
-                                                //if (flag.Value.ToLower() == "on" || flag.Value.ToLower() == "yes")
+                                                foreach (fomod.setConditionFlag flag in ((fomod.conditionFlagList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).flag)
                                                 {
-                                                    flaglist.Add(flag.name.ToLower());
-                                                    flagvaluelist.Add(flag.Value.ToLower());
-                                                }
-//                                                flaglist.Add(((fomod.conditionFlagList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).flag[0].name.ToLower());
-//                                                flagvaluelist.Add(((fomod.conditionFlagList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).flag[0].Value.ToLower());
-                                            }
-                                        }
-                                        else if (step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item].GetType() == typeof(fomod.fileList))
-                                        {
-                                            if (((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items != null)
-                                            {
-                                                // install that one ((fomod.conditionFlagList)(step.optionalFileGroups.group[0].plugins.plugin[0].Items[1])).Items
-                                                for (int k = 0; k < ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items.GetLength(0); k++)
-                                                {
-                                                    string source = ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items[k].source;
-                                                    string dest = ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items[k].destination;
-                                                    if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
-                                                        functions.CopyPlugin(source, dest);
-                                                    else if (source.EndsWith(".bsa"))
-                                                        functions.CopyDataFile(source, dest);
-                                                    else
-                                                        functions.CopyDataFolder(source, dest, true);
+                                                    // set the flag ((fomod.conditionFlagList)(step.optionalFileGroups.group[0].plugins.plugin[0].Items[0])).flag
+                                                    //if (flag.Value.ToLower() == "on" || flag.Value.ToLower() == "yes")
+                                                    {
+                                                        flaglist.Add(flag.name.ToLower());
+                                                        flagvaluelist.Add(flag.Value.ToLower());
+                                                    }
+                                                    //                                                flaglist.Add(((fomod.conditionFlagList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).flag[0].name.ToLower());
+                                                    //                                                flagvaluelist.Add(((fomod.conditionFlagList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).flag[0].Value.ToLower());
                                                 }
                                             }
+                                            else if (step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item].GetType() == typeof(fomod.fileList))
+                                            {
+                                                if (((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items != null)
+                                                {
+                                                    // install that one ((fomod.conditionFlagList)(step.optionalFileGroups.group[0].plugins.plugin[0].Items[1])).Items
+                                                    for (int k = 0; k < ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items.GetLength(0); k++)
+                                                    {
+                                                        string source = ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items[k].source;
+                                                        string dest = ((fomod.fileList)(step.optionalFileGroups.group[grp].plugins.plugin[i].Items[item])).Items[k].destination;
+                                                        if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
+                                                            functions.CopyPlugin(source, dest);
+                                                        else if (source.EndsWith(".bsa"))
+                                                            functions.CopyDataFile(source, dest);
+                                                        else
+                                                            functions.CopyDataFolder(source, dest, true);
+                                                    }
+                                                }
+                                            }
                                         }
+                                        break;
                                     }
-                                    break;
                                 }
                             }
                         }
                     }
                 }
             }
+
             if (mc.conditionalFileInstalls != null && mc.conditionalFileInstalls.patterns!=null)
             {
                 foreach (fomod.conditionalInstallPattern pattern in mc.conditionalFileInstalls.patterns)
@@ -702,6 +719,11 @@ namespace OblivionModManager.Scripting {
                             // copy all files from source to destination
                             string source = fsitem.source.Replace("/","\\");// ((fomod.fileSystemItem)(pattern.files.Items[0])).source;
                             string dest = fsitem.destination.Replace("/", "\\"); // ((fomod.fileSystemItem)(pattern.files.Items[0])).destination;
+
+                            if (string.IsNullOrWhiteSpace(dest))
+                            {
+                                dest = source;
+                            }
 
                             if (source.EndsWith(".esp") || source.EndsWith(".esm") || source.EndsWith(".esl"))
                                 functions.CopyPlugin(source, dest);

@@ -587,7 +587,9 @@ namespace OblivionModManager {
             string sourceFolder = folder;
             if (Directory.Exists(Path.Combine(folder, "data")) && Directory.GetFiles(folder).Length == 0)
             {
-                sourceFolder = Path.Combine(folder, "data");
+                // have to contend with possible different casing
+                string[] dirs = Directory.GetDirectories(folder, "data");
+                sourceFolder = new List<string>(dirs)[0];
             }
 
             bool bModeESPToDataFolder = false;
@@ -871,7 +873,7 @@ namespace OblivionModManager {
 				ops.espSources = NewSources;
 				//data files
 				MatchedPaths.Clear();
-				MatchedPaths.AddRange(Directory.GetFiles(sourceFolder, "*", SearchOption.AllDirectories));
+				MatchedPaths.AddRange(Directory.GetFiles(sourceFolder, "*.*", SearchOption.AllDirectories));
 				foreach(string s in MatchedFiles)
 					MatchedPaths.Remove(s);
 				
