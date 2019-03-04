@@ -91,6 +91,10 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.44
+--------------
+* Added a workaround for malformed FOMOD Xml where target path for ESP/BSA is empty
+
 Version 1.6.43
 --------------
 * Fixed a case where a SKSE plugin would be ignored

@@ -806,21 +806,35 @@ namespace OblivionModManager.Scripting {
         public void CopyDataFolder(string from, string to, bool recurse) { _CopyDataFolder(from, to, recurse); }
         public static void _CopyDataFolder(string from, string to, bool recurse)
         {
-            if (string.IsNullOrWhiteSpace(to))
-            {
-                to = from;
-            }
-
             // check if it's actually a folder
-            if (File.Exists(DataFiles+from))
+            if (File.Exists(Path.Combine(DataFiles,from)))
             {
+                if (string.IsNullOrWhiteSpace(to))
+                {
+                    to = from;
+                }
+
                 _CopyDataFile(from, to);
                 return;
             }
             try
             {
-
 			    CheckDataFolderSafety(from);
+
+                // valid FROM folder. But what does it contain?
+                string[] espfiles = Directory.GetFiles(Path.Combine(DataFiles, from), "*.es*");
+                string[] bsafiles = Directory.GetFiles(Path.Combine(DataFiles, from), "*.bsa");
+
+                if (espfiles.Length > 0 || bsafiles.Length > 0)
+                {
+                    // mislabelled to
+                    to = ".";
+                }
+                else
+                {
+                    to = from;
+                }
+
 			    CheckFolderSafety(to);
 
 			    if(testMode) {
