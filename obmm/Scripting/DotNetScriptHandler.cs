@@ -506,6 +506,10 @@ namespace OblivionModManager.Scripting {
                             }
                         }
                     }
+                    else
+                    {
+                        bInstallstep = true;
+                    }
 
                     // check: <visible> <flagDependency value="On" flag="<previousChoiceItDependsOn>"/> </visible> to find if dependent
                     if (bInstallstep && !bMissingDependency) // step.visible == null || (flaglist.Contains(((fomod.flagDependency)(step.visible.Items[0])).flag.ToLower()))) // && flagvaluelist[index])
