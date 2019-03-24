@@ -307,12 +307,12 @@ namespace OblivionModManager.Scripting {
             functions.DontInstallAnyPlugins();
 
             // install everything in 00
-            string[] files = functions.GetDataFiles("", "*.*", true);
+            string[] files = functions.GetDataFiles(".", "*.*", true);
             List<string> folders = new List<string>();
             string lastseenfolder = "";
             foreach (string file in files)
             {
-                string path=file.Substring(1);
+                string path=file.Substring(2);
                 if (path.StartsWith("00"))
                 {
                     // needs to be installed minus the base folder name of course
@@ -325,9 +325,9 @@ namespace OblivionModManager.Scripting {
                         lowerfilename = lowerfilename.Substring(lowerfilename.IndexOf("/") + 1);
 
                     if (lowerfilename.EndsWith(".esp") || lowerfilename.EndsWith(".esm") || lowerfilename.EndsWith(".esl"))
-                        functions.CopyPlugin(file.Substring(1), lowerfilename);
+                        functions.CopyPlugin(path, lowerfilename);
                     else
-                        functions.CopyDataFile(file.Substring(1), lowerfilename);
+                        functions.CopyDataFile(path, lowerfilename);
                 }
                 else if (lastseenfolder.Length>0 && path.IndexOf("\\")!=-1 && lastseenfolder != path.Substring(0, path.IndexOf("\\")))
                 {
