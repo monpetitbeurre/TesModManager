@@ -91,6 +91,10 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.47
+--------------
+* Added protection for odd path in BSA entries decoding
+
 Version 1.6.46
 --------------
 * Fixed a case where a BAIN mod would not install

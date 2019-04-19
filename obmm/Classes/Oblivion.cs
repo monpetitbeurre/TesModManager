@@ -601,7 +601,12 @@ namespace OblivionModManager {
                 br.BaseStream.Position=br.ReadInt32()-TotalFileNameLength+1;
                 string fname=Program.ReadCString(br).Replace('/', '\\');
                 br.BaseStream.Position=FileNameBlockStart;
-                for(int j=0;j<filecount;j++) files.Add(Path.Combine(fname,Program.ReadCString(br)));
+                for (int j = 0; j < filecount; j++)
+                {
+                    string filename = Program.ReadCString(br).Replace('/', '\\');
+                    Program.logger.WriteToLog("BSAEntry: path=" + fname + " file=" + filename, Logger.LogLevel.High);
+                    files.Add(Path.Combine(fname, filename));
+                }
                 FileNameBlockStart=br.BaseStream.Position;
                 folderpos+=16;
             }

@@ -42,7 +42,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.46"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.48"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -1354,8 +1354,10 @@ namespace OblivionModManager {
                             string[] txtfiles = Directory.GetFiles(strTmpDir, "*.txt");
                             if (txtfiles.Length > 0)
                                 createModForm.ops.readme = File.ReadAllText(txtfiles[0]);
-                            if (filelist.Count == 0 && Directory.GetDirectories(strTmpDir, "*.*").Length == 1 && Directory.Exists(Path.Combine(strTmpDir, "Data")))
-                                strTmpDir = Path.Combine(strTmpDir,"Data");
+                            if (filelist.Count == 0 && Directory.GetDirectories(strTmpDir, "*.*").Length == 1 && Directory.GetDirectories(strTmpDir, "Data", SearchOption.AllDirectories).Length == 1) // Directory.Exists(Path.Combine(strTmpDir, "Data")))
+                            {
+                                strTmpDir = Directory.GetDirectories(strTmpDir, "Data", SearchOption.AllDirectories)[0]; //  Path.Combine(strTmpDir, "Data");
+                            }
 
 
                             string[] texturesdirlist = Directory.GetDirectories(strTmpDir, "textures", SearchOption.AllDirectories);
