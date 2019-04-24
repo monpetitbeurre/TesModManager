@@ -628,7 +628,7 @@ namespace OblivionModManager {
                 lvModList.BeginUpdate();
                 string modFilter = (cmbGroupFilter.SelectedItem != null ? cmbGroupFilter.SelectedItem.ToString() : "");
                 Program.logger.WriteToLog("Refreshing omod list with " + Program.Data.omods.Count + " mods and filter='" + modFilter + "' from + " + Settings.omodDir, Logger.LogLevel.High);
-                for (int j = 0; j < Program.Data.omods.Count; j++)
+                for (int j = 0; j < Program.Data.omods.Count && j > -1; j++)
                 {
                     omod o = Program.Data.omods[j];
                     Program.logger.WriteToLog("Checking '" + o.FileName + "'", Logger.LogLevel.High);

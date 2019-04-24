@@ -91,6 +91,14 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.49
+--------------
+* Added a protection against crash
+
+Version 1.6.48
+--------------
+* Added a fix for mods where the Data folder is deep inside the input file
+
 Version 1.6.47
 --------------
 * Added protection for odd path in BSA entries decoding
