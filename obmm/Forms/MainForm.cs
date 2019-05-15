@@ -630,122 +630,129 @@ namespace OblivionModManager {
                 Program.logger.WriteToLog("Refreshing omod list with " + Program.Data.omods.Count + " mods and filter='" + modFilter + "' from + " + Settings.omodDir, Logger.LogLevel.High);
                 for (int j = 0; j < Program.Data.omods.Count && j > -1; j++)
                 {
-                    omod o = Program.Data.omods[j];
-                    Program.logger.WriteToLog("Checking '" + o.FileName + "'", Logger.LogLevel.High);
-                    if (!File.Exists(Path.Combine(Settings.omodDir,o.LowerFileName)))
-                    {
-                        Program.Data.omods.Remove(o);
-                        //omod.Remove(o.LowerFileName);
-                        j--;
-                        continue;
-                    }
-                    if (o.Hidden && !Settings.bShowHiddenMods) continue;
-                    if (o.ModName == null) o.ModName = o.FileName;
-                    if (!o.ModName.ToLower().Contains(strFilter)) continue;
-                    if (cmbGroupFilter.SelectedIndex != 0)
-                    {
-                        if (cmbGroupFilter.SelectedIndex == 1) // ALL
-                        {
-                            if (o.group != 0) continue;
-                        }
-                        else if (modFilter == "[Active mods only]")
-                        {
-                            if (o.Conflict != ConflictLevel.Active) continue;
-                        }
-                        else
-                        {
-                            if ((o.group & (ulong)((ulong)0x01 << (cmbGroupFilter.SelectedIndex - 2))) == 0) continue;
-                        }
-                    }
-                    Program.logger.WriteToLog("Adding " + o.FileName, Logger.LogLevel.High);
-                    ListViewItem lvi = new ListViewItem(GlobalSettings.ShowOMODNames ? o.ModName : Path.GetFileNameWithoutExtension(o.FileName));
-                    for (int i = 0; i < Settings.omodGroups.Count; i++)
-                    {
-                        if ((o.group & (ulong)((ulong)0x01 << i)) != 0)
-                        {
-                            if (Settings.omodGroups[i].Font != null)
-                            {
-                                lvi.Font = Settings.omodGroups[i].Font;
-                            }
-                        }
-                    }
-                    lvi.ToolTipText = o.ModName + "\nAuthor: " + o.Author + "\n" + "Version: " + o.Version + (o.bSystemMod?"\nSystem Mod":"")+"\n\n" + o.Description;
-                    lvi.Tag = o;
-                    lvi.SubItems.Add(o.Author);
-                    lvi.SubItems.Add(o.Version);
-                    lvi.SubItems.Add("" + o.AllDataFiles.Length);
-                    lvi.SubItems.Add("" + o.AllPlugins.Length);
-                    lvi.SubItems.Add("" + (o.bHasScript ? "Yes" : "No"));
-                    lvi.SubItems.Add(new FileInfo(Path.Combine(Settings.omodDir,o.LowerFileName)).CreationTime.ToString());
-                    lvi.SubItems.Add(o.Conflict.ToString());
-                    float filesize = new FileInfo(Path.Combine(Settings.omodDir,o.LowerFileName)).Length;
-                    string sfilesize = "";
-                    if (filesize / 1024 / 1024 / 1024 > 1)
-                        sfilesize = String.Format("{0:F2} GB", filesize / 1024 / 1024 / 1024);
-                    else if (filesize / 1024 / 1024 > 1)
-                        sfilesize = String.Format("{0:F2} MB", filesize / 1024 / 1024);
-                    else
-                        sfilesize = String.Format("{0:F2} KB", filesize / 1024);
-                    lvi.SubItems.Add(sfilesize);
-
-                    if (o.Website != null && o.Website.Contains("nexusmods/"))
-                        o.Website = o.Website.Replace("nexusmods/", "nexusmods.com/");
-
-                    string modid = Program.GetModIDFromWebsite(o.Website); if (modid.Length == 0) modid = Program.GetModID(o.LowerFileName);
-                    lvi.SubItems.Add(modid);
-
-                    if (o.bUpdateExists)
-                        lvi.ForeColor = Color.Red;
-
-                    if (o.Hidden && lvi.Font.Style != FontStyle.Italic)
-                    {
-                        lvi.Font = new Font(lvi.Font.Name, lvi.Font.Size, FontStyle.Italic);
-                    }
-                    else if (!o.Hidden && lvi.Font.Style == FontStyle.Italic)
-                    {
-                        lvi.Font = new Font(lvi.Font.Name, lvi.Font.Size, FontStyle.Regular);
-                    }
-
-                    switch (o.Conflict)
-                    {
-                        case ConflictLevel.Active:
-                            lvi.ImageIndex = 0;
-                            lvi.ToolTipText = "This mod is active\r\n" + lvi.ToolTipText;
-                            break;
-                        case ConflictLevel.NoConflict:
-                            lvi.ImageIndex = 1;
-                            lvi.ToolTipText = "This mod has no conflicts\r\n" + lvi.ToolTipText;
-                            break;
-                        case ConflictLevel.MinorConflict:
-                            lvi.ImageIndex = 2;
-                            lvi.ToolTipText = "This mod has minor conflicts\r\n" + lvi.ToolTipText;
-                            break;
-                        case ConflictLevel.MajorConflict:
-                            lvi.ImageIndex = 3;
-                            lvi.ToolTipText = "This mod has major conflicts\r\n" + lvi.ToolTipText;
-                            break;
-                        case ConflictLevel.Unusable:
-                            lvi.ImageIndex = 4;
-                            lvi.ToolTipText = "Unusable mod (plugin name conflict)\r\n" + lvi.ToolTipText;
-                            break;
-                        default:
-                            MessageBox.Show("omod had unrecognized conflict level", "Error");
-                            lvi.ImageIndex = 1;
-                            lvi.ToolTipText = "Unrecognized conflict level\r\n" + lvi.ToolTipText;
-                            break;
-                    }
-                    lvModList.Items.Add(lvi);
                     try
                     {
-                        if (o.ModName == selectedmod)
+                        omod o = Program.Data.omods[j];
+                        Program.logger.WriteToLog("Checking '" + o.FileName + "'", Logger.LogLevel.Low);
+                        if (!File.Exists(Path.Combine(Settings.omodDir, o.LowerFileName)))
                         {
-                            lvi.Selected = true;
-                            selectedItem = lvi;
+                            Program.Data.omods.Remove(o);
+                            //omod.Remove(o.LowerFileName);
+                            j--;
+                            continue;
+                        }
+                        if (o.Hidden && !Settings.bShowHiddenMods) continue;
+                        if (o.ModName == null) o.ModName = o.FileName;
+                        if (!o.ModName.ToLower().Contains(strFilter)) continue;
+                        if (cmbGroupFilter.SelectedIndex != 0)
+                        {
+                            if (cmbGroupFilter.SelectedIndex == 1) // ALL
+                            {
+                                if (o.group != 0) continue;
+                            }
+                            else if (modFilter == "[Active mods only]")
+                            {
+                                if (o.Conflict != ConflictLevel.Active) continue;
+                            }
+                            else
+                            {
+                                if ((o.group & (ulong)((ulong)0x01 << (cmbGroupFilter.SelectedIndex - 2))) == 0) continue;
+                            }
+                        }
+                        Program.logger.WriteToLog("Adding " + o.FileName, Logger.LogLevel.High);
+                        ListViewItem lvi = new ListViewItem(GlobalSettings.ShowOMODNames ? o.ModName : Path.GetFileNameWithoutExtension(o.FileName));
+                        for (int i = 0; i < Settings.omodGroups.Count; i++)
+                        {
+                            if ((o.group & (ulong)((ulong)0x01 << i)) != 0)
+                            {
+                                if (Settings.omodGroups[i].Font != null)
+                                {
+                                    lvi.Font = Settings.omodGroups[i].Font;
+                                }
+                            }
+                        }
+                        lvi.ToolTipText = o.ModName + "\nAuthor: " + o.Author + "\n" + "Version: " + o.Version + (o.bSystemMod ? "\nSystem Mod" : "") + "\n\n" + o.Description;
+                        lvi.Tag = o;
+                        lvi.SubItems.Add(o.Author);
+                        lvi.SubItems.Add(o.Version);
+                        lvi.SubItems.Add("" + o.AllDataFiles.Length);
+                        lvi.SubItems.Add("" + o.AllPlugins.Length);
+                        lvi.SubItems.Add("" + (o.bHasScript ? "Yes" : "No"));
+                        lvi.SubItems.Add(new FileInfo(Path.Combine(Settings.omodDir, o.LowerFileName)).CreationTime.ToString());
+                        lvi.SubItems.Add(o.Conflict.ToString());
+                        float filesize = new FileInfo(Path.Combine(Settings.omodDir, o.LowerFileName)).Length;
+                        string sfilesize = "";
+                        if (filesize / 1024 / 1024 / 1024 > 1)
+                            sfilesize = String.Format("{0:F2} GB", filesize / 1024 / 1024 / 1024);
+                        else if (filesize / 1024 / 1024 > 1)
+                            sfilesize = String.Format("{0:F2} MB", filesize / 1024 / 1024);
+                        else
+                            sfilesize = String.Format("{0:F2} KB", filesize / 1024);
+                        lvi.SubItems.Add(sfilesize);
+
+                        if (o.Website != null && o.Website.Contains("nexusmods/"))
+                            o.Website = o.Website.Replace("nexusmods/", "nexusmods.com/");
+
+                        string modid = Program.GetModIDFromWebsite(o.Website); if (modid.Length == 0) modid = Program.GetModID(o.LowerFileName);
+                        lvi.SubItems.Add(modid);
+
+                        if (o.bUpdateExists)
+                            lvi.ForeColor = Color.Red;
+
+                        if (o.Hidden && lvi.Font.Style != FontStyle.Italic)
+                        {
+                            lvi.Font = new Font(lvi.Font.Name, lvi.Font.Size, FontStyle.Italic);
+                        }
+                        else if (!o.Hidden && lvi.Font.Style == FontStyle.Italic)
+                        {
+                            lvi.Font = new Font(lvi.Font.Name, lvi.Font.Size, FontStyle.Regular);
+                        }
+
+                        switch (o.Conflict)
+                        {
+                            case ConflictLevel.Active:
+                                lvi.ImageIndex = 0;
+                                lvi.ToolTipText = "This mod is active\r\n" + lvi.ToolTipText;
+                                break;
+                            case ConflictLevel.NoConflict:
+                                lvi.ImageIndex = 1;
+                                lvi.ToolTipText = "This mod has no conflicts\r\n" + lvi.ToolTipText;
+                                break;
+                            case ConflictLevel.MinorConflict:
+                                lvi.ImageIndex = 2;
+                                lvi.ToolTipText = "This mod has minor conflicts\r\n" + lvi.ToolTipText;
+                                break;
+                            case ConflictLevel.MajorConflict:
+                                lvi.ImageIndex = 3;
+                                lvi.ToolTipText = "This mod has major conflicts\r\n" + lvi.ToolTipText;
+                                break;
+                            case ConflictLevel.Unusable:
+                                lvi.ImageIndex = 4;
+                                lvi.ToolTipText = "Unusable mod (plugin name conflict)\r\n" + lvi.ToolTipText;
+                                break;
+                            default:
+                                MessageBox.Show("omod had unrecognized conflict level", "Error");
+                                lvi.ImageIndex = 1;
+                                lvi.ToolTipText = "Unrecognized conflict level\r\n" + lvi.ToolTipText;
+                                break;
+                        }
+                        lvModList.Items.Add(lvi);
+                        try
+                        {
+                            if (o.ModName == selectedmod)
+                            {
+                                lvi.Selected = true;
+                                selectedItem = lvi;
+                            }
+                        }
+                        catch (Exception ex)
+                        {
+                            Program.logger.WriteToLog("Could not set selected item: " + ex.Message, Logger.LogLevel.Low);
                         }
                     }
                     catch (Exception ex)
                     {
-                        Program.logger.WriteToLog("Could not set selected item: " + ex.Message, Logger.LogLevel.Medium);
+                        Program.logger.WriteToLog($"Could not refresh item. J={j}, Count={Program.Data.omods.Count} {ex.Message}", Logger.LogLevel.Low);
                     }
                 }
                 //if (lvModList.Items.Count > pos)
