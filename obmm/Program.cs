@@ -42,7 +42,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.50"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.51"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 

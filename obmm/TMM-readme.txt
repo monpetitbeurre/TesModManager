@@ -91,6 +91,14 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.51
+--------------
+* Fixed a case where mods could be ghosted when not expected
+
+Version 1.6.50
+--------------
+* Added a protection against crash
+
 Version 1.6.49
 --------------
 * Added a protection against crash

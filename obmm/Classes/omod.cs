@@ -3679,8 +3679,20 @@ namespace OblivionModManager {
 			hidden=false;
             if (this.FileName.EndsWith(".ghost"))
             {
-                this.FileName.Replace(".ghost", "");
-                this.LowerFileName.Replace(".ghost","");
+
+                this.FileName = this.FileName.Replace(".ghost", "");
+                this.LowerFileName = this.LowerFileName.Replace(".ghost","");
+
+                try
+                {
+                    this.Close();
+                    File.Delete(Path.Combine(Settings.omodDir, this.FileName));
+                    File.Move(Path.Combine(Settings.omodDir, this.FileName + ".ghost"), Path.Combine(Settings.omodDir, this.FileName));
+                }
+                catch (Exception ex)
+                {
+                    Program.logger.WriteToLog("Could not Hide '" + LowerFileName + ": " + ex.Message, Logger.LogLevel.High);
+                }
             }
         }
 

@@ -633,6 +633,12 @@ namespace OblivionModManager {
                     try
                     {
                         omod o = Program.Data.omods[j];
+
+                        if (!o.Hidden && o.LowerFileName.EndsWith(".ghost"))
+                        {
+                            o.Show();
+                        }
+
                         Program.logger.WriteToLog("Checking '" + o.FileName + "'", Logger.LogLevel.Low);
                         if (!File.Exists(Path.Combine(Settings.omodDir, o.LowerFileName)))
                         {
