@@ -499,7 +499,8 @@ namespace OblivionModManager {
                 if (login.bRemember)
                 {
                     Properties.Settings.Default.NexusUsername = Program.nexususername;
-                    Properties.Settings.Default.NexusPassword = Program.nexuspassword;
+                    // Properties.Settings.Default.NexusPassword = Program.nexuspassword;
+                    Properties.Settings.Default.NexusPassword = "crypt" + Convert.ToBase64String(AESThenHMAC.SimpleEncryptWithPassword(Encoding.ASCII.GetBytes(Program.nexuspassword), "TesModManager"));
                     //            byte[] encryptedpwd = new byte[Program.nexuspassword.Length](Program.nexuspassword);
                     //            ProtectedMemory.Protect(Properties.Settings.Default.NexusPassword, MemoryProtectionScope.SameLogon);
                     Properties.Settings.Default.Save();

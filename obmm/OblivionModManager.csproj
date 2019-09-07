@@ -165,6 +165,7 @@
     <Compile Include="7zip\ICoder.cs" />
     <Compile Include="AdvList.cs" />
     <Compile Include="altpanel.cs" />
+    <Compile Include="Classes\Encryption.cs" />
     <Compile Include="Classes\Game.cs" />
     <Compile Include="Forms\ChoseGameForm.cs">
       <SubType>Form</SubType>

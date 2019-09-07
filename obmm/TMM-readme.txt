@@ -91,6 +91,14 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.53
+--------------
+* nexus password is now encrypted
+
+Version 1.6.52
+--------------
+* Resized settings dialog
+
 Version 1.6.51
 --------------
 * Fixed a case where mods could be ghosted when not expected

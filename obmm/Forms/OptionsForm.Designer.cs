@@ -668,9 +668,9 @@ namespace OblivionModManager {
             this.cbAskIfLoadAsIsOrImport.AutoSize = true;
             this.cbAskIfLoadAsIsOrImport.Location = new System.Drawing.Point(11, 380);
             this.cbAskIfLoadAsIsOrImport.Name = "cbAskIfLoadAsIsOrImport";
-            this.cbAskIfLoadAsIsOrImport.Size = new System.Drawing.Size(226, 17);
+            this.cbAskIfLoadAsIsOrImport.Size = new System.Drawing.Size(193, 17);
             this.cbAskIfLoadAsIsOrImport.TabIndex = 50;
-            this.cbAskIfLoadAsIsOrImport.Text = "Always import Nexus files for customization";
+            this.cbAskIfLoadAsIsOrImport.Text = "Always import Nexus files for editing";
             this.toolTip.SetToolTip(this.cbAskIfLoadAsIsOrImport, "Unchecked asks if load as is is wanted");
             this.cbAskIfLoadAsIsOrImport.UseVisualStyleBackColor = true;
             this.cbAskIfLoadAsIsOrImport.CheckedChanged += new System.EventHandler(this.cbAskIfLoadAsIsOrImport_CheckedChanged);

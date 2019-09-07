@@ -42,7 +42,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.51"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.53"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -287,6 +287,17 @@ namespace OblivionModManager {
 
             nexususername = Properties.Settings.Default.NexusUsername;
             nexuspassword = Properties.Settings.Default.NexusPassword;
+
+            if (nexuspassword.StartsWith("crypt"))
+            {
+                nexuspassword = nexuspassword.Substring("crypt".Length);
+                nexuspassword = Encoding.ASCII.GetString(AESThenHMAC.SimpleDecryptWithPassword(Convert.FromBase64String(nexuspassword), "TesModManager"));
+            }
+            else if (nexuspassword.Length > 0)
+            {
+                Properties.Settings.Default.NexusPassword = "crypt" + Encoding.ASCII.GetString(AESThenHMAC.SimpleEncryptWithPassword(Encoding.ASCII.GetBytes(nexuspassword), "TesModManager"));
+            }
+
 //            ProtectedMemory.UnProtect(nexuspassword, MemoryProtectionScope.SameLogon);
             importList = new List<string>(Directory.GetFiles(Path.Combine(Program.BaseDir, "downloads")));
             if (File.Exists(Path.Combine(Program.BaseDir, "downloadlist.txt")))
@@ -1693,7 +1704,7 @@ namespace OblivionModManager {
                     if (nexuslogin.bRemember)
                     {
                         Properties.Settings.Default.NexusUsername = nexususername;
-                        Properties.Settings.Default.NexusPassword = nexuspassword;
+                        Properties.Settings.Default.NexusPassword = "crypt" + Convert.ToBase64String(AESThenHMAC.SimpleEncryptWithPassword(Encoding.ASCII.GetBytes(nexuspassword),"TesModManager"));
                         Properties.Settings.Default.AutoLoginToNexus = true;
                         Properties.Settings.Default.Save();
                     }
