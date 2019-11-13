@@ -1185,15 +1185,25 @@ namespace OblivionModManager {
                         else if (Config==null)
                         {
                             // no info file???? darn - get website and version out of filename
-                            string s = Program.GetModID(path);
-                            if (s.Length != 0)
+                            string modID = Program.GetModID(path);
+                            if (modID.Length != 0)
                             {
-                                Website = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + s;
+                                Website = "https://www.nexusmods.com/" + Program.currentGame.NexusNameNoSpaces + "/mods/" + modID;
                             }
                             try
                             {
-                                string version = path.Substring(path.IndexOf(s) + s.Length + 1);
-                                version = version.Substring(0, version.LastIndexOf("."));
+                                string version = Path.GetFileNameWithoutExtension(path);
+                                if (version.EndsWith(modID))
+                                {
+                                    version = version.Substring(0, version.Length - modID.Length - 1); // path.IndexOf(modID) + modID.Length + 1);
+                                    version = version.Substring(version.IndexOf(" "));
+                                }
+                                else
+                                {
+                                    version = version.Substring(path.IndexOf(modID) + modID.Length + 1);
+                                }
+
+                                // version = version.Substring(0, version.LastIndexOf("."));
                                 Version = version.Replace('-', '.');
                             }
                             catch

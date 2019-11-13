@@ -480,7 +480,7 @@ namespace OblivionModManager {
                     }
                     toolText += ei.FileName + "\nAuthor: " + ei.header.Author;
 
-                    if (ei.BelongsTo == "Unknown" || ei.BelongsTo.Contains("Steam"))
+                    if (ei.BelongsTo != null && (ei.BelongsTo == "Unknown" || ei.BelongsTo.Contains("Steam")))
                     {
                         string filename = ei.FileName.ToLower();
                         //foreach (string mod in Program.SteamModList)

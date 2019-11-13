@@ -622,7 +622,7 @@ namespace OblivionModManager {
         {
             _Writer.Write((byte)Package);
             _Writer.Write(Shader);
-            _Writer.Write(BinaryObject);
+            _Writer.Write(BinaryObject != null ? BinaryObject : string.Empty);
         }
 
     }

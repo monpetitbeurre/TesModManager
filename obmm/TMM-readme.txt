@@ -91,6 +91,14 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.55
+--------------
+* Fixed a case where an omod cuold not be activated
+
+Version 1.6.54
+--------------
+* fixed a case where esp would be randomly deactivated
+
 Version 1.6.53
 --------------
 * nexus password is now encrypted
