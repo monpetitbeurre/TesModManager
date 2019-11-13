@@ -34,7 +34,6 @@ namespace OblivionModManager.Forms {
                 string toolText=ei.FileName+"\nAuthor: "+ei.header.Author;
                 ListViewItem lvi=new ListViewItem(new string[] { ei.FileName, ei.BelongsTo });
                 if(ei.Active) {
-                    lvi.Checked=true;
                     if (ei.FileName.ToLower().EndsWith(".esl") || ei.header.isLightMaster)
                     {
                         toolText += "\n\nFormID: " + (0xFE).ToString("x").PadLeft(2, '0');
@@ -47,6 +46,7 @@ namespace OblivionModManager.Forms {
                 if(ei.header.Description!=null) {
                     toolText+="\n\n"+ei.header.Description;
                 }
+                lvi.Checked = ei.Active;
                 lvi.Tag=ei;
                 lvi.ToolTipText=toolText;
                 lvEspList.Items.Add(lvi);

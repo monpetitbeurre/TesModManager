@@ -529,7 +529,6 @@ namespace OblivionModManager {
                         lvi.ForeColor = Color.Red;
                         toolText += "\n\nRequired active plugin(s) '" + missingDependencies + "' missing or not active";
                         ei.Active = false;
-                        lvi.Checked = false;
                     }
                     else
                     {
@@ -538,7 +537,6 @@ namespace OblivionModManager {
 
                     if (ei.Active)
                     {
-                        lvi.Checked = true;
                         if (ei.FileName.ToLower().EndsWith(".esl") || ei.header.isLightMaster)
                         {
                             toolText += "\n\nFormID: " + (0xFE).ToString("x").PadLeft(2, '0');
@@ -548,11 +546,13 @@ namespace OblivionModManager {
                             toolText += "\n\nFormID: " + (ActiveCount++).ToString("x").PadLeft(2, '0');
                         }
                     }
+
                     toolText += "\n\nBelongs to:" + ei.BelongsTo;
                     if (ei.header.Description != null)
                     {
                         toolText += "\n\n" + ei.header.Description;
                     }
+                    lvi.Checked = ei.Active;
                     lvi.Tag = ei;
                     if (ei.Parent != null)
                     {
@@ -873,6 +873,9 @@ namespace OblivionModManager {
 			}
 		}
 		private void lvEspList_ItemCheck(object sender, ItemCheckEventArgs e) {
+
+            if (updatingESPList) return;
+
 			EspInfo ei=(EspInfo)lvEspList.Items[e.Index].Tag;
 			if(ei.Active==(e.NewValue==CheckState.Checked)) return;
 			if(e.NewValue==CheckState.Checked)
@@ -919,7 +922,9 @@ namespace OblivionModManager {
 			int omodnum = 0;
 			for(int i=0;i<lvEspList.Items.Count;i++)
 			{
-                string espname = lvEspList.Items[i].SubItems[0].Text.ToLower();
+                ListViewItem lvi = lvEspList.Items[i];
+                string espname = lvi.SubItems[0].Text.ToLower();
+                EspInfo ei = (EspInfo)lvi.Tag;
 
                 // check default plugins
                 if (Program.currentGame.NickName == "skyrimse" &&
@@ -928,34 +933,32 @@ namespace OblivionModManager {
                     espname == "hearthfires.esm" ||
                     espname == "dragonborn.esm" ||
                     espname == "dawnguard.esm"))
-                {
-                    lvEspList.Items[i].Checked = true;
-                    ((EspInfo)lvEspList.Items[i].Tag).Active = true;
+                {                    
+                    ei.Active = true;
                 }
                 else if (Program.currentGame.NickName=="skyrim" && espname == "skyrim.esm")
-                {
-                    lvEspList.Items[i].Checked = true;
-                    ((EspInfo)lvEspList.Items[i].Tag).Active = true;
-                }
+                    ei.Active = true;
                 else if (Program.currentGame.Name == "Morrowind" && espname == "morrowind.esm")
-                    lvEspList.Items[i].Checked = true;
-                else if (espname == "oblivion.esm")
-                    lvEspList.Items[i].Checked = true;
+                    ei.Active = true;
+                else if (Program.currentGame.Name == "Oblivion" && espname == "oblivion.esm")
+                    ei.Active = true;
 
-				if (lvEspList.Items[i].Checked)
+                if (ei.Active)
 				{
                     if (!espname.EndsWith(".esl"))
                     {
                         cnt++;
                     }
 
-					if (lvEspList.Items[i].SubItems[1].Text != "Unknown")
+					if (lvi.SubItems[1].Text != "Unknown")
 					{
 						omodnum++;
 					}
 				}
-			}
-			
+
+                lvi.Checked = ei.Active;
+            }			
+
 			if (cnt == 0)
 				lblStatus.Text = "No Active ESPMS";
 			else if (cnt < 256)
