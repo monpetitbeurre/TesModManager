@@ -42,7 +42,7 @@ namespace OblivionModManager {
 //		public const byte MinorVersion=1;
 //		public const byte BuildNumber=18;
 		public const byte CurrentOmodVersion=4; // omod file version
-		public const string version="1.6.55"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
+		public const string version="1.6.56"; // MajorVersion.ToString()+"."+MinorVersion.ToString()+"."+BuildNumber.ToString(); // ;
 		public static MainForm ProgramForm = null;
         public static Logger logger = new Logger();
 
@@ -288,14 +288,21 @@ namespace OblivionModManager {
             nexususername = Properties.Settings.Default.NexusUsername;
             nexuspassword = Properties.Settings.Default.NexusPassword;
 
-            if (nexuspassword.StartsWith("crypt"))
+            try
             {
-                nexuspassword = nexuspassword.Substring("crypt".Length);
-                nexuspassword = Encoding.ASCII.GetString(AESThenHMAC.SimpleDecryptWithPassword(Convert.FromBase64String(nexuspassword), "TesModManager"));
+                if (nexuspassword.StartsWith("crypt"))
+                {
+                    nexuspassword = nexuspassword.Substring("crypt".Length);
+                    nexuspassword = Encoding.ASCII.GetString(AESThenHMAC.SimpleDecryptWithPassword(Convert.FromBase64String(nexuspassword), "TesModManager"));
+                }
+                else if (nexuspassword.Length > 0)
+                {
+                    Properties.Settings.Default.NexusPassword = "crypt" + Encoding.ASCII.GetString(AESThenHMAC.SimpleEncryptWithPassword(Encoding.ASCII.GetBytes(nexuspassword), "TesModManager"));
+                }
             }
-            else if (nexuspassword.Length > 0)
+            catch (Exception ex)
             {
-                Properties.Settings.Default.NexusPassword = "crypt" + Encoding.ASCII.GetString(AESThenHMAC.SimpleEncryptWithPassword(Encoding.ASCII.GetBytes(nexuspassword), "TesModManager"));
+                Program.logger.WriteToLog("Could not decode invalid password: " + ex.Message, Logger.LogLevel.Low);
             }
 
 //            ProtectedMemory.UnProtect(nexuspassword, MemoryProtectionScope.SameLogon);

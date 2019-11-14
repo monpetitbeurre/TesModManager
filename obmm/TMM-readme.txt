@@ -91,6 +91,10 @@ HTML ability pack - https://github.com/zzzprojects/html-agility-pack
 
 Version changes
 ===============
+Version 1.6.56
+--------------
+* Added protection against corrupt password
+
 Version 1.6.55
 --------------
 * Fixed a case where an omod cuold not be activated
